@@ -1,0 +1,7 @@
+streamlit
+streamlit-option-menu
+missingno
+pandas
+numpy
+matplotlib
+scikit-learn
