@@ -283,7 +283,7 @@ class OutliersTreatment:
         st.subheader("Visualize Outliers with Boxplot")
         
         # Create a boxplot for each numeric column to visualize outliers
-        numeric_columns = self.dataset.select_dtypes(exclude=["categorical","object","string"]).columns.tolist()
+        numeric_columns = self.dataset.select_dtypes(include=["int32","int64","float32","float64"]).columns.tolist()
         
         for column in numeric_columns:
             plt.figure(figsize=(8, 6))
