@@ -3,6 +3,8 @@ import streamlit as st
 import numpy as np
 from feature_engine.imputation import *
 from feature_engine.outliers import *
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Class for methods offered by pandas
 class PandasMethods:
@@ -277,3 +279,14 @@ class OutliersTreatment:
             return self.winsorizer()
         elif self.method == 'Outlier Trimmer':
             return self.outlier_trimmer()
+    def visualize_outliers(self):
+        st.subheader("Visualize Outliers with Boxplot")
+        
+        # Create a boxplot for each numeric column to visualize outliers
+        numeric_columns = self.dataset.select_dtypes(include=[np.number]).columns.tolist()
+        
+        for column in numeric_columns:
+            plt.figure(figsize=(8, 6))
+            sns.boxplot(x=self.dataset)
+            plt.title(f"Boxplot")
+            st.pyplot(plt)  # Display the plot using Streamlit
