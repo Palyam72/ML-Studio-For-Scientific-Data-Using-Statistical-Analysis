@@ -123,7 +123,7 @@ elif selected == "Data Cleaning":
 
             with col2:
                 pm = PandasMethods(st.session_state.selected_dataset)
-		uim = UnivariateImputers(t.session_state.selected_dataset)
+		uim = UnivariateImputers(st.session_state.selected_dataset)
                 # Apply Backward Fill
                 if apply_backward_fill:
                     result = pm.backward_fill()
