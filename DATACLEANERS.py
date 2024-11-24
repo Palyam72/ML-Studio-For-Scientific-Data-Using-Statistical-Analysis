@@ -213,8 +213,8 @@ class OutliersTreatment:
         st.subheader("Arbitrary Outlier Capper")
 
         # User inputs for max and min capping dictionaries
-        max_capping = st.text_input("Enter max capping values (e.g., {'x1': 8})", value="{'x1': 8}")
-        min_capping = st.text_input("Enter min capping values (e.g., {'x1': 2})", value="{'x1': 2}")
+        max_capping = st.text_input("Enter max capping values (e.g., {'x1': 8})")
+        min_capping = st.text_input("Enter min capping values (e.g., {'x1': 2})")
         
         try:
             max_capping_dict = eval(max_capping)
