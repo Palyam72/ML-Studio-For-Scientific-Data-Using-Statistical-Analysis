@@ -4,7 +4,7 @@ import pandas as pd
 from DATAREADERS import DataExtractor
 import missingno as mso
 import matplotlib.pyplot as plt
-from DATACLEANERS import PandasMethods, UnivariateImputers
+from DATACLEANERS import PandasMethods, UnivariateImputers, OutliersTreatment  # Import OutliersTreatment
 
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
@@ -120,9 +120,15 @@ elif selected == "Data Cleaning":
                 add_missing_indicator = st.checkbox("Add Missing Indicator")
                 st.divider()
 
+                # Headings for Outlier Treatment
+                st.markdown("<p style='color:blue;'>Outlier Treatment</p>", unsafe_allow_html=True)
+                apply_outlier_treatment = st.checkbox("Apply Outlier Treatment")
+                st.divider()
+
             with col2:
                 pm = PandasMethods(st.session_state.selected_dataset)
                 uim = UnivariateImputers(st.session_state.selected_dataset)
+                ot = OutliersTreatment(st.session_state.selected_dataset)  # Initialize OutliersTreatment
 
                 # Apply Backward Fill
                 if apply_backward_fill:
@@ -204,6 +210,15 @@ elif selected == "Data Cleaning":
                             st.dataframe(result)
                             st.session_state.availableDatasets["STAGE 2: UNIVARIATE IMPUTATION - MISSING INDICATOR"] = result
                             st.success("Missing indicator added successfully!")
+
+                # Apply Outlier Treatment
+                if apply_outlier_treatment:
+                    result = ot.apply_outlier_treatment()
+                    if st.checkbox("Proceed with Outlier Treatment", key="confirm_outlier_treatment"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: OUTLIER TREATMENT"] = result
+                            st.success("Outlier treatment applied successfully!")
 
     else:
         st.warning("No datasets available. Please upload data first.")
