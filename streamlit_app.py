@@ -4,7 +4,9 @@ import pandas as pd
 from DATAREADERS import DataExtractor
 import missingno as mso
 import matplotlib.pyplot as plt
-from DATACLEANERS import PandasMethods
+from DATACLEANERS import PandasMethods, UnivariateImputers
+pm = PandasMethods(dataset)
+uim = UnivariateImputers(dataset)
 
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
@@ -122,11 +124,6 @@ elif selected == "Data Cleaning":
                 st.divider()
 
             with col2:
-                # Instantiate classes
-                from DATACLEANERS import PandasMethods, UnivariateImputers
-                pm = PandasMethods(dataset)
-                uim = UnivariateImputers(dataset)
-
                 # Apply Backward Fill
                 if apply_backward_fill:
                     result = pm.backward_fill()
