@@ -1,7 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
-
+from feature_engine.imputation import *
 
 # Class for methods offered by pandas
 class PandasMethods:
@@ -72,3 +72,127 @@ class PandasMethods:
             else:
                 fill_dict[selected_columns[i]] = values[i]
         return fill_dict
+        
+
+class UnivariateImputers:
+    def __init__(self, dataset):
+        self.dataset = dataset
+
+    def MeanMedianImputer(self):
+        st.write("### Mean/Median Imputer")
+        imputation_method = st.radio("Choose imputation method:", ["mean", "median"])
+        method = "mean" if imputation_method == "mean" else "median"
+
+        variables_mode = st.radio(
+            "How would you like to select variables?",
+            ["All variables", "Specific variables"],
+        )
+
+        if variables_mode == "Specific variables":
+            variables = st.multiselect(
+                "Select variables to impute:",
+                options=self.dataset.columns.tolist(),
+                help="Choose one or more columns to apply imputation.",
+            )
+        else:
+            variables = None  # Default to all variables
+
+        imputer = MeanMedianImputer(imputation_method=method, variables=variables)
+        imputer.fit(self.dataset)
+        transformed_data = imputer.transform(self.dataset)
+
+        st.success("Imputation complete!")
+        return transformed_data
+
+    def EndTailImputer(self):
+        st.write("### End Tail Imputer")
+        tail = st.radio("Choose the tail to use for imputation:", ["right", "left"])
+        fold = st.slider("Select the fold value:", 1.0, 5.0, 3.0, step=0.1)
+
+        variables_mode = st.radio(
+            "How would you like to select variables?",
+            ["All variables", "Specific variables"],
+        )
+
+        if variables_mode == "Specific variables":
+            variables = st.multiselect(
+                "Select variables to impute:",
+                options=self.dataset.columns.tolist(),
+                help="Choose one or more columns to apply imputation.",
+            )
+        else:
+            variables = None  # Default to all variables
+
+        imputer = EndTailImputer(tail=tail, fold=fold, variables=variables)
+        imputer.fit(self.dataset)
+        transformed_data = imputer.transform(self.dataset)
+
+        st.success("Imputation complete!")
+        return transformed_data
+
+    def RandomSampleImputer(self):
+        st.write("### Random Sample Imputer")
+        seed = st.radio(
+            "Select seeding method:",
+            ["general", "observation"],
+            help="Choose whether to set one seed for all observations or a unique seed for each observation.",
+        )
+        random_state = st.number_input(
+            "Set random state (leave blank for None):",
+            value=None,
+            min_value=0,
+            format="%d",
+        )
+
+        variables_mode = st.radio(
+            "How would you like to select variables?",
+            ["All variables", "Specific variables"],
+        )
+
+        if variables_mode == "Specific variables":
+            variables = st.multiselect(
+                "Select variables to impute:",
+                options=self.dataset.columns.tolist(),
+                help="Choose one or more columns to apply imputation.",
+            )
+        else:
+            variables = None  # Default to all variables
+
+        imputer = RandomSampleImputer(
+            variables=variables, random_state=random_state, seed=seed
+        )
+        imputer.fit(self.dataset)
+        transformed_data = imputer.transform(self.dataset)
+
+        st.success("Imputation complete!")
+        return transformed_data
+
+    def AddMissingIndicator(self):
+        st.write("### Add Missing Indicator")
+        missing_only = st.radio(
+            "Should indicators be added only for variables with missing data?",
+            ["Yes", "No"],
+            help="Yes: Indicators for variables with missing data only. No: Indicators for all variables.",
+        )
+        missing_only = True if missing_only == "Yes" else False
+
+        variables_mode = st.radio(
+            "How would you like to select variables?",
+            ["All variables", "Specific variables"],
+        )
+
+        if variables_mode == "Specific variables":
+            variables = st.multiselect(
+                "Select variables to add missing indicators:",
+                options=self.dataset.columns.tolist(),
+                help="Choose one or more columns to apply missing indicator creation.",
+            )
+        else:
+            variables = None  # Default to all variables
+
+        imputer = AddMissingIndicator(missing_only=missing_only, variables=variables)
+        imputer.fit(self.dataset)
+        transformed_data = imputer.transform(self.dataset)
+
+        st.success("Missing indicators added!")
+        return transformed_data
