@@ -5,8 +5,6 @@ from DATAREADERS import DataExtractor
 import missingno as mso
 import matplotlib.pyplot as plt
 from DATACLEANERS import PandasMethods, UnivariateImputers
-pm = PandasMethods(dataset)
-uim = UnivariateImputers(dataset)
 
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
@@ -96,10 +94,10 @@ elif selected == "Data Cleaning":
             st.divider()
             st.markdown("### Missing Value Analysis")
             fig, ax = plt.subplots(figsize=(10, 5))
-            mso.matrix(dataset, ax=ax)
+            mso.matrix(st.session_state.selected_dataset, ax=ax)
             st.pyplot(fig)
             fig1, ax1 = plt.subplots(figsize=(10, 5))
-            mso.heatmap(dataset, ax=ax1)
+            mso.heatmap(st.session_state.selected_dataset, ax=ax1)
             st.pyplot(fig1)
 
             # Layout for cleaning options
@@ -124,6 +122,8 @@ elif selected == "Data Cleaning":
                 st.divider()
 
             with col2:
+                pm = PandasMethods(dataset)
+				uim = UnivariateImputers(dataset)
                 # Apply Backward Fill
                 if apply_backward_fill:
                     result = pm.backward_fill()
