@@ -122,7 +122,7 @@ elif selected == "Data Cleaning":
 
                 # Headings for Outlier Treatment
                 st.markdown("<p style='color:blue;'>Outlier Treatment</p>", unsafe_allow_html=True)
-                visualize_outliers=st.checkboox("Visualize outliers")
+                visualize_outliers=st.checkbox("Visualize outliers")
                 apply_outlier_treatment = st.checkbox("Apply Outlier Treatment")
                 
                 st.divider()
