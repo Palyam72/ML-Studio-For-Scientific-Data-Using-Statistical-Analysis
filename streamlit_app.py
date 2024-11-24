@@ -72,7 +72,6 @@ if selected == "Data Upload":
                 st.session_state.availableDatasets["HTML Dataset"] = st.session_state.readHTML
 
 # Data Cleaning Section
-# Data Cleaning Section
 elif selected == "Data Cleaning":
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
@@ -123,7 +122,8 @@ elif selected == "Data Cleaning":
 
             with col2:
                 pm = PandasMethods(st.session_state.selected_dataset)
-		uim = UnivariateImputers(st.session_state.selected_dataset)
+                uim = UnivariateImputers(st.session_state.selected_dataset)
+
                 # Apply Backward Fill
                 if apply_backward_fill:
                     result = pm.backward_fill()
