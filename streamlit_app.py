@@ -122,7 +122,9 @@ elif selected == "Data Cleaning":
 
                 # Headings for Outlier Treatment
                 st.markdown("<p style='color:blue;'>Outlier Treatment</p>", unsafe_allow_html=True)
+                visualize_outliers=st.checkboox("Visualize outliers")
                 apply_outlier_treatment = st.checkbox("Apply Outlier Treatment")
+                
                 st.divider()
 
             with col2:
@@ -219,6 +221,8 @@ elif selected == "Data Cleaning":
                             st.dataframe(result)
                             st.session_state.availableDatasets["STAGE 2: OUTLIER TREATMENT"] = result
                             st.success("Outlier treatment applied successfully!")
+                if visualize_outliers:
+                    ot.visualize_outliers()
 
     else:
         st.warning("No datasets available. Please upload data first.")
