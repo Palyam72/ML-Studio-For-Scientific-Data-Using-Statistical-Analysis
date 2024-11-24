@@ -72,6 +72,7 @@ if selected == "Data Upload":
                 st.session_state.availableDatasets["HTML Dataset"] = st.session_state.readHTML
 
 # Data Cleaning Section
+# Data Cleaning Section
 elif selected == "Data Cleaning":
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
@@ -89,86 +90,123 @@ elif selected == "Data Cleaning":
             st.markdown("### Selected Dataset")
             st.dataframe(dataset)
 
-            # Create PandasMethods object for the selected dataset
-            pm = PandasMethods(dataset)
-
-            # Display missing matrix chart
+            # Display missing value charts
             st.divider()
-            st.markdown("### Missing Value Matrix")
+            st.markdown("### Missing Value Analysis")
             fig, ax = plt.subplots(figsize=(10, 5))
             mso.matrix(dataset, ax=ax)
             st.pyplot(fig)
-            st.markdown("### Missing Value HeatMap")
             fig1, ax1 = plt.subplots(figsize=(10, 5))
             mso.heatmap(dataset, ax=ax1)
             st.pyplot(fig1)
 
-            st.divider()
-
             # Layout for cleaning options
+            st.divider()
             col1, col2 = st.columns([1, 2])
 
             with col1:
-                st.markdown("<p style='color:blue;'>Handle Missing Values </p>",unsafe_allow_html=True)
-                apply_backward_fill = st.checkbox("Apply Backward Fill")
-                apply_forward_fill = st.checkbox("Apply Forward Fill")
+                # Headings for cleaning options
+                st.markdown("<p style='color:blue;'>Handle Missing Values</p>", unsafe_allow_html=True)
+                apply_backward_fill = st.checkbox("Backward Fill")
+                apply_forward_fill = st.checkbox("Forward Fill")
                 drop_nan_rows = st.checkbox("Drop Rows with NaN")
                 fill_with_value = st.checkbox("Fill Missing Values with a Particular Value")
                 interpolate_values = st.checkbox("Interpolate Missing Values")
                 st.divider()
-                st.markdown("<p style='color:blue;'>Handle Outliers </p>",unsafe_allow_html=True)
-                outlier_visualize = st.checkbox("Visualize outliers")
-                remove_outliers = st.checkbox("Remove Outliers")
+
+                st.markdown("<p style='color:blue;'>Univariate Missing Data Imputers</p>", unsafe_allow_html=True)
+                mean_median_imputer = st.checkbox("Mean/Median Imputer")
+                end_tail_imputer = st.checkbox("End Tail Imputer")
+                random_sample_imputer = st.checkbox("Random Sample Imputer")
+                add_missing_indicator = st.checkbox("Add Missing Indicator")
                 st.divider()
-                st.markdown("<p style='color:blue;'>Remove Duplicates </p>",unsafe_allow_html=True)
-                remove_duplicates = st.checkbox("Remove Duplicate Rows")
-                st.divider()
-                st.markdown("<p style='color:blue;'>Convert dtypes + drop misssing values + standadize column names </p>",unsafe_allow_html=True)
-                convert_dtypes = st.checkbox("Convert dtypes + drop misssing values + standadize colmn names")
 
             with col2:
+                # Instantiate classes
+                from DATACLEANERS import PandasMethods, UnivariateImputers
+                pm = PandasMethods(dataset)
+                uim = UnivariateImputers(dataset)
+
                 # Apply Backward Fill
                 if apply_backward_fill:
                     result = pm.backward_fill()
-                    if result is not None:
-                        st.dataframe(result)
-                        st.session_state.availableDatasets["STAGE 2 : DATA CLEANING OUTPUT - BFILL"] = result
-                        st.success("Backward Fill applied successfully!")
+                    if st.checkbox("Proceed with Backward Fill", key="confirm_bfill"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: DATA CLEANING OUTPUT - BFILL"] = result
+                            st.success("Backward Fill applied successfully!")
 
                 # Apply Forward Fill
                 if apply_forward_fill:
                     result = pm.forward_fill()
-                    if result is not None:
-                        st.dataframe(result)
-                        st.session_state.availableDatasets["STAGE 2 : DATA CLEANING OUTPUT - FFILL"] = result
-                        st.success("Backward Fill applied successfully!")
+                    if st.checkbox("Proceed with Forward Fill", key="confirm_ffill"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: DATA CLEANING OUTPUT - FFILL"] = result
+                            st.success("Forward Fill applied successfully!")
 
-                # Drop NaN Rows
+                # Drop Rows with NaN
                 if drop_nan_rows:
-                    st.subheader("Drop Rows with NaN")
                     result = pm.drop_na()
-                    if result is not None:
-                        st.dataframe(result)
-                        st.session_state.availableDatasets["STAGE 2 : DATA CLEANING OUTPUT - DROP_NAN"] = result
-                        st.success("Rows with NaN dropped successfully!")
+                    if st.checkbox("Proceed with Drop NaN Rows", key="confirm_dropna"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: DATA CLEANING OUTPUT - DROP_NAN"] = result
+                            st.success("Rows with NaN dropped successfully!")
 
                 # Fill Missing Values
                 if fill_with_value:
                     result = pm.fill_na()
-                    if result is not None:
-                        st.dataframe(result)
-                        st.session_state.availableDatasets["STAGE 2 : DATA CLEANING OUTPUT - FILL_VALUES"] = result
-                        st.success("Missing values filled successfully!")
+                    if st.checkbox("Proceed with Fill Missing Values", key="confirm_fillna"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: DATA CLEANING OUTPUT - FILL_VALUES"] = result
+                            st.success("Missing values filled successfully!")
 
                 # Interpolate Missing Values
                 if interpolate_values:
-                    st.subheader("Interpolate Missing Values")
-                    method = st.selectbox("Select Interpolation Method", ['linear', 'polynomial', 'cubic', 'nearest'])
-                    result = pm.interpolate_missing_values(method=method, inplace=False)
-                    if result is not None:
-                        st.dataframe(result)
-                        st.session_state.availableDatasets["STAGE 2 : DATA CLEANING OUTPUT - INTERPOLATE"] = result
-                        st.success("Missing values interpolated successfully!")
+                    result = pm.interpolate_missing_values()
+                    if st.checkbox("Proceed with Interpolation", key="confirm_interpolate"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: DATA CLEANING OUTPUT - INTERPOLATE"] = result
+                            st.success("Missing values interpolated successfully!")
+
+                # Apply Mean/Median Imputer
+                if mean_median_imputer:
+                    result = uim.MeanMedianImputer()
+                    if st.checkbox("Proceed with Mean/Median Imputation", key="confirm_meanmedian"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: UNIVARIATE IMPUTATION - MEAN/MEDIAN"] = result
+                            st.success("Mean/Median imputation applied successfully!")
+
+                # Apply End Tail Imputer
+                if end_tail_imputer:
+                    result = uim.EndTailImputer()
+                    if st.checkbox("Proceed with End Tail Imputation", key="confirm_endtail"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: UNIVARIATE IMPUTATION - END TAIL"] = result
+                            st.success("End Tail imputation applied successfully!")
+
+                # Apply Random Sample Imputer
+                if random_sample_imputer:
+                    result = uim.RandomSampleImputer()
+                    if st.checkbox("Proceed with Random Sample Imputation", key="confirm_randomsample"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: UNIVARIATE IMPUTATION - RANDOM SAMPLE"] = result
+                            st.success("Random Sample imputation applied successfully!")
+
+                # Add Missing Indicator
+                if add_missing_indicator:
+                    result = uim.AddMissingIndicator()
+                    if st.checkbox("Proceed with Adding Missing Indicator", key="confirm_missingindicator"):
+                        if result is not None:
+                            st.dataframe(result)
+                            st.session_state.availableDatasets["STAGE 2: UNIVARIATE IMPUTATION - MISSING INDICATOR"] = result
+                            st.success("Missing indicator added successfully!")
 
     else:
         st.warning("No datasets available. Please upload data first.")
