@@ -246,7 +246,7 @@ elif selected == "Identify & Select the Most Important Features":
             variance = st.checkbox("Varience Threshold")
             
         with col2:
-            fe=FEATURESELECTION(st.session_state.selected_dataset)
+            fe=FeatureSelection(st.session_state.selected_dataset)
             if pearson:
                 fe.pearson()
             if spearman:
