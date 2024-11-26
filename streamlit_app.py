@@ -226,12 +226,12 @@ elif selected == "Data Cleaning":
 elif selected == "Identify & Select the Most Important Features":
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
-        st.session_state.selected_dataset_name = st.selectbox(
+        selected_dataset_name = st.selectbox(
             "Select a dataset to clean",
             list(st.session_state.availableDatasets.keys())
         )
 
-    if st.session_state.selected_dataset:
+    if selected_dataset_name:
         # Load the selected dataset from session state
         st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
         dataset = st.session_state.selected_dataset
