@@ -137,7 +137,7 @@ class StatisticalFunctions:
         target = st.selectbox("Select target column", [None] + list(self.dataset.columns))
 
         if st.checkbox("Confirm to apply Generic Univariate Select"):
-            if not features or not target:
+            if not features:
                 st.error("Please select both feature columns and a target column.")
                 return
 
