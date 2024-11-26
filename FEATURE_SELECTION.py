@@ -142,7 +142,8 @@ class StatisticalFunctions:
                 return
 
             x = self.dataset[features]
-            y = self.dataset[target]
+            if y!=None:
+                y = self.dataset[target]
             score_func = self.score_functions[score_func_name]
 
             transformer = GenericUnivariateSelect(score_func=score_func, mode=mode, param=param)
@@ -201,7 +202,8 @@ class StatisticalFunctions:
                 return
 
             x = self.dataset[features]
-            y = self.dataset[target]
+            if y!=None:
+                y = self.dataset[target]
             score_func = self.score_functions[score_func_name]
 
             transformer = selector_class(score_func=score_func, alpha=alpha)
@@ -226,7 +228,8 @@ class StatisticalFunctions:
                 return
 
             x = self.dataset[features]
-            y = self.dataset[target]
+            if y!=None:
+                y = self.dataset[target]
             score_func = self.score_functions['f_classif']  # Default score function for simplicity
 
             transformer = selector_class(score_func=score_func, **{param_name: param})
