@@ -250,6 +250,8 @@ elif selected == "Identify & Select the Most Important Features":
             select_fdr=st.checkbox("Select FDR")
             select_fpr=st.checkbox("Select FPR")
             select_k_best=st.checkbox("Select K Best")
+            select_fwe=st.checkbox("Select FWE")
+            select_percentile=st.checkbox("Select Percentile")
             
         with col2:
             fe=FeatureSelection(st.session_state.selected_dataset)
@@ -266,6 +268,24 @@ elif selected == "Identify & Select the Most Important Features":
                 fe.cramers()
             if variance:
                 fe.variance_threshold()
+            if generic_univariate_select:
+                obtainedValue=stats.generic_univariate_select()
+                st.session_state.availableDatasets["DataFrame From Generic Uni Variate Select"]=obtainedValue
+            if select_fdr:
+                obtainedValue=stats.select_fdr()
+                st.session_state.availableDatasets["DataFrame From SELECT FDR"]=obtainedValue
+            if select_fpr:
+                obtainedValue=stats.select_fpr()
+                st.session_state.availableDatasets["DataFrame From Select FPR"]=obtainedValue
+            if select_fwe:
+                obtainedValue=stats.select_fwe()
+                st.session_state.availableDatasets["DataFrame From Select FWE"]=obtainedValue
+            if select_k_best:
+                obtainedValue=stats.select_k_best()
+                st.session_state.availableDatasets["datafrane from select k best"]=obtainedValue
+            if select_percentile:
+                obtainedValue=stats.select_percentile()
+                st.session_state.availableDatasets["data frame from select percentile"]=obtainedValue
             
             
     else:
