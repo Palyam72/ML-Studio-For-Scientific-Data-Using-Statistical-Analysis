@@ -5,7 +5,7 @@ from DATAREADERS import DataExtractor
 import missingno as mso
 import matplotlib.pyplot as plt
 from DATACLEANERS import PandasMethods, UnivariateImputers, OutliersTreatment  # Import OutliersTreatment
-from FEATURE_SELECTION import FeatureSelection StatisticalFunctions
+from FEATURE_SELECTION import *
 
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
