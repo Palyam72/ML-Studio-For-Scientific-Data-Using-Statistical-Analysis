@@ -3,6 +3,7 @@ streamlit-option-menu
 missingno
 pandas
 numpy
+lxml
 matplotlib
 scikit-learn
 chardet
