@@ -47,7 +47,7 @@ def upload_file(data_type, upload_func, file_type=None):
             st.session_state.availableDatasets[dataset_name] = data
             st.success(f"{data_type} file uploaded successfully!")
             st.dataframe(data.head())
-def SelectDataSet(st.session_state.availableDatasets):
+def SelectDataSet():
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
         selected_dataset_name = st.selectbox(
