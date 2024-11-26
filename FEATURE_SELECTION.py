@@ -134,16 +134,15 @@ class StatisticalFunctions:
         param = float(param) if param != "Enter Here" else 5e-2
 
         features = st.multiselect("Select feature columns", self.dataset.columns)
-        target = st.selectbox("Select target column", [None] + list(self.dataset.columns))
+        target = st.selectbox("Select target column (optional)", [None] + list(self.dataset.columns))
 
         if st.checkbox("Confirm to apply Generic Univariate Select"):
             if not features:
-                st.error("Please select both feature columns and a target column.")
+                st.error("Please select at least one feature column.")
                 return
 
             x = self.dataset[features]
-            if target != None:
-                y = self.dataset[target]
+            y = self.dataset[target] if target else None
             score_func = self.score_functions[score_func_name]
 
             transformer = GenericUnivariateSelect(score_func=score_func, mode=mode, param=param)
@@ -194,16 +193,15 @@ class StatisticalFunctions:
         alpha = st.slider(f"Select the alpha value for {header}", min_value=0.01, max_value=0.5, value=0.05, step=0.01)
 
         features = st.multiselect("Select feature columns", self.dataset.columns)
-        target = st.selectbox("Select target column", [None] + list(self.dataset.columns))
+        target = st.selectbox("Select target column (optional)", [None] + list(self.dataset.columns))
 
         if st.checkbox(f"Confirm to apply {header}"):
             if not features:
-                st.error("Please select both feature columns and a target column.")
+                st.error("Please select at least one feature column.")
                 return
 
             x = self.dataset[features]
-            if target != None:
-                y = self.dataset[target]
+            y = self.dataset[target] if target else None
             score_func = self.score_functions[score_func_name]
 
             transformer = selector_class(score_func=score_func, alpha=alpha)
@@ -220,16 +218,15 @@ class StatisticalFunctions:
         param = st.number_input(f"Select the {param_name} value", min_value=1, value=default_param, step=1)
 
         features = st.multiselect("Select feature columns", self.dataset.columns)
-        target = st.selectbox("Select target column", [None] + list(self.dataset.columns))
+        target = st.selectbox("Select target column (optional)", [None] + list(self.dataset.columns))
 
         if st.checkbox(f"Confirm to apply {selector_class.__name__}"):
             if not features:
-                st.error("Please select both feature columns and a target column.")
+                st.error("Please select at least one feature column.")
                 return
 
             x = self.dataset[features]
-            if target != None:
-                y = self.dataset[target]
+            y = self.dataset[target] if target else None
             score_func = self.score_functions['f_classif']  # Default score function for simplicity
 
             transformer = selector_class(score_func=score_func, **{param_name: param})
