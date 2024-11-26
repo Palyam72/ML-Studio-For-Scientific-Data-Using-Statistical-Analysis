@@ -9,3 +9,4 @@ scikit-learn
 chardet
 openpyxl
 feature-engine
+html5lib
