@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 from scipy.stats import pointbiserialr, chi2_contingency
-from sklearn.feature_selection import VarianceThreshold
+from sklearn.feature_selection import *
 import matplotlib.pyplot as plt
 
 class FeatureSelection:
@@ -111,3 +111,130 @@ class FeatureSelection:
                 st.write(list(numeric_data.columns[~mask]))
             except Exception as e:
                 st.error(f"Error during variance threshold selection: {e}")
+
+
+
+
+class StatisticalFunctions:
+    def __init__(self, dataset):
+        self.dataset = dataset
+        self.score_functions = {
+            'f_classif': f_classif,
+            'f_regression': f_regression,
+            'mutual_info_classif': mutual_info_classif,
+            'mutual_info_regression': mutual_info_regression,
+            'r_regression': r_regression,
+            'chi2': chi2
+        }
+
+    def generic_univariate_select(self):
+        score_func_name = st.selectbox("Select a score function", self.score_functions.keys())
+        mode = st.selectbox("Select the mode", ['percentile', 'k_best', 'fpr', 'fdr', 'fwe'])
+        param = st.text_input("Parameter for the mode (percentile, k, alpha)", "Enter Here")
+        param = float(param) if param != "Enter Here" else 5e-2
+
+        features = st.multiselect("Select feature columns", self.dataset.columns)
+        target = st.selectbox("Select target column", [None] + list(self.dataset.columns))
+
+        if st.checkbox("Confirm to apply Generic Univariate Select"):
+            if not features or not target:
+                st.error("Please select both feature columns and a target column.")
+                return
+
+            x = self.dataset[features]
+            y = self.dataset[target]
+            score_func = self.score_functions[score_func_name]
+
+            transformer = GenericUnivariateSelect(score_func=score_func, mode=mode, param=param)
+            X_new = transformer.fit_transform(x, y)
+
+            st.header("Transformed Data Frame")
+            transformed_df = pd.DataFrame(X_new, columns=[f"Feature_{i}" for i in range(X_new.shape[1])])
+            st.dataframe(transformed_df)
+
+            # Calling common_attributes
+            self.common_attributes(transformer)
+        else:
+            st.warning("Please confirm to apply Generic Univariate Select.")
+
+    def common_attributes(self, transformer):
+        st.subheader("Attributes for the Current Result")
+        if hasattr(transformer, 'scores_'):
+            st.info("Scores")
+            st.write(transformer.scores_)
+        if hasattr(transformer, 'pvalues_'):
+            st.info("P-Values")
+            st.write(transformer.pvalues_)
+        st.info("Number of Features In")
+        st.write(transformer.n_features_in_)
+        st.info("Feature Names In")
+        st.write(transformer.feature_names_in_)
+
+    def select_fdr(self):
+        self._apply_selection_method("Select FDR", SelectFdr)
+
+    def select_fpr(self):
+        self._apply_selection_method("Select FPR", SelectFpr)
+
+    def select_fwe(self):
+        self._apply_selection_method("Select FWE", SelectFwe)
+
+    def select_k_best(self):
+        st.header("Select K Best")
+        self._apply_selection_method_with_param("k", SelectKBest, default_param=10)
+
+    def select_percentile(self):
+        st.header("Select Percentile")
+        self._apply_selection_method_with_param("percentile", SelectPercentile, default_param=10)
+
+    def _apply_selection_method(self, header, selector_class):
+        st.header(header)
+        score_func_name = st.selectbox("Select a score function", self.score_functions.keys())
+        alpha = st.slider(f"Select the alpha value for {header}", min_value=0.01, max_value=0.5, value=0.05, step=0.01)
+
+        features = st.multiselect("Select feature columns", self.dataset.columns)
+        target = st.selectbox("Select target column", [None] + list(self.dataset.columns))
+
+        if st.checkbox(f"Confirm to apply {header}"):
+            if not features or not target:
+                st.error("Please select both feature columns and a target column.")
+                return
+
+            x = self.dataset[features]
+            y = self.dataset[target]
+            score_func = self.score_functions[score_func_name]
+
+            transformer = selector_class(score_func=score_func, alpha=alpha)
+            X_new = transformer.fit_transform(x, y)
+
+            st.header("Transformed Data Frame")
+            transformed_df = pd.DataFrame(X_new, columns=[f"Feature_{i}" for i in range(X_new.shape[1])])
+            st.dataframe(transformed_df)
+
+            # Calling common_attributes
+            self.common_attributes(transformer)
+
+    def _apply_selection_method_with_param(self, param_name, selector_class, default_param):
+        param = st.number_input(f"Select the {param_name} value", min_value=1, value=default_param, step=1)
+
+        features = st.multiselect("Select feature columns", self.dataset.columns)
+        target = st.selectbox("Select target column", [None] + list(self.dataset.columns))
+
+        if st.checkbox(f"Confirm to apply {selector_class.__name__}"):
+            if not features or not target:
+                st.error("Please select both feature columns and a target column.")
+                return
+
+            x = self.dataset[features]
+            y = self.dataset[target]
+            score_func = self.score_functions['f_classif']  # Default score function for simplicity
+
+            transformer = selector_class(score_func=score_func, **{param_name: param})
+            X_new = transformer.fit_transform(x, y)
+
+            st.header("Transformed Data Frame")
+            transformed_df = pd.DataFrame(X_new, columns=[f"Feature_{i}" for i in range(X_new.shape[1])])
+            st.dataframe(transformed_df)
+
+            # Calling common_attributes
+            self.common_attributes(transformer)
