@@ -142,7 +142,7 @@ class StatisticalFunctions:
                 return
 
             x = self.dataset[features]
-            if y!=None:
+            if target != None:
                 y = self.dataset[target]
             score_func = self.score_functions[score_func_name]
 
@@ -202,7 +202,7 @@ class StatisticalFunctions:
                 return
 
             x = self.dataset[features]
-            if y!=None:
+            if target != None:
                 y = self.dataset[target]
             score_func = self.score_functions[score_func_name]
 
@@ -228,7 +228,7 @@ class StatisticalFunctions:
                 return
 
             x = self.dataset[features]
-            if y!=None:
+            if target != None:
                 y = self.dataset[target]
             score_func = self.score_functions['f_classif']  # Default score function for simplicity
 
