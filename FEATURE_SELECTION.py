@@ -91,7 +91,7 @@ class FeatureSelection:
     def variance_threshold(self):
         st.write("### Variance Threshold Method")
 
-        threshold=st.slider("Threshold value",0,1,0.5)
+        threshold=st.number_input("Threshold value",0,1,0.5)
         if threshold:
             st.write(f"Variance Threshold: {threshold}")
             
