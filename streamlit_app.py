@@ -47,21 +47,6 @@ def upload_file(data_type, upload_func, file_type=None):
             st.session_state.availableDatasets[dataset_name] = data
             st.success(f"{data_type} file uploaded successfully!")
             st.dataframe(data.head())
-def SelectDataSet():
-    if st.session_state.availableDatasets:
-        # Dataset selection for cleaning
-        selected_dataset_name = st.selectbox(
-            "Select a dataset to clean",
-            list(st.session_state.availableDatasets.keys())
-        )
-
-    if selected_dataset_name:
-        # Load the selected dataset from session state
-        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
-        dataset = st.session_state.selected_dataset
-        return dataset
-    else:
-        return None
         
 # Data Upload Section
 if selected == "Data Upload":
@@ -89,12 +74,20 @@ if selected == "Data Upload":
 
 # Data Cleaning Section
 elif selected == "Data Cleaning":
-    dataset=SelectDataSet()
-    if dataset:
+    if st.session_state.availableDatasets:
+        # Dataset selection for cleaning
+        selected_dataset_name = st.selectbox(
+            "Select a dataset to clean",
+            list(st.session_state.availableDatasets.keys())
+        )
+
+    if selected_dataset_name:
+        # Load the selected dataset from session state
+        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+        dataset = st.session_state.selected_dataset
         st.markdown("### Selected Dataset")
         st.dataframe(dataset)
-
-            # Display missing value charts
+        # Display missing value charts
         st.divider()
         st.markdown("### Missing Value Analysis")
         fig, ax = plt.subplots(figsize=(10, 5))
@@ -231,8 +224,17 @@ elif selected == "Data Cleaning":
     else:
         st.warning("No datasets available. Please upload data first.")
 elif selected == "Identify & Select the Most Important Features":
-    dataset = SelectDataSet()
-    if dataset:
+    if st.session_state.availableDatasets:
+        # Dataset selection for cleaning
+        selected_dataset_name = st.selectbox(
+            "Select a dataset to clean",
+            list(st.session_state.availableDatasets.keys())
+        )
+
+    if selected_dataset_name:
+        # Load the selected dataset from session state
+        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+        dataset = st.session_state.selected_dataset
         col1, col2, col3 = st.columns([1, 2, 1])
         with col1:
             st.success("CORRELATION ANALYSIS")
@@ -244,7 +246,7 @@ elif selected == "Identify & Select the Most Important Features":
             variance = st.checkbox("Varience Threshold")
             
         with col2:
-            fe=FEATURESELECTION(dataset)
+            fe=FEATURESELECTION(st.session_state.selected_dataset)
             if pearson:
                 fe.pearson()
             if spearman:
