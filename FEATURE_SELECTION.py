@@ -196,7 +196,7 @@ class StatisticalFunctions:
         target = st.selectbox("Select target column", [None] + list(self.dataset.columns))
 
         if st.checkbox(f"Confirm to apply {header}"):
-            if not features or not target:
+            if not features:
                 st.error("Please select both feature columns and a target column.")
                 return
 
