@@ -10,3 +10,4 @@ chardet
 openpyxl
 feature-engine
 html5lib
+category-encoders
