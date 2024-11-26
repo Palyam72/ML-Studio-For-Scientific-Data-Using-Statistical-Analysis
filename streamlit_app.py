@@ -257,7 +257,7 @@ elif selected == "Identify & Select the Most Important Features":
                 fe.point()
             if cramers:
                 fe.cramers()
-            if varience:
+            if variance:
                 fe.varience_threshold()
             
             
