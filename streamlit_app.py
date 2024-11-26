@@ -89,7 +89,7 @@ if selected == "Data Upload":
 
 # Data Cleaning Section
 elif selected == "Data Cleaning":
-    dataset=SelectDataSet(st.session_state.availableDatasets)
+    dataset=SelectDataSet()
     if dataset:
         st.markdown("### Selected Dataset")
         st.dataframe(dataset)
@@ -231,7 +231,7 @@ elif selected == "Data Cleaning":
     else:
         st.warning("No datasets available. Please upload data first.")
 elif selected == "Identify & Select the Most Important Features":
-    dataset = SelectDataSet(st.session_state.availableDatasets)
+    dataset = SelectDataSet()
     if dataset:
         col1, col2, col3 = st.columns([1, 2, 1])
         with col1:
