@@ -226,7 +226,7 @@ elif selected == "Data Cleaning":
 elif selected == "Identify & Select the Most Important Features":
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
-        selected_dataset_name = st.selectbox(
+        st.session_state.selected_dataset_name = st.selectbox(
             "Select a dataset to clean",
             list(st.session_state.availableDatasets.keys())
         )
