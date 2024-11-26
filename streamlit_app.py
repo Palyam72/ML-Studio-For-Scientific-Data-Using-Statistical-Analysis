@@ -22,7 +22,7 @@ with st.sidebar:
     selected = option_menu(
         menu_title="Main Menu",
         options=[
-            "Data Upload", "Data Cleaning", "Identify the Most Important Features",
+            "Data Upload", "Data Cleaning", "Identify & Select the Most Important Features",
             "Create New Features", "Encode Categorical Data",
             "Normalize or Scale the Features", "Exploratory Data Analysis",
             "Splitting the Data", "Model Selection and Training",
@@ -223,6 +223,7 @@ elif selected == "Data Cleaning":
                             st.success("Outlier treatment applied successfully!")
                 if visualize_outliers:
                     ot.visualize_outliers()
+            
 
     else:
         st.warning("No datasets available. Please upload data first.")
