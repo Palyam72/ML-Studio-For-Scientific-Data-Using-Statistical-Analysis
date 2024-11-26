@@ -5,7 +5,7 @@ from DATAREADERS import DataExtractor
 import missingno as mso
 import matplotlib.pyplot as plt
 from DATACLEANERS import PandasMethods, UnivariateImputers, OutliersTreatment  # Import OutliersTreatment
-from FEATURE_SELECTION import FeatureSelection
+from FEATURE_SELECTION import FeatureSelection,StatisticalFunctions
 
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
@@ -245,9 +245,15 @@ elif selected == "Identify & Select the Most Important Features":
             cramers = st.checkbox("Cramers V correlation")
             st.success("Varience Threshold Method")
             variance = st.checkbox("Varience Threshold")
+            st.info("Univariate Selections")
+            generic_univariate_select=st.checkbox("Generic Univariate Select")
+            select_fdr=st.checkbox("Select FDR")
+            select_fpr=st.checkbox("Select FPR")
+            select_k_best=st.checkbox("Select K Best")
             
         with col2:
             fe=FeatureSelection(st.session_state.selected_dataset)
+            stats=StatisticalFunctions(st.session_state.selected_dataset)
             if pearson:
                 fe.pearson()
             if spearman:
