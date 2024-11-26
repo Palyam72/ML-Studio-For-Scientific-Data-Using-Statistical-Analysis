@@ -243,6 +243,7 @@ elif selected == "Identify & Select the Most Important Features":
             kendall = st.checkbox("Kendall tau correlation")
             point = st.checkbox("Point biserial corelation")
             cramers = st.checkbox("Cramers V correlation")
+            st.success("Varience Threshold Method")
             variance = st.checkbox("Varience Threshold")
             
         with col2:
