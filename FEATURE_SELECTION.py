@@ -88,23 +88,26 @@ class FeatureSelection:
         sns.heatmap(result_df, annot=True, cmap='coolwarm', ax=ax, cbar=False)
         st.pyplot(fig)
 
-    def variance_threshold(self, threshold=0.0):
+    def variance_threshold(self):
         st.write("### Variance Threshold Method")
-        st.write(f"Variance Threshold: {threshold}")
-        
-        numeric_data = self.dataset.select_dtypes(include=['number'])
-        if numeric_data.empty:
-            st.warning("No numeric columns found for Variance Threshold.")
-            return
-        
-        selector = VarianceThreshold(threshold=threshold)
-        try:
-            selector.fit(numeric_data)
-            mask = selector.get_support()
-            selected_features = numeric_data.columns[mask]
-            st.write("Selected Features:")
-            st.write(list(selected_features))
-            st.write("Removed Features:")
-            st.write(list(numeric_data.columns[~mask]))
-        except Exception as e:
-            st.error(f"Error during variance threshold selection: {e}")
+
+        threshold=st.slider("Threshold value",0,1,0.5)
+        if threshold:
+            st.write(f"Variance Threshold: {threshold}")
+            
+            numeric_data = self.dataset.select_dtypes(include=['number'])
+            if numeric_data.empty:
+                st.warning("No numeric columns found for Variance Threshold.")
+                return
+            
+            selector = VarianceThreshold(threshold=threshold)
+            try:
+                selector.fit(numeric_data)
+                mask = selector.get_support()
+                selected_features = numeric_data.columns[mask]
+                st.write("Selected Features:")
+                st.write(list(selected_features))
+                st.write("Removed Features:")
+                st.write(list(numeric_data.columns[~mask]))
+            except Exception as e:
+                st.error(f"Error during variance threshold selection: {e}")
