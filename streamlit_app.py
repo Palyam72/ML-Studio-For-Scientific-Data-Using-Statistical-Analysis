@@ -258,7 +258,7 @@ elif selected == "Identify & Select the Most Important Features":
             if cramers:
                 fe.cramers()
             if variance:
-                fe.varience_threshold()
+                fe.variance_threshold()
             
             
     else:
