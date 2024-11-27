@@ -515,57 +515,7 @@ class FinalDataSet:
             except Exception as e:
                 st.error(f"An error occurred: {e}")
         return self.dataset
-    def recursive_feature_addition(self):
-        st.subheader("Recursive Feature Addition")
-
-        estimator_name = st.text_input(
-            "Enter the name of a Scikit-learn estimator (e.g., RandomForestClassifier):",
-            help="Provide the name of the estimator to be used for feature ranking."
-        )
-        scoring = st.text_input(
-            "Enter the scoring metric (default='roc_auc'):",
-            value="roc_auc",
-            help="Scoring metric to evaluate model performance. See Scikit-learn documentation for valid metrics."
-        )
-        threshold = st.number_input(
-            "Set performance increase threshold:",
-            min_value=0.0, max_value=1.0, value=0.01,
-            help="Minimum performance increase to retain a feature."
-        )
-        cv = st.slider(
-            "Select number of cross-validation folds:",
-            min_value=2, max_value=10, value=3,
-            help="Number of folds for cross-validation."
-        )
-        confirm = st.checkbox("Apply Recursive Feature Addition?")
-
-        if estimator_name and confirm:
-            try:
-                from sklearn.ensemble import RandomForestClassifier
-                estimator = eval(estimator_name + "()")
-                selector = RecursiveFeatureAddition(
-                    estimator=estimator,
-                    scoring=scoring,
-                    cv=cv,
-                    threshold=threshold
-                )
-                transformed_data = selector.fit_transform(self.dataset)
-                st.write("### Attributes:")
-                st.json({
-                    "initial_model_performance_": selector.initial_model_performance_,
-                    "feature_importances_": selector.feature_importances_.to_dict(),
-                    "feature_importances_std_": selector.feature_importances_std_.to_dict(),
-                    "performance_drifts_": selector.performance_drifts_,
-                    "performance_drifts_std_": selector.performance_drifts_std_,
-                    "features_to_drop_": list(selector.features_to_drop_),
-                    "variables_": selector.variables_,
-                    "feature_names_in_": selector.feature_names_in_,
-                    "n_features_in_": selector.n_features_in_,
-                })
-                return transformed_data
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-        return self.dataset
+    
     def recursive_feature_addition(self):
         st.subheader("Recursive Feature Addition")
 
@@ -775,74 +725,7 @@ class FinalDataSet:
             except Exception as e:
                 st.error(f"An error occurred: {e}")
         return self.dataset
-    def select_by_target_mean_performance(self):
-        st.subheader("Select Features by Target Mean Performance")
-
-        variables = st.text_input(
-            "Enter the variables to evaluate (comma separated):",
-            help="Specify the list of variables to evaluate for feature selection."
-        )
-        bins = st.slider(
-            "Select number of bins for numerical variables:",
-            min_value=2, max_value=20, value=5,
-            help="Number of bins for discretizing numerical variables."
-        )
-        strategy = st.selectbox(
-            "Select binning strategy:",
-            ["equal_width", "equal_frequency"],
-            help="Strategy for binning numerical variables ('equal_width' or 'equal_frequency')."
-        )
-        scoring = st.text_input(
-            "Enter the scoring metric (default='roc_auc'):",
-            value="roc_auc",
-            help="Metric to evaluate the performance of the estimator."
-        )
-        threshold = st.number_input(
-            "Set performance threshold: ",
-            min_value=0.0, max_value=1.0, value=0.01,
-            help="Threshold value to determine whether a feature is retained."
-        )
-        cv = st.slider(
-            "Select number of cross-validation folds:",
-            min_value=2, max_value=10, value=3,
-            help="Number of folds for cross-validation."
-        )
-        regression = st.checkbox(
-            "Is the target for regression?",
-            value=True,
-            help="Check this box if the target is for regression tasks."
-        )
-        confirm = st.checkbox("Apply SelectByTargetMeanPerformance?")
-
-        if confirm:
-            try:
-                selected_variables = variables.split(",") if variables else None
-
-                selector = SelectByTargetMeanPerformance(
-                    variables=selected_variables,
-                    bins=bins,
-                    strategy=strategy,
-                    scoring=scoring,
-                    threshold=threshold,
-                    cv=cv,
-                    regression=regression
-                )
-                transformed_data = selector.fit_transform(self.dataset)
-
-                st.write("### Attributes:")
-                st.json({
-                    "feature_performance_": selector.feature_performance_,
-                    "feature_performance_std_": selector.feature_performance_std_,
-                    "features_to_drop_": list(selector.features_to_drop_),
-                    "variables_": selector.variables_,
-                    "feature_names_in_": selector.feature_names_in_,
-                    "n_features_in_": selector.n_features_in_,
-                })
-                return transformed_data
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-        return self.dataset
-        
+    
     def select_by_mrmr(self):
         st.subheader("Select Features by MRMR (Minimum Redundancy, Maximum Relevance)")
 
