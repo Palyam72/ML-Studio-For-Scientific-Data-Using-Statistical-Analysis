@@ -237,13 +237,13 @@ elif selected == "Identify & Select the Most Important Features":
         dataset = st.session_state.selected_dataset
         col1, col2, col3 = st.columns([1, 2, 1])
         with col1:
-            st.success("CORRELATION ANALYSIS")
+            st.info("CORRELATION ANALYSIS")
             pearson = st.checkbox("Pearson correlation")
             spearman = st.checkbox("Spearman rank correlation")
             kendall = st.checkbox("Kendall tau correlation")
             point = st.checkbox("Point biserial corelation")
             cramers = st.checkbox("Cramers V correlation")
-            st.success("Varience Threshold Method")
+            st.info("Varience Threshold Method")
             variance = st.checkbox("Varience Threshold")
             st.info("Univariate Selections")
             generic_univariate_select=st.checkbox("Generic Univariate Select")
@@ -252,6 +252,15 @@ elif selected == "Identify & Select the Most Important Features":
             select_k_best=st.checkbox("Select K Best")
             select_fwe=st.checkbox("Select FWE")
             select_percentile=st.checkbox("Select Percentile")
+            st.info("Create Your Final DataFrame")
+            drop_duplicate=st.checkbox("Drop Features")
+            drop_constant=st.checkbox("Drop Constant & Quai Constant Features")
+            drop_correlated=st.checkbox("Drop Correlated Featiures")
+            drop_high_psi=st.checkbox("Drop HIGH PSI Features")
+            select_by_information_value=st.checkbox("Selet Features By Information Values")
+            select_by_shuffling=st.checkbox("Select Features By Shuffling")
+            select_by_target_mean=st.checkbox("Select features By Target Mean Performance")
+            select_by_single_feature = st.checkbox("Select By Single Feature Performance")
             
         with col2:
             fe=FeatureSelection(st.session_state.selected_dataset)
@@ -270,23 +279,31 @@ elif selected == "Identify & Select the Most Important Features":
                 fe.variance_threshold()
             if generic_univariate_select:
                 obtainedValue=stats.generic_univariate_select()
-                st.session_state.availableDatasets["DataFrame From Generic Uni Variate Select"]=obtainedValue
             if select_fdr:
                 obtainedValue=stats.select_fdr()
-                st.session_state.availableDatasets["DataFrame From SELECT FDR"]=obtainedValue
             if select_fpr:
                 obtainedValue=stats.select_fpr()
-                st.session_state.availableDatasets["DataFrame From Select FPR"]=obtainedValue
             if select_fwe:
                 obtainedValue=stats.select_fwe()
-                st.session_state.availableDatasets["DataFrame From Select FWE"]=obtainedValue
             if select_k_best:
                 obtainedValue=stats.select_k_best()
-                st.session_state.availableDatasets["datafrane from select k best"]=obtainedValue
             if select_percentile:
                 obtainedValue=stats.select_percentile()
-                st.session_state.availableDatasets["data frame from select percentile"]=obtainedValue
-            
-            
+            if drop_duplicate:
+                pass
+            if drop_constant:
+                pass
+            if drop_correlated:
+                pass
+            if drop_high_psi:
+                pass
+            if select_by_information_value:
+                pass
+            if select_by_shuffling:
+                pass
+            if select_by_target_mean:
+                pass
+            if select_by_single_feature:
+                pass
     else:
         st.warning("Please give the data first")
