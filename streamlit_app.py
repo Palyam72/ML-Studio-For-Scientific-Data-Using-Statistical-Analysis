@@ -268,7 +268,7 @@ elif selected == "Identify & Select the Most Important Features":
         with col2:
             fe=FeatureSelection(st.session_state.selected_dataset)
             stats=StatisticalFunctions(st.session_state.selected_dataset)
-            features=FinalDataset(st.session_state.selected_dataset)
+            features=FinalDataSet(st.session_state.selected_dataset)
             if pearson:
                 fe.pearson()
             if spearman:
