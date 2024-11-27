@@ -250,6 +250,7 @@ class FinalDataSet:
             "Select features to drop:",
             options=self.dataset.columns,
             help="Choose one or more features to remove from the dataset.",
+            key=1
         )
         confirm = st.checkbox("Apply DropFeatures?")
         if confirm and features_to_drop:
@@ -293,7 +294,7 @@ class FinalDataSet:
     def drop_duplicate_features(self):
         st.subheader("Drop Duplicate Features")
         missing_values = st.selectbox(
-            "How to handle missing values?",
+            "How to handle missing values ?",
             options=["raise", "ignore"],
             index=1
         )
@@ -315,17 +316,17 @@ class FinalDataSet:
     def drop_correlated_features(self):
         st.subheader("Drop Correlated Features")
         threshold = st.slider(
-            "Set correlation threshold:",
+            "Set correlation threshold :",
             min_value=0.0, max_value=1.0, value=0.8,
             help="Correlation above this threshold will result in feature removal."
         )
         method = st.selectbox(
-            "Select correlation method:",
+            "Select correlation method :",
             options=["pearson", "spearman", "kendall"],
             index=0
         )
         missing_values = st.selectbox(
-            "How to handle missing values?",
+            "How to handle missing values",
             options=["raise", "ignore"],
             index=1
         )
@@ -357,7 +358,7 @@ class FinalDataSet:
             help="Method for calculating correlation."
         )
         threshold = st.slider(
-            "Set correlation threshold:",
+            "Set correlation threshold",
             min_value=0.0,
             max_value=1.0,
             value=0.8,
@@ -370,7 +371,7 @@ class FinalDataSet:
             help="Criteria to select the best feature from a correlated group."
         )
         missing_values = st.selectbox(
-            "How to handle missing values?",
+            "how to handle missing values?",
             options=["raise", "ignore"],
             index=1,
             help="Specify if missing values should be ignored or raise an error."
@@ -420,7 +421,7 @@ class FinalDataSet:
         st.subheader("Select Features by Single Feature Performance")
         
         estimator_name = st.text_input(
-            "Enter the name of a Scikit-learn estimator (e.g., RandomForestClassifier):",
+            "Enter the name of a Scikit-learn estimator(e.g., RandomForestClassifier):",
             help="Provide the name of the estimator to be used for performance evaluation."
         )
         scoring = st.text_input(
@@ -429,12 +430,12 @@ class FinalDataSet:
             help="Scoring metric to evaluate model performance. See Scikit-learn documentation for valid metrics."
         )
         cv = st.slider(
-            "Select number of cross-validation folds:",
+            "Select number of cross-validation folds :",
             min_value=2, max_value=10, value=3,
             help="Number of folds for cross-validation."
         )
         threshold = st.number_input(
-            "Set performance threshold:",
+            "Set performance threshold",
             min_value=0.0, max_value=1.0, value=0.5,
             help="Threshold above which features will be retained."
         )
@@ -468,21 +469,21 @@ class FinalDataSet:
         st.subheader("Recursive Feature Elimination")
 
         estimator_name = st.text_input(
-            "Enter the name of a Scikit-learn estimator (e.g., RandomForestClassifier):",
+            "Enter the name of a Scikit-learn estimator (Example : RandomForestClassifier):",
             help="Provide the name of the estimator to be used for feature ranking."
         )
         scoring = st.text_input(
-            "Enter the scoring metric (default='roc_auc'):",
+            "Enter the scoring metric(default='roc_auc'):",
             value="roc_auc",
             help="Scoring metric to evaluate model performance. See Scikit-learn documentation for valid metrics."
         )
         threshold = st.number_input(
-            "Set performance drift threshold:",
+            "Set performance drift threshold  :",
             min_value=0.0, max_value=1.0, value=0.01,
             help="Maximum allowed performance drop when removing a feature."
         )
         cv = st.slider(
-            "Select number of cross-validation folds:",
+            "Select number of cross-validation folds  :",
             min_value=2, max_value=10, value=3,
             help="Number of folds for cross-validation."
         )
@@ -520,11 +521,11 @@ class FinalDataSet:
         st.subheader("Recursive Feature Addition")
 
         estimator_name = st.text_input(
-            "Enter the name of a Scikit-learn estimator (e.g., RandomForestClassifier):",
+            "Enter the name of a Scikit-learn estimator (e.g. RandomForestClassifier):",
             help="Provide the name of the estimator to be used for feature ranking."
         )
         scoring = st.text_input(
-            "Enter the scoring metric (default='roc_auc'):",
+            "Enter the scoring metric default='roc_auc':",
             value="roc_auc",
             help="Scoring metric to evaluate model performance. See Scikit-learn documentation for valid metrics."
         )
@@ -534,7 +535,7 @@ class FinalDataSet:
             help="Minimum performance increase to retain a feature."
         )
         cv = st.slider(
-            "Select number of cross-validation folds:",
+            "select number of cross-validation folds:",
             min_value=2, max_value=10, value=3,
             help="Number of folds for cross-validation."
         )
@@ -610,21 +611,21 @@ class FinalDataSet:
         st.subheader("Select Features by Shuffling")
 
         estimator_name = st.text_input(
-            "Enter the name of a Scikit-learn estimator (e.g., RandomForestClassifier):",
+            "enter the name of a Scikit-learn estimator (e.g., RandomForestClassifier):",
             help="Provide the name of the estimator to be used for feature ranking."
         )
         scoring = st.text_input(
-            "Enter the scoring metric (default='roc_auc'):",
+            "enter the scoring metric (default='roc_auc'):",
             value="roc_auc",
             help="Scoring metric to evaluate model performance. See Scikit-learn documentation for valid metrics."
         )
         threshold = st.number_input(
-            "Set performance decrease threshold: ",
+            "set performance decrease threshold: ",
             min_value=0.0, max_value=1.0, value=0.01,
             help="Minimum performance decrease to retain a feature."
         )
         cv = st.slider(
-            "Select number of cross-validation folds:",
+            "select number of cross-validation folds:",
             min_value=2, max_value=10, value=3,
             help="Number of folds for cross-validation."
         )
@@ -659,36 +660,36 @@ class FinalDataSet:
 
         # User input for different parameters
         variables = st.text_input(
-            "Enter the variables to evaluate (comma separated):",
+            "Enter the variables to evaluate  (comma separated):",
             help="Specify the list of variables to evaluate for feature selection."
         )
         bins = st.slider(
-            "Select number of bins for numerical variables:",
+            "Select number of bins for numerical variables :",
             min_value=2, max_value=20, value=5,
             help="Number of bins for discretizing numerical variables."
         )
         strategy = st.selectbox(
-            "Select binning strategy:",
+            "Select binning strategy :",
             ["equal_width", "equal_frequency"],
             help="Strategy for binning numerical variables ('equal_width' or 'equal_frequency')."
         )
         scoring = st.text_input(
-            "Enter the scoring metric (default='roc_auc'):",
+            "Enter the scoring metric ( default='roc_auc' ):",
             value="roc_auc",
             help="Metric to evaluate the performance of the estimator."
         )
         threshold = st.number_input(
-            "Set performance threshold: ",
+            "set performance threshold: ",
             min_value=0.0, max_value=1.0, value=0.01,
             help="Threshold value to determine whether a feature is retained."
         )
         cv = st.slider(
-            "Select number of cross-validation folds:",
+            "select number of cross-validation folds:",
             min_value=2, max_value=10, value=3,
             help="Number of folds for cross-validation."
         )
         regression = st.checkbox(
-            "Is the target for regression?",
+            "is the target for regression?",
             value=True,
             help="Check this box if the target is for regression tasks."
         )
@@ -731,36 +732,36 @@ class FinalDataSet:
 
         # Input fields for MRMR parameters
         variables = st.text_input(
-            "Enter the variables to evaluate (comma separated):",
+            "enter the variables to evaluate (comma separated):",
             help="Specify the list of variables to evaluate for feature selection."
         )
         method = st.selectbox(
-            "Select the method to estimate relevance and redundancy:",
+            "select the method to estimate relevance and redundancy:",
             ["MIQ", "MID", "FCD", "FCQ", "RFCQ"],
             help="Method to estimate relevance and redundancy."
         )
         max_features = st.number_input(
-            "Set the maximum number of features to select:",
+            "set the maximum number of features to select:",
             min_value=1, max_value=100, value=20,
             help="Number of features to select."
         )
         n_neighbors = st.slider(
-            "Select number of neighbors for MI estimation:",
+            "select number of neighbors for MI estimation:",
             min_value=1, max_value=10, value=3,
             help="Number of neighbors to use for MI estimation."
         )
         scoring = st.text_input(
-            "Enter the scoring metric (default='roc_auc'):",
+            "enter the scoring metric  (default='roc_auc'):",
             value="roc_auc",
             help="Metric to evaluate the performance of the estimator."
         )
         cv = st.slider(
-            "Select number of cross-validation folds:",
+            "select number of cross-validation folds:",
             min_value=2, max_value=10, value=3,
             help="Number of folds for cross-validation."
         )
         regression = st.checkbox(
-            "Is the target for regression?",
+            "IS the target for regression?",
             value=True,
             help="Check this box if the target is for regression tasks."
         )
