@@ -8,21 +8,8 @@ class Encoders:
         self.transformed_data = None
 
     def get_user_input(self, param_name, default_value, param_type='selectbox', options=None):
-        # Handle the 'selectbox' input type
         if param_type == 'selectbox':
-            # If default_value is None, simply return the selectbox without an index
-            if default_value is None:
-                return st.selectbox(param_name, options)
-            # If default_value is provided, find the index and use it
-            else:
-                try:
-                    return st.selectbox(param_name, options, index=options.index(default_value))
-                except ValueError:
-                    # Handle case where default_value is not in options (e.g., 'None' or unexpected value)
-                    st.warning(f"Default value '{default_value}' not found in options, defaulting to first option.")
-                    return st.selectbox(param_name, options)
-
-        # Handle other input types
+            return st.selectbox(param_name, options, index=options.index(default_value))
         elif param_type == 'checkbox':
             return st.checkbox(param_name, value=default_value)
         elif param_type == 'slider':
@@ -40,11 +27,7 @@ class Encoders:
         handle_unknown = self.get_user_input("Handle Unknown", 'value', 'selectbox', ['error', 'return_nan', 'value', 'indicator'])
         handle_missing = self.get_user_input("Handle Missing", 'value', 'selectbox', ['error', 'return_nan', 'value', 'indicator'])
 
-        # If 'All Columns' is selected, encode all object columns; otherwise, encode only the selected column(s)
-        if cols == 'All Columns':
-            cols = self.data.select_dtypes(include=['object']).columns.tolist()
-        else:
-            cols = [cols]
+        cols = self.data.select_dtypes(include=['object']).columns.tolist() if cols == 'All Columns' else [cols]
 
         # Apply the encoder based on the chosen type
         if encoder_type == 'BaseNEncoder':
@@ -81,18 +64,22 @@ class Encoders:
                                                            handle_unknown=handle_unknown, handle_missing=handle_missing, 
                                                            sigma=sigma, return_df=True)
 
-        # Fit and transform data
-        self.transformed_data = encoder.fit_transform(self.data)
+        # Streamlit checkbox to confirm if user wants to apply the transformation
+        apply_transformation = st.checkbox(f"Apply {encoder_type} transformation")
 
-        # Display the transformed data and encoder parameters
-        st.write("Transformed Data:")
-        st.dataframe(self.transformed_data)
+        if apply_transformation:
+            # Fit and transform data
+            self.transformed_data = encoder.fit_transform(self.data)
 
-        st.write("Encoder Parameters:")
-        st.write(f"Verbose: {verbose}")
-        st.write(f"Columns Encoded: {cols}")
-        st.write(f"Drop Invariant: {drop_invariant}")
-        st.write(f"Handle Unknown: {handle_unknown}")
-        st.write(f"Handle Missing: {handle_missing}")
+            # Display the transformed data and encoder parameters
+            st.write("Transformed Data:")
+            st.dataframe(self.transformed_data)
 
+            st.write("Encoder Parameters:")
+            st.write(f"Verbose: {verbose}")
+            st.write(f"Columns Encoded: {cols}")
+            st.write(f"Drop Invariant: {drop_invariant}")
+            st.write(f"Handle Unknown: {handle_unknown}")
+            st.write(f"Handle Missing: {handle_missing}")
+        
         return self.transformed_data
