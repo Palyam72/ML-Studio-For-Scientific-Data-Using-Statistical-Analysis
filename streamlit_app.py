@@ -360,12 +360,13 @@ elif selected=="Encode Categorical Data":
         # layout for encoders
         col1,col2=st.columns([1,2])
         encoder_methods = {
-        'BaseNEncoder': 'encoders.apply_encoder("BaseNEncoder")',
-        'BinaryEncoder': 'encoders.apply_encoder("BinaryEncoder")',
-        'CatBoostEncoder': 'encoders.apply_encoder("CatBoostEncoder")',
-        'CountEncoder': 'encoders.apply_encoder("CountEncoder")',
-        'GeneralizedLinearMixedModelEncoder': 'encoders.apply_encoder("GeneralizedLinearMixedModelEncoder")'
+            'BaseNEncoder': encoders.apply_basen_encoder,
+            'BinaryEncoder': encoders.apply_binary_encoder,
+            'CatBoostEncoder': encoders.apply_catboost_encoder,
+            'CountEncoder': encoders.apply_count_encoder,
+            'GeneralizedLinearMixedModelEncoder': encoders.apply_generalized_linear_mixed_model_encoder
         }
+
         with col1:
             encoders=Encoders(st.session_state.selected_dataset)
             for i in encoder_methods.keys():
