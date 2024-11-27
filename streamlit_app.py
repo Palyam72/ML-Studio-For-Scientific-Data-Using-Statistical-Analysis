@@ -357,20 +357,21 @@ elif selected=="Encode Categorical Data":
         fig1, ax1 = plt.subplots(figsize=(10, 5))
         mso.heatmap(st.session_state.selected_dataset, ax=ax1)
         st.pyplot(fig1)
-    # layout for encoders
-    col1,col2=st.columns([1,2])
-    encoder_methods = {
-    'BaseNEncoder': 'encoders.apply_encoder("BaseNEncoder")',
-    'BinaryEncoder': 'encoders.apply_encoder("BinaryEncoder")',
-    'CatBoostEncoder': 'encoders.apply_encoder("CatBoostEncoder")',
-    'CountEncoder': 'encoders.apply_encoder("CountEncoder")',
-    'GeneralizedLinearMixedModelEncoder': 'encoders.apply_encoder("GeneralizedLinearMixedModelEncoder")'
-    }
-    with col1:
-        for i in encoder_methods.keys():
-            if st.checkbox(i):
-                output=eval(encoder_methods[i])
-                st.session_state.availableDatasets[i]=output
+        # layout for encoders
+        col1,col2=st.columns([1,2])
+        encoder_methods = {
+        'BaseNEncoder': 'encoders.apply_encoder("BaseNEncoder")',
+        'BinaryEncoder': 'encoders.apply_encoder("BinaryEncoder")',
+        'CatBoostEncoder': 'encoders.apply_encoder("CatBoostEncoder")',
+        'CountEncoder': 'encoders.apply_encoder("CountEncoder")',
+        'GeneralizedLinearMixedModelEncoder': 'encoders.apply_encoder("GeneralizedLinearMixedModelEncoder")'
+        }
+        with col1:
+            for i in encoder_methods.keys():
+                if st.checkbox(i):
+                    with col2:
+                        output=eval(encoder_methods[i])
+                        st.session_state.availableDatasets[i]=output
                 
                 
         
