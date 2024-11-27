@@ -660,16 +660,16 @@ class FinalDataSet:
 
         # User input for different parameters
         variables = st.text_input(
-            "Enter the variables to evaluate  (comma separated):",
+            "enter the variables to evaluate  (comma separated):",
             help="Specify the list of variables to evaluate for feature selection."
         )
         bins = st.slider(
-            "Select number of bins for numerical variables :",
+            "select number of bins for numerical variables :",
             min_value=2, max_value=20, value=5,
             help="Number of bins for discretizing numerical variables."
         )
         strategy = st.selectbox(
-            "Select binning strategy :",
+            "select binning strategy :",
             ["equal_width", "equal_frequency"],
             help="Strategy for binning numerical variables ('equal_width' or 'equal_frequency')."
         )
@@ -756,7 +756,7 @@ class FinalDataSet:
             help="Metric to evaluate the performance of the estimator."
         )
         cv = st.slider(
-            "select number of cross-validation folds:",
+            "Select number of cross-validation folds:",
             min_value=2, max_value=10, value=3,
             help="Number of folds for cross-validation."
         )
@@ -793,7 +793,7 @@ class FinalDataSet:
                     "variables_": selector.variables_,
                     "feature_names_in_": selector.feature_names_in_,
                     "n_features_in_": selector.n_features_in_,
-                })
+                },key=50)
                 return transformed_data
             except Exception as e:
                 st.error(f"An error occurred: {e}")
