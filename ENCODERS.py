@@ -7,7 +7,7 @@ class Encoders:
         self.data = data
         self.transformed_data = None
 
-    def get_user_input(self, param_name, default_value, param_type='selectbox', options=None):
+    def get_user_input(self, param_name, default_value, param_type='selectbox', options=None, min_value=None, max_value=None):
         if param_type == 'selectbox':
             if default_value is None:
                 # Handle the case when default_value is None (choose the first option as default)
@@ -16,7 +16,11 @@ class Encoders:
         elif param_type == 'checkbox':
             return st.checkbox(param_name, value=default_value)
         elif param_type == 'slider':
-            return st.slider(param_name, min_value=1, max_value=10, value=default_value)
+            if default_value is None:
+                default_value = min_value  # Set default to min_value if None
+            # Ensure default_value is within the bounds
+            default_value = max(min_value, min(max_value, default_value))
+            return st.slider(param_name, min_value=min_value, max_value=max_value, value=default_value)
         elif param_type == 'text':
             return st.text_input(param_name, default_value)
         else:
@@ -46,8 +50,8 @@ class Encoders:
                                        base=base, return_df=True)
 
         elif encoder_type == 'CatBoostEncoder':
-            sigma = self.get_user_input("Sigma (Gaussian Noise)", None, 'slider', options=[None, 0.1, 0.5, 1.0, 2.0])
-            a = self.get_user_input("Additive Smoothing (a)", 1.0, 'slider', options=[0.1, 0.5, 1.0, 2.0])
+            sigma = self.get_user_input("Sigma (Gaussian Noise)", None, 'slider', options=[None, 0.1, 0.5, 1.0, 2.0], min_value=0.0, max_value=2.0)
+            a = self.get_user_input("Additive Smoothing (a)", 1.0, 'slider', options=[0.1, 0.5, 1.0, 2.0], min_value=0.1, max_value=2.0)
             encoder = ce.CatBoostEncoder(verbose=verbose, cols=cols, drop_invariant=drop_invariant, 
                                          handle_unknown=handle_unknown, handle_missing=handle_missing, 
                                          sigma=sigma, a=a, return_df=True)
@@ -62,7 +66,7 @@ class Encoders:
                                       combine_min_nan_groups=combine_min_nan_groups, return_df=True)
 
         elif encoder_type == 'GeneralizedLinearMixedModelEncoder':
-            sigma = self.get_user_input("Sigma (Gaussian Noise)", 0.05, 'slider', options=[0.0, 0.05, 0.1, 0.5])
+            sigma = self.get_user_input("Sigma (Gaussian Noise)", 0.05, 'slider', options=[0.0, 0.05, 0.1, 0.5], min_value=0.0, max_value=0.5)
             encoder = ce.GeneralizedLinearMixedModelEncoder(verbose=verbose, cols=cols, drop_invariant=drop_invariant, 
                                                            handle_unknown=handle_unknown, handle_missing=handle_missing, 
                                                            sigma=sigma, return_df=True)
