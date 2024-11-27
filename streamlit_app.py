@@ -253,7 +253,8 @@ elif selected == "Identify & Select the Most Important Features":
             select_fwe=st.checkbox("Select FWE")
             select_percentile=st.checkbox("Select Percentile")
             st.info("Create Your Final DataFrame")
-            drop_duplicate=st.checkbox("Drop Features")
+            drop_duplicate=st.checkbox("Drop Duplicate Features")
+            drop_features=st.checkbox("Drop Features")
             drop_constant=st.checkbox("Drop Constant & Quai Constant Features")
             drop_correlated=st.checkbox("Drop Correlated Featiures")
             drop_high_psi=st.checkbox("Drop HIGH PSI Features")
@@ -261,10 +262,13 @@ elif selected == "Identify & Select the Most Important Features":
             select_by_shuffling=st.checkbox("Select Features By Shuffling")
             select_by_target_mean=st.checkbox("Select features By Target Mean Performance")
             select_by_single_feature = st.checkbox("Select By Single Feature Performance")
+            recursive_feature_elimination=st.checkbox("Recursive Feature Elimination")
+            recursive_feature_addition=st.checkbox("Recursive Feature Addition")
             
         with col2:
             fe=FeatureSelection(st.session_state.selected_dataset)
             stats=StatisticalFunctions(st.session_state.selected_dataset)
+            features=FinalDataset(st.session_state.selected_dataset)
             if pearson:
                 fe.pearson()
             if spearman:
@@ -289,21 +293,43 @@ elif selected == "Identify & Select the Most Important Features":
                 obtainedValue=stats.select_k_best()
             if select_percentile:
                 obtainedValue=stats.select_percentile()
+            if drop_features:
+                obtainedData=features.drop_features()
+                st.session_state.availableDatasets["drop_features"]=obtainedData
             if drop_duplicate:
-                pass
+                obtainedData=features.drop_duplicate_features()
+                st.session_state.availableDatasets["drop_duplicate_features"]=obtainedData
             if drop_constant:
-                pass
+                obtainedData=features.drop_constant_features()
+                st.session_state.availableDatasets["drop_constant_features"]=obtainedData
             if drop_correlated:
-                pass
+                obtainedData=features.drop_correlated_features()
+                st.session_state.availableDatasets["drop_correlated_features"]=obtainedData
             if drop_high_psi:
-                pass
+                obtainedData=features.drop_features()
+                st.session_state.availableDatasets["drop_correlated_features"]=obtainedData
             if select_by_information_value:
-                pass
+                obtainedData=features.select_by_information_value()
+                st.session_state.availableDatasets["select_by_information_value"]=obtainedData
             if select_by_shuffling:
-                pass
+                obtainedData=features.select_by_shuffling()
+                st.session_state.availableDatasets["select_by_shuffling"]=obtainedData
             if select_by_target_mean:
-                pass
+                obtainedData=features.drop_features()
+                st.session_state.availableDatasets[""]=obtainedData
             if select_by_single_feature:
-                pass
+                obtainedData=features.select_by_single_feature_performance()
+                st.session_state.availableDatasets["select_by_single_feature_performance"]=obtainedData
+            if select_by_mrmr:
+                obtainedData=features.select_by_mrmr()
+                st.session_state.availableDatasets["select_by_mrmr"]=obtainedData
+            if recursive_feature_elimination:
+                obtainedData=features.recursive_feature_elimination()
+                st.session_state.availableDatasets["recursive_feature_elimination"]=obtainedData
+            if recursive_feature_addition:
+                obtainedData=features.recursive_feature_addition()
+                st.session_state.availableDatasets["recursive_feature_addition"]=obtainedData
+ 
+                
     else:
         st.warning("Please give the data first")
