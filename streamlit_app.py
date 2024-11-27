@@ -359,6 +359,7 @@ elif selected=="Encode Categorical Data":
         st.pyplot(fig1)
         # layout for encoders
         col1,col2=st.columns([1,2])
+        encoders=Encoders(st.session_state.selected_dataset)
         encoder_methods = {
             'BaseNEncoder': encoders.apply_basen_encoder,
             'BinaryEncoder': encoders.apply_binary_encoder,
@@ -368,7 +369,6 @@ elif selected=="Encode Categorical Data":
         }
 
         with col1:
-            encoders=Encoders(st.session_state.selected_dataset)
             for i in encoder_methods.keys():
                 if st.checkbox(i):
                     with col2:
