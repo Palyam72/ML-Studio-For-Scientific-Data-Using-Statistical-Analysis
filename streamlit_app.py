@@ -6,7 +6,7 @@ import missingno as mso
 import matplotlib.pyplot as plt
 from DATACLEANERS import PandasMethods, UnivariateImputers, OutliersTreatment  # Import OutliersTreatment
 from FEATURE_SELECTION import *
-
+from ENCODERS import *
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
 
@@ -334,3 +334,43 @@ elif selected == "Identify & Select the Most Important Features":
                 
     else:
         st.warning("Please give the data first")
+elif selected=="Encode Categorical Data":
+    if st.session_state.availableDatasets:
+        # Dataset selection for cleaning
+        selected_dataset_name = st.selectbox(
+            "Select a dataset to clean",
+            list(st.session_state.availableDatasets.keys())
+        )
+
+    if selected_dataset_name:
+        # Load the selected dataset from session state
+        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+        dataset = st.session_state.selected_dataset
+        st.markdown("### Selected Dataset")
+        st.dataframe(dataset)
+        # Display missing value charts
+        st.divider()
+        st.markdown("### Missing Value Analysis")
+        fig, ax = plt.subplots(figsize=(10, 5))
+        mso.matrix(st.session_state.selected_dataset, ax=ax)
+        st.pyplot(fig)
+        fig1, ax1 = plt.subplots(figsize=(10, 5))
+        mso.heatmap(st.session_state.selected_dataset, ax=ax1)
+        st.pyplot(fig1)
+    # layout for encoders
+    col1,col2=st.columns([1,2])
+    encoder_methods = {
+    'BaseNEncoder': 'encoders.apply_encoder("BaseNEncoder")',
+    'BinaryEncoder': 'encoders.apply_encoder("BinaryEncoder")',
+    'CatBoostEncoder': 'encoders.apply_encoder("CatBoostEncoder")',
+    'CountEncoder': 'encoders.apply_encoder("CountEncoder")',
+    'GeneralizedLinearMixedModelEncoder': 'encoders.apply_encoder("GeneralizedLinearMixedModelEncoder")'
+    }
+    with col1:
+        for i in encoder_methods.keys():
+            if st.checkbox(i):
+                output=eval(encoder_methods[i])
+                st.session_state.availableDatasets[i]=output
+                
+                
+        
