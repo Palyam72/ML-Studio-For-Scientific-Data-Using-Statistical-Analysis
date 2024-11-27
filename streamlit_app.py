@@ -367,6 +367,7 @@ elif selected=="Encode Categorical Data":
         'GeneralizedLinearMixedModelEncoder': 'encoders.apply_encoder("GeneralizedLinearMixedModelEncoder")'
         }
         with col1:
+            encoders=Encoders(st.session_state.selected_dataset)
             for i in encoder_methods.keys():
                 if st.checkbox(i):
                     with col2:
