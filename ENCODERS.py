@@ -9,6 +9,9 @@ class Encoders:
 
     def get_user_input(self, param_name, default_value, param_type='selectbox', options=None):
         if param_type == 'selectbox':
+            if default_value is None:
+                # Handle the case when default_value is None (choose the first option as default)
+                default_value = options[0]
             return st.selectbox(param_name, options, index=options.index(default_value))
         elif param_type == 'checkbox':
             return st.checkbox(param_name, value=default_value)
