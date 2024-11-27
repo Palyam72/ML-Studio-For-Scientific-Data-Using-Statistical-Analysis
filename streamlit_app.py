@@ -371,7 +371,7 @@ elif selected=="Encode Categorical Data":
             for i in encoder_methods.keys():
                 if st.checkbox(i):
                     with col2:
-                        output=eval(encoder_methods[i])
+                        output=encoder_methods[I]()
                         st.session_state.availableDatasets[i]=output
                 
                 
