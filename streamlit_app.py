@@ -364,8 +364,7 @@ elif selected=="Encode Categorical Data":
             'BaseNEncoder': encoders.apply_basen_encoder,
             'BinaryEncoder': encoders.apply_binary_encoder,
             'CatBoostEncoder': encoders.apply_catboost_encoder,
-            'CountEncoder': encoders.apply_count_encoder,
-            'GeneralizedLinearMixedModelEncoder': encoders.apply_generalized_linear_mixed_model_encoder
+            'CountEncoder': encoders.apply_count_encoder
         }
 
         with col1:
