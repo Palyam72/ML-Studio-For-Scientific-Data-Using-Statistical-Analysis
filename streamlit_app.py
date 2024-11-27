@@ -264,6 +264,7 @@ elif selected == "Identify & Select the Most Important Features":
             select_by_single_feature = st.checkbox("Select By Single Feature Performance")
             recursive_feature_elimination=st.checkbox("Recursive Feature Elimination")
             recursive_feature_addition=st.checkbox("Recursive Feature Addition")
+            select_by_mrmr=st.checkbox("select_by_mrmr")
             
         with col2:
             fe=FeatureSelection(st.session_state.selected_dataset)
