@@ -876,35 +876,42 @@ class Encoders:
     
         # Button to apply WOE Encoder
         if st.checkbox("Apply WOE Encoder", key="woe_apply"):
-            if y is None and cols is None:
-                st.error("Please select columns for encoding or a target column.")
-                return None
+            try:
+                # Validate if 'y' is not None when columns are selected
+                if y is None and cols is None:
+                    st.error("Please select columns for encoding or a target column.")
+                    return None
 
-            # Check that the columns exist in the data
-            if cols and not all(col in self.data.columns for col in cols):
-                st.error("One or more selected columns do not exist in the data.")
+                # Check that the columns exist in the data
+                if cols and not all(col in self.data.columns for col in cols):
+                    st.error("One or more selected columns do not exist in the data.")
+                    return None
+                
+                # Initialize WOEEncoder with user inputs
+                woe_encoder = ce.woe.WOEEncoder(
+                    verbose=verbose,
+                    cols=cols,
+                    drop_invariant=drop_invariant,
+                    return_df=return_df,
+                    handle_unknown=handle_unknown,
+                    handle_missing=handle_missing,
+                    randomized=randomized,
+                    sigma=sigma,
+                    regularization=regularization
+                )
+                
+                # Fit and transform the data, using 'y' if provided
+                if y is not None:
+                    self.transformed = woe_encoder.fit_transform(self.data, self.data[y])
+                else:
+                    self.transformed = woe_encoder.fit_transform(self.data)
+                
+                # Display success message and return transformed data
+                st.success("WOE Encoder applied successfully!")
+                st.dataframe(self.transformed)  # Display the transformed data for preview
+                return self.transformed
+
+            except Exception as e:
+                # Handle any errors that occur during the application of the encoder
+                st.error(f"An error occurred: {e}")
                 return None
-            
-            # Initialize WOEEncoder with user inputs
-            woe_encoder = ce.woe.WOEEncoder(
-                verbose=verbose,
-                cols=cols,
-                drop_invariant=drop_invariant,
-                return_df=return_df,
-                handle_unknown=handle_unknown,
-                handle_missing=handle_missing,
-                randomized=randomized,
-                sigma=sigma,
-                regularization=regularization
-            )
-            
-            # Fit and transform the data, using 'y' if provided
-            if y is not None:
-                self.transformed = woe_encoder.fit_transform(self.data, self.data[y])
-            else:
-                self.transformed = woe_encoder.fit_transform(self.data)
-            
-            # Display success message and return transformed data
-            st.success("WOE Encoder applied successfully!")
-            st.dataframe(self.transformed)  # Display the transformed data for preview
-            return self.transformed
