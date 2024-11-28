@@ -853,52 +853,58 @@ class Encoders:
     def apply_woe_encoder(self):
         st.subheader("Enter the parameters and hit the checkbox to apply and store the transformation")
     
-            # Input widgets for WOEEncoder parameters
+        # Input widgets for WOEEncoder parameters
         cols = st.multiselect("Select the columns to encode",
-                                  ["All Columns"] + list(self.data.columns), key="woe_columns")
+                              ["All Columns"] + list(self.data.columns), key="woe_columns")
         y = st.selectbox("Select the target column", [None] + list(self.data.columns), key="woe_target_column")
         verbose = int(st.number_input("Enter the verbosity level (Int)", value=0, min_value=0, key="woe_verbose"))
         drop_invariant = st.checkbox("Drop columns with 0 variance", key="woe_drop_invariant")
         return_df = st.checkbox("Return a Pandas DataFrame from transform (otherwise returns a NumPy array)",
-                                    value=True, key="woe_return_df")
+                                value=True, key="woe_return_df")
         handle_unknown = st.selectbox("How to handle unknown values",
-                                          ['value', 'error', 'return_nan', 'indicator'],
-                                          key="woe_handle_unknown")
+                                      ['value', 'error', 'return_nan', 'indicator'],
+                                      key="woe_handle_unknown")
         handle_missing = st.selectbox("How to handle missing values",
-                                          ['value', 'error', 'return_nan', 'indicator'],
-                                          key="woe_handle_missing")
+                                      ['value', 'error', 'return_nan', 'indicator'],
+                                      key="woe_handle_missing")
         randomized = st.checkbox("Add Gaussian noise to decrease overfitting", key="woe_randomized")
         sigma = float(st.number_input("Enter the sigma value for Gaussian noise", value=0.05, min_value=0.0, key="woe_sigma"))
         regularization = float(st.number_input("Enter the regularization value", value=1.0, min_value=0.0, key="woe_regularization"))
     
-            # Setting the cols parameter to None if "All Columns" is selected
+        # Setting the cols parameter to None if "All Columns" is selected
         cols = None if "All Columns" in cols else cols
     
-            # Button to apply WOE Encoder
+        # Button to apply WOE Encoder
         if st.checkbox("Apply WOE Encoder", key="woe_apply"):
-            try:
-                woe_encoder = ce.woe.WOEEncoder(
-                        verbose=verbose,
-                        cols=cols,
-                        drop_invariant=drop_invariant,
-                        return_df=return_df,
-                        handle_unknown=handle_unknown,
-                        handle_missing=handle_missing,
-                        randomized=randomized,
-                        sigma=sigma,
-                        regularization=regularization
-                )
-    
-                    # Fit and transform the data, using y if provided
-                if y is not None:
-                    self.transformed = woe_encoder.fit_transform(self.data, self.data[y])
-                else:
-                    self.transformed = woe_encoder.fit_transform(self.data)
-                    # Display success message and return transformed data
-                st.success("WOE Encoder applied successfully!")
-                st.dataframe(self.transformed)  # Display the transformed data for preview
-                return self.transformed
-    
-            except Exception as e:
-                # Handle any errors that occur
-                st.error(f"An error occurred: {e}")
+            if y is None and cols is None:
+                st.error("Please select columns for encoding or a target column.")
+                return None
+
+            # Check that the columns exist in the data
+            if cols and not all(col in self.data.columns for col in cols):
+                st.error("One or more selected columns do not exist in the data.")
+                return None
+            
+            # Initialize WOEEncoder with user inputs
+            woe_encoder = ce.woe.WOEEncoder(
+                verbose=verbose,
+                cols=cols,
+                drop_invariant=drop_invariant,
+                return_df=return_df,
+                handle_unknown=handle_unknown,
+                handle_missing=handle_missing,
+                randomized=randomized,
+                sigma=sigma,
+                regularization=regularization
+            )
+            
+            # Fit and transform the data, using 'y' if provided
+            if y is not None:
+                self.transformed = woe_encoder.fit_transform(self.data, self.data[y])
+            else:
+                self.transformed = woe_encoder.fit_transform(self.data)
+            
+            # Display success message and return transformed data
+            st.success("WOE Encoder applied successfully!")
+            st.dataframe(self.transformed)  # Display the transformed data for preview
+            return self.transformed
