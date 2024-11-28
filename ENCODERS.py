@@ -186,7 +186,7 @@ class Encoders:
                     handle_missing=handle_missing, bionomial_target=bionomial_target, random_state=random_state)
             
             self.transformed = glmm.fit_transform(cols, y)
-            return self.transformed
+        return self.transformed
     def apply_gray_encoder(self):
         st.subheader("Enter the parameters and hit the checkbox to apply and store the transformation")
         
@@ -211,7 +211,7 @@ class Encoders:
                 self.transformed = gray_encoder.fit_transform(cols,y)
             else:
                 self.transformed=gray_encoder.fit_transform(self.data,y)
-            return self.transformed
+        return self.transformed
                 
     def apply_hashing_encoder(self):
         st.subheader("Enter the parameters and hit the checkbox to apply and store the transformation")
@@ -253,6 +253,7 @@ class Encoders:
                 self.transformed = hashing_encoder.fit_transform(self.data, self.data[y])
             else:
                 self.transformed = hashing_encoder.fit_transform(self.data[cols])
+            return self.transformed
 
     def apply_helmert_encoder(self):
         st.subheader("Enter the parameters and hit the checkbox to apply and store the transformation")
