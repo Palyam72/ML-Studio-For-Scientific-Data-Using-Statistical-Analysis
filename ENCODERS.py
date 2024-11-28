@@ -277,7 +277,7 @@ class Encoders:
         cols = None if cols == "All Columns" else cols
         
         if st.checkbox("Apply Helmert Encoder", key="helmert_apply"):
-            helmert_encoder = category_encoders.HelmertEncoder(
+            helmert_encoder = ce.HelmertEncoder(
                 verbose=verbose,
                 cols=cols,
                 drop_invariant=drop_invariant,
