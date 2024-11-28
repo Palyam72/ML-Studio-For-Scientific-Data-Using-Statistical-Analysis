@@ -28,7 +28,8 @@ class Descritizers:
             discretiser = EqualWidthDiscretiser(variables=variables, bins=bins, return_object=return_object, 
                                                 return_boundaries=return_boundaries, precision=precision)
             transformed_data = discretiser.fit_transform(self.data)
-            st.write(transformed_data)
+            st.dataframe(transformed_data)
+            return transformed_data
 
     def equal_frequency_discretiser(self):
         """EqualFrequencyDiscretiser with Streamlit widgets"""
@@ -52,7 +53,8 @@ class Descritizers:
             discretiser = EqualFrequencyDiscretiser(variables=variables, q=bins, return_object=return_object, 
                                                     return_boundaries=return_boundaries, precision=precision)
             transformed_data = discretiser.fit_transform(self.data)
-            st.write(transformed_data)
+            st.dataframe(transformed_data)
+            return transformed_data
 
     def decision_tree_discretiser(self):
         """DecisionTreeDiscretiser with Streamlit widgets"""
@@ -80,7 +82,8 @@ class Descritizers:
             discretiser = DecisionTreeDiscretiser(variables=variables, bin_output=bin_output, precision=precision,
                                                   cv=cv, scoring=scoring)
             transformed_data = discretiser.fit_transform(self.data, y)
-            st.write(transformed_data)
+            st.dataframe(transformed_data)
+            return transformed_data
 
     def geometric_width_discretiser(self):
         """GeometricWidthDiscretiser with Streamlit widgets"""
@@ -104,4 +107,5 @@ class Descritizers:
             discretiser = GeometricWidthDiscretiser(variables=variables, bins=bins, return_object=return_object, 
                                                     return_boundaries=return_boundaries, precision=precision)
             transformed_data = discretiser.fit_transform(self.data)
-            st.write(transformed_data)
+            st.dataframe(transformed_data)
+            return transformed_data
