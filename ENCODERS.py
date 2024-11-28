@@ -930,12 +930,6 @@ class Encoders:
             # Button to apply WOE Encoder
         if st.checkbox("Apply WOE Encoder", key="woe_apply"):
             try:
-                    # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
-                    # Initialize the encoder
                 woe_encoder = ce.woe.WOEEncoder(
                         verbose=verbose,
                         cols=cols,
@@ -953,11 +947,11 @@ class Encoders:
                     self.transformed = woe_encoder.fit_transform(self.data, self.data[y])
                 else:
                     self.transformed = woe_encoder.fit_transform(self.data)
-                # Display success message and return transformed data
+                    # Display success message and return transformed data
                 st.success("WOE Encoder applied successfully!")
                 st.dataframe(self.transformed)  # Display the transformed data for preview
                 return self.transformed
     
-                except Exception as e:
-                    # Handle any errors that occur
-                    st.error(f"An error occurred: {e}")
+            except Exception as e:
+                # Handle any errors that occur
+                st.error(f"An error occurred: {e}")
