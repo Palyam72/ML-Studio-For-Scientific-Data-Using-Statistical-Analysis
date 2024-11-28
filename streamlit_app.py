@@ -425,6 +425,7 @@ elif selected=="Encode Categorical Data":
         # layout for encoders
         col1,col2=st.columns([1,2])                
         with col1:
+            st.subheader("Descritizers")
             for i in descretizer_methods.keys():
                 if st.checkbox(i):
                     with col2:
