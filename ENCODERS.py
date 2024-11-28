@@ -323,10 +323,6 @@ class Encoders:
         # Button to apply James-Stein Encoder
         if st.checkbox("Apply James-Stein Encoder", key="james_stein_apply"):
             try:
-                # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
     
                 # Initialize the encoder
                 james_stein_encoder = category_encoders.JamesSteinEncoder(
@@ -378,10 +374,6 @@ class Encoders:
         # Button to apply Leave-One-Out Encoder
         if st.checkbox("Apply Leave-One-Out Encoder", key="leave_one_out_apply"):
             try:
-                # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
     
                 # Initialize the encoder
                 leave_one_out_encoder = category_encoders.LeaveOneOutEncoder(
@@ -431,12 +423,6 @@ class Encoders:
     
         # Button to apply M-Estimate Encoder
         if st.checkbox("Apply M-Estimate Encoder", key="m_estimate_apply"):
-            try:
-                # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
                 # Initialize the encoder
                 m_estimate_encoder = category_encoders.MEstimateEncoder(
                     verbose=verbose,
@@ -538,11 +524,6 @@ class Encoders:
                 else:
                     mapping_dict = None  # If no mapping is provided, the encoder will create its own
     
-                # Validate that a target column is selected (if needed for the model)
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
                 # Initialize the encoder
                 ordinal_encoder = ce.OrdinalEncoder(
                     cols=cols,
@@ -589,11 +570,6 @@ class Encoders:
         # Button to apply Polynomial Encoder
         if st.checkbox("Apply Polynomial Encoder", key="polynomial_apply"):
             try:
-                # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
                 # Initialize the encoder
                 polynomial_encoder = ce.PolynomialEncoder(
                     verbose=verbose,
@@ -644,11 +620,6 @@ class Encoders:
         # Button to apply Quantile Encoder
         if st.checkbox("Apply Quantile Encoder", key="quantile_apply"):
             try:
-                # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
                 # Initialize the encoder
                 quantile_encoder = ce.QuantileEncoder(
                     verbose=verbose,
@@ -699,12 +670,7 @@ class Encoders:
     
         # Button to apply RankHot Encoder
         if st.checkbox("Apply RankHot Encoder", key="rankhot_apply"):
-            try:
-                # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
+            try:    
                 # Initialize the encoder
                 rankhot_encoder = ce.RankHotEncoder(
                     verbose=verbose,
@@ -754,11 +720,6 @@ class Encoders:
         # Button to apply Sum Encoder
         if st.checkbox("Apply Sum Encoder", key="sumenc_apply"):
             try:
-                # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
                 # Initialize the encoder
                 sum_encoder = ce.SumEncoder(
                     verbose=verbose,
@@ -816,12 +777,6 @@ class Encoders:
         # Button to apply Summary Encoder
         if st.checkbox("Apply Summary Encoder", key="sumenc_apply"):
             try:
-                # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
-                # Initialize the encoder
                 summary_encoder = ce.SummaryEncoder(
                     verbose=verbose,
                     cols=cols,
