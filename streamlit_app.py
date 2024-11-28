@@ -335,7 +335,7 @@ elif selected == "Identify & Select the Most Important Features":
                 
     else:
         st.warning("Please give the data first")
-elif selected=="Normalize or Scale the Features":
+elif selected=="Encode Categorical Data":
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
         selected_dataset_name = st.selectbox(
@@ -390,7 +390,7 @@ elif selected=="Normalize or Scale the Features":
                     with col2:
                         output=encoder_methods[i]()
                         st.session_state.availableDatasets[i]=output
-elif selected=="Encode Categorical Data":
+elif selected=="Normalize or Scale the Features":
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
         selected_dataset_name = st.selectbox(
