@@ -872,12 +872,6 @@ class Encoders:
             # Button to apply Target Encoder
         if st.checkbox("Apply Target Encoder", key="tenc_apply"):
             try:
-                    # Validate that a target column is selected
-                if y is None:
-                    st.error("You must select a target column for the transformation.")
-                    return
-    
-                    # Initialize the encoder
                 target_encoder = ce.TargetEncoder(
                         verbose=verbose,
                         cols=cols,
