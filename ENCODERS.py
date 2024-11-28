@@ -443,9 +443,6 @@ class Encoders:
                 st.success("M-Estimate Encoder applied successfully!")
                 st.dataframe(self.transformed)  # Display the transformed data for preview
                 return self.transformed
-            except Exception as e:
-                # Handle any errors that occur
-                st.error(f"An error occurred: {e}")
     def apply_one_hot_encoder(self):
         st.subheader("Enter the parameters and hit the checkbox to apply and store the transformation")
     
