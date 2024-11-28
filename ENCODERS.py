@@ -437,15 +437,13 @@ class Encoders:
                 )
     
                 # Fit and transform the data
-            if y!=None:
-                self.transformed = m_estimate_encoder.fit_transform(self.data, self.data[y])
-            else:
-                self.transformed = m_estimate_encoder.fit_transform(self.data)
-    
-            # Display success message and return transformed data
-            st.success("M-Estimate Encoder applied successfully!")
-            st.dataframe(self.transformed)  # Display the transformed data for preview
-            return self.transformed
+                if y!=None:
+                    self.transformed = m_estimate_encoder.fit_transform(self.data, self.data[y])
+                else:
+                    self.transformed = m_estimate_encoder.fit_transform(self.data)
+                st.success("M-Estimate Encoder applied successfully!")
+                st.dataframe(self.transformed)  # Display the transformed data for preview
+                return self.transformed
     def apply_one_hot_encoder(self):
         st.subheader("Enter the parameters and hit the checkbox to apply and store the transformation")
     
