@@ -325,7 +325,7 @@ class Encoders:
             try:
     
                 # Initialize the encoder
-                james_stein_encoder = category_encoders.JamesSteinEncoder(
+                james_stein_encoder = ce.JamesSteinEncoder(
                     verbose=verbose,
                     cols=cols,
                     drop_invariant=drop_invariant,
