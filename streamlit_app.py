@@ -360,14 +360,31 @@ elif selected=="Encode Categorical Data":
         # layout for encoders
         col1,col2=st.columns([1,2])
         encoders=Encoders(st.session_state.selected_dataset)
-        encoder_methods = {
-            'BaseNEncoder': encoders.apply_basen_encoder,
-            'BinaryEncoder': encoders.apply_binary_encoder,
-            'CatBoostEncoder': encoders.apply_catboost_encoder,
-            'CountEncoder': encoders.apply_count_encoder
+        encoder_methods= {
+            "TargetEncoder": encoders.apply_target_encoder,
+            "WOEEncoder": encoders.apply_woe_encoder,
+            "SummaryEncoder": encoders.apply_summary_encoder,
+            "SumEncoder": encoders.apply_sum_encoder,
+            "RankhotEncoder": encoders.apply_rankhot_encoder,
+            "QuantileEncoder": encoders.apply_quantile_encoder,
+            "PolynomialEncoder": encoders.apply_polynomial_encoder,
+            "OrdinalEncoder": encoders.apply_ordinal_encoder,
+            "OneHotEncoder": encoders.apply_one_hot_encoder,
+            "LeaveOneOutEncoder": encoders.apply_leave_one_out_encoder,
+            "MEstimateEncoder": encoders.apply_m_estimate_encoder,
+            "JamesSteinEncoder": encoders.apply_james_stein_encoder,
+            "HelmertEncoder": encoders.apply_helmert_encoder,
+            "HashingEncoder": encoders.apply_hashing_encoder,
+            "GrayEncoder": encoders.apply_gray_encoder,
+            "GeneralizedLinearMixedModel": encoders.generalized_linear_mixed_model,
+            "CountEncoder": encoders.apply_count_encoder,
+            "CatboostEncoder": encoders.apply_catboost_encoder,
+            "BinaryEncoder": encoders.apply_binary_encoder,
+            "BasenEncoder": encoders.apply_basen_encoder
         }
 
         with col1:
+            st.subheader("Encoder Techniques")
             for i in encoder_methods.keys():
                 if st.checkbox(i):
                     with col2:
