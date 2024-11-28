@@ -382,12 +382,12 @@ elif selected=="Encode Categorical Data":
             "BinaryEncoder": encoders.apply_binary_encoder,
             "BasenEncoder": encoders.apply_basen_encoder
         }
-            with col1:
-                st.subheader("Encoder Techniques")
-                for i in encoder_methods.keys():
-                    if st.checkbox(i):
-                        with col2:
-                            output=encoder_methods[i]()
+        with col1:
+            st.subheader("Encoder Techniques")
+            for i in encoder_methods.keys():
+                if st.checkbox(i):
+                    with col2:
+                        output=encoder_methods[i]()
                             st.session_state.availableDatasets[i]=output
                 
                 
