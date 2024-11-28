@@ -416,15 +416,14 @@ elif selected=="Normalize or Scale the Features":
         discretizers = Descritizers(st.session_state.selected_dataset)
 
         # Create a dictionary mapping technique names to methods
-        discretizer_methods = {
+        col1,col2=st.columns([1,2])                
+        with col1:
+            discretizer_methods = {
             'Equal Width Discretiser': discretizers.equal_width_discretiser,
             'Equal Frequency Discretiser': discretizers.equal_frequency_discretiser,
             'Decision Tree Discretiser': discretizers.decision_tree_discretiser,
             'Geometric Width Discretiser': discretizers.geometric_width_discretiser
-        }
-        # layout for encoders
-        col1,col2=st.columns([1,2])                
-        with col1:
+            }
             st.subheader("Descritizers")
             for i in descretizer_methods.keys():
                 if st.checkbox(i):
