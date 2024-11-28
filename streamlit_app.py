@@ -360,7 +360,7 @@ elif selected=="Encode Categorical Data":
         # layout for encoders
         col1,col2=st.columns([1,2])
         encoders=Encoders(st.session_state.selected_dataset)
-        encoder_methods= {
+        encoders_methods = {
             "TargetEncoder": encoders.apply_target_encoder,
             "WOEEncoder": encoders.apply_woe_encoder,
             "SummaryEncoder": encoders.apply_summary_encoder,
@@ -382,6 +382,7 @@ elif selected=="Encode Categorical Data":
             "BinaryEncoder": encoders.apply_binary_encoder,
             "BasenEncoder": encoders.apply_basen_encoder
         }
+
 
         with col1:
             st.subheader("Encoder Techniques")
