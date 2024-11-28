@@ -424,7 +424,7 @@ class Encoders:
         # Button to apply M-Estimate Encoder
         if st.checkbox("Apply M-Estimate Encoder", key="m_estimate_apply"):
                 # Initialize the encoder
-                m_estimate_encoder = category_encoders.MEstimateEncoder(
+                m_estimate_encoder = ce.MEstimateEncoder(
                     verbose=verbose,
                     cols=cols,
                     drop_invariant=drop_invariant,
