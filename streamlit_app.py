@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from DATACLEANERS import PandasMethods, UnivariateImputers, OutliersTreatment  # Import OutliersTreatment
 from FEATURE_SELECTION import *
 from ENCODERS import *
+from CHANGERS import *
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
 
@@ -334,7 +335,7 @@ elif selected == "Identify & Select the Most Important Features":
                 
     else:
         st.warning("Please give the data first")
-elif selected=="Encode Categorical Data":
+elif selected=="Normalize or Scale the Features":
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
         selected_dataset_name = st.selectbox(
@@ -389,6 +390,45 @@ elif selected=="Encode Categorical Data":
                     with col2:
                         output=encoder_methods[i]()
                         st.session_state.availableDatasets[i]=output
-                
-                
+elif selected=="Encode Categorical Data":
+    if st.session_state.availableDatasets:
+        # Dataset selection for cleaning
+        selected_dataset_name = st.selectbox(
+            "Select a dataset to clean",
+            list(st.session_state.availableDatasets.keys())
+        )
+
+    if selected_dataset_name:
+        # Load the selected dataset from session state
+        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+        dataset = st.session_state.selected_dataset
+        st.markdown("### Selected Dataset")
+        st.dataframe(dataset)
+        # Display missing value charts
+        st.divider()
+        st.markdown("### Missing Value Analysis")
+        fig, ax = plt.subplots(figsize=(10, 5))
+        mso.matrix(st.session_state.selected_dataset, ax=ax)
+        st.pyplot(fig)
+        fig1, ax1 = plt.subplots(figsize=(10, 5))
+        mso.heatmap(st.session_state.selected_dataset, ax=ax1)
+        st.pyplot(fig1)
+        discretizers = Descritizers(data)
+
+        # Create a dictionary mapping technique names to methods
+        discretizer_methods = {
+            'Equal Width Discretiser': discretizers.equal_width_discretiser,
+            'Equal Frequency Discretiser': discretizers.equal_frequency_discretiser,
+            'Decision Tree Discretiser': discretizers.decision_tree_discretiser,
+            'Geometric Width Discretiser': discretizers.geometric_width_discretiser
+        }
+        # layout for encoders
+        col1,col2=st.columns([1,2])                
+        with col1:
+            for i in descretizer_methods.keys():
+                if st.checkbox(i):
+                    with col2:
+                        dataframe=discretizer_methods[i]()
+                        st.session_state.availableDatasets[i]=dataframe
+                        
         
