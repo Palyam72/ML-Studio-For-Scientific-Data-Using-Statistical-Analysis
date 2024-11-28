@@ -384,7 +384,7 @@ elif selected=="Encode Categorical Data":
         }
         with col1:
             st.subheader("Encoder Techniques")
-            for i in encoder_methods.keys():
+            for i in encoders_methods.keys():
                 if st.checkbox(i):
                     with col2:
                         output=encoder_methods[i]()
