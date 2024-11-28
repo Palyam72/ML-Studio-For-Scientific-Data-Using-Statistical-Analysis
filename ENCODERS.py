@@ -376,7 +376,7 @@ class Encoders:
             try:
     
                 # Initialize the encoder
-                leave_one_out_encoder = category_encoders.LeaveOneOutEncoder(
+                leave_one_out_encoder = ce.LeaveOneOutEncoder(
                     verbose=verbose,
                     cols=cols,
                     drop_invariant=drop_invariant,
