@@ -111,6 +111,9 @@ class Descritizers:
             st.dataframe(transformed_data)
             return transformed_data
 
+from sklearn.preprocessing import Normalizer, Binarizer, LabelBinarizer, MultiLabelBinarizer
+import streamlit as st
+
 class PreprocessingMethods:
     def __init__(self, dataset):
         self.dataset = dataset
@@ -120,8 +123,11 @@ class PreprocessingMethods:
         norm = st.selectbox("Normalization method ('l1', 'l2', or 'max'):", ['l1', 'l2', 'max'], key="normalizer_norm")
         axis = st.selectbox("Axis to normalize along (0 for columns, 1 for rows):", [0, 1], key="normalizer_axis")
         
-        if st.button("Apply Normalizer", key="normalizer_apply"):
+        if st.checkbox("Apply Normalizer", key="normalizer_checkbox"):
             try:
+                if self.dataset is None or len(self.dataset) == 0:
+                    raise ValueError("Dataset is empty or invalid!")
+
                 normalizer = Normalizer(norm=norm, axis=axis)
                 transformed_dataset = normalizer.fit_transform(self.dataset)
                 st.write("Transformation successful! Here are the first 5 rows:")
@@ -134,8 +140,11 @@ class PreprocessingMethods:
         st.subheader("Binarizer Parameters")
         threshold = st.slider("Threshold value for binarization:", min_value=0.0, max_value=1.0, step=0.01, value=0.0, key="binarizer_threshold")
         
-        if st.button("Apply Binarizer", key="binarizer_apply"):
+        if st.checkbox("Apply Binarizer", key="binarizer_checkbox"):
             try:
+                if self.dataset is None or len(self.dataset) == 0:
+                    raise ValueError("Dataset is empty or invalid!")
+
                 binarizer = Binarizer(threshold=threshold)
                 transformed_dataset = binarizer.fit_transform(self.dataset)
                 st.write("Transformation successful! Here are the first 5 rows:")
@@ -150,25 +159,20 @@ class PreprocessingMethods:
         pos_label = st.number_input("Positive label value:", value=1, key="label_binarizer_pos_label")
         sparse_output = st.checkbox("Output in sparse format", key="label_binarizer_sparse_output")
         
-        # Validate neg_label and pos_label
         if neg_label == pos_label:
             st.error("Negative and positive labels must be distinct!")
             return
         
-        # Check for empty dataset
-        if self.dataset is None or len(self.dataset) == 0:
-            st.error("The dataset is empty or invalid!")
-            return
-        
-        if st.button("Apply LabelBinarizer", key="label_binarizer_apply"):
+        if st.checkbox("Apply LabelBinarizer", key="label_binarizer_checkbox"):
             try:
-                # Validate if the dataset is suitable for LabelBinarizer
+                if self.dataset is None or len(self.dataset) == 0:
+                    raise ValueError("Dataset is empty or invalid!")
+                
                 if not isinstance(self.dataset, (list, tuple)) and not hasattr(self.dataset, "__array__"):
                     raise ValueError("Input data must be a list, tuple, or array-like object.")
-                
+
                 label_binarizer = LabelBinarizer(neg_label=neg_label, pos_label=pos_label, sparse_output=sparse_output)
                 transformed_dataset = label_binarizer.fit_transform(self.dataset)
-                
                 st.write("Transformation successful! Here are the results:")
                 st.write(transformed_dataset)
                 return transformed_dataset
@@ -177,15 +181,17 @@ class PreprocessingMethods:
             except Exception as e:
                 st.error(f"An unexpected error occurred: {e}")
 
-
     def multi_label_binarizer(self):
         st.subheader("MultiLabelBinarizer Parameters")
         classes_input = st.text_area("Enter class labels (comma-separated):", key="multi_label_binarizer_classes")
         classes = [cls.strip() for cls in classes_input.split(",")] if classes_input else None
         sparse_output = st.checkbox("Output in sparse format", key="multi_label_binarizer_sparse_output")
         
-        if st.button("Apply MultiLabelBinarizer", key="multi_label_binarizer_apply"):
+        if st.checkbox("Apply MultiLabelBinarizer", key="multi_label_binarizer_checkbox"):
             try:
+                if self.dataset is None or len(self.dataset) == 0:
+                    raise ValueError("Dataset is empty or invalid!")
+
                 multi_label_binarizer = MultiLabelBinarizer(classes=classes, sparse_output=sparse_output)
                 transformed_dataset = multi_label_binarizer.fit_transform(self.dataset)
                 st.write("Transformation successful! Here are the results:")
