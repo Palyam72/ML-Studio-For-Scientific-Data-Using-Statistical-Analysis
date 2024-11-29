@@ -110,10 +110,7 @@ class Descritizers:
             transformed_data = discretiser.fit_transform(self.data)
             st.dataframe(transformed_data)
             return transformed_data
-
-from sklearn.preprocessing import Normalizer, Binarizer, LabelBinarizer, MultiLabelBinarizer
-import streamlit as st
-
+            
 class PreprocessingMethods:
     def __init__(self, dataset):
         self.dataset = dataset
@@ -129,8 +126,7 @@ class PreprocessingMethods:
 
                 normalizer = Normalizer(norm=norm)
                 transformed_dataset = normalizer.fit_transform(self.dataset)
-                st.write("Transformation successful! Here are the first 5 rows:")
-                st.write(transformed_dataset[:5])
+                st.dataframe(transformed_dataset)
                 return transformed_dataset
             except Exception as e:
                 st.error(f"An error occurred: {e}")
@@ -146,8 +142,7 @@ class PreprocessingMethods:
 
                 binarizer = Binarizer(threshold=threshold)
                 transformed_dataset = binarizer.fit_transform(self.dataset)
-                st.write("Transformation successful! Here are the first 5 rows:")
-                st.write(transformed_dataset[:5])
+                st.dataframe(transformed_dataset)
                 return transformed_dataset
             except Exception as e:
                 st.error(f"An error occurred: {e}")
@@ -172,8 +167,7 @@ class PreprocessingMethods:
 
                 label_binarizer = LabelBinarizer(neg_label=neg_label, pos_label=pos_label, sparse_output=sparse_output)
                 transformed_dataset = label_binarizer.fit_transform(self.dataset)
-                st.write("Transformation successful! Here are the results:")
-                st.write(transformed_dataset)
+                st.dataframe(transformed_dataset)
                 return transformed_dataset
             except ValueError as e:
                 st.error(f"ValueError: {e}")
@@ -193,8 +187,7 @@ class PreprocessingMethods:
 
                 multi_label_binarizer = MultiLabelBinarizer(classes=classes, sparse_output=sparse_output)
                 transformed_dataset = multi_label_binarizer.fit_transform(self.dataset)
-                st.write("Transformation successful! Here are the results:")
-                st.write(transformed_dataset)
+                st.dataframe(transformed_dataset)
                 return transformed_dataset
             except Exception as e:
                 st.error(f"An error occurred: {e}")
