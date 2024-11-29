@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from feature_engine.discretisation import EqualWidthDiscretiser, EqualFrequencyDiscretiser, DecisionTreeDiscretiser, GeometricWidthDiscretiser
+from sklearn.preprocessing import *
 
 class Descritizers:
     def __init__(self, dataset: pd.DataFrame):
@@ -109,3 +110,50 @@ class Descritizers:
             transformed_data = discretiser.fit_transform(self.data)
             st.dataframe(transformed_data)
             return transformed_data
+class PreprocessingMethods:
+    def __init__(self, dataset):
+        self.dataset = dataset
+
+    def normalizer(self):
+        st.subheader("Parameters for Normalizer")
+        norm = st.selectbox("The normalization method to use. Can be 'l1', 'l2', or 'max'", ['l1', 'l2', 'max'], key="normalizer_norm")
+        axis = st.selectbox("Axis along which to normalize. If axis=0, each feature (column) is normalized. If axis=1, each sample (row) is normalized.", [0, 1], key="normalizer_axis")
+        
+        if st.checkbox("Confirm to apply normalizer", key="normalizer_checkbox"):
+            normalizer = Normalizer(norm=norm, axis=axis)
+            transformed_dataset = normalizer.fit_transform(self.dataset)
+            return transformed_dataset
+
+    def binarizer(self):
+        st.subheader("Parameters for Binarizer")
+        threshold = st.number_input("Threshold value for binarization", min_value=0.0, max_value=1.0, step=0.01, value=0.0, key="binarizer_threshold")
+        copy = st.checkbox("Confirm to apply binarizer", key="binarizer_copy")
+        
+        if st.checkbox("Confirm to apply binarizer", key="binarizer_checkbox"):
+            binarizer = Binarizer(threshold=threshold, copy=copy)
+            transformed_dataset = binarizer.fit_transform(self.dataset)
+            return transformed_dataset
+
+    def label_binarizer(self):
+        st.subheader("Parameters for LabelBinarizer")
+        neg_label = st.number_input("Negative label encoding value", value=0, key="label_binarizer_neg_label")
+        pos_label = st.number_input("Positive label encoding value", value=1, key="label_binarizer_pos_label")
+        sparse_output = st.checkbox("Output in sparse format", key="label_binarizer_sparse_output")
+        
+        if st.checkbox("Confirm to apply LabelBinarizer", key="label_binarizer_checkbox"):
+            label_binarizer = LabelBinarizer(neg_label=neg_label, pos_label=pos_label, sparse_output=sparse_output)
+            transformed_dataset = label_binarizer.fit_transform(self.dataset)
+            return transformed_dataset
+
+    def multi_label_binarizer(self):
+        st.subheader("Parameters for MultiLabelBinarizer")
+        classes_input = st.text_area("Enter the class labels (comma separated)", key="multi_label_binarizer_classes")
+        classes = classes_input.split(",") if classes_input else None
+        sparse_output = st.checkbox("Output in sparse format", key="multi_label_binarizer_sparse_output")
+        
+        if st.checkbox("Confirm to apply MultiLabelBinarizer", key="multi_label_binarizer_checkbox"):
+            multi_label_binarizer = MultiLabelBinarizer(classes=classes, sparse_output=sparse_output)
+            transformed_dataset = multi_label_binarizer.fit_transform(self.dataset)
+            return transformed_dataset
+
+        
