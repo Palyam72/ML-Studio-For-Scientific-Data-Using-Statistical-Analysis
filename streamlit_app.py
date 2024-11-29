@@ -391,7 +391,6 @@ elif selected=="Encode Categorical Data":
                         output=encoder_methods[i]()
                         st.session_state.availableDatasets[i]=output
 elif selected=="Normalize or Scale the Features":
-    methods=PreprocessingMethods(st.session_state.selected_dataset)
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
         selected_dataset_name = st.selectbox(
@@ -414,7 +413,9 @@ elif selected=="Normalize or Scale the Features":
         fig1, ax1 = plt.subplots(figsize=(10, 5))
         mso.heatmap(st.session_state.selected_dataset, ax=ax1)
         st.pyplot(fig1)
+        methods=PreprocessingMethods(st.session_state.selected_dataset)
         discretizers = Descritizers(st.session_state.selected_dataset)
+        
 
         # Create a dictionary mapping technique names to methods
         col1,col2=st.columns([1,2])                
