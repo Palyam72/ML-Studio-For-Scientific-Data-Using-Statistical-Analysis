@@ -121,14 +121,13 @@ class PreprocessingMethods:
     def normalizer(self):
         st.subheader("Normalizer Parameters")
         norm = st.selectbox("Normalization method ('l1', 'l2', or 'max'):", ['l1', 'l2', 'max'], key="normalizer_norm")
-        axis = st.selectbox("Axis to normalize along (0 for columns, 1 for rows):", [0, 1], key="normalizer_axis")
         
         if st.checkbox("Apply Normalizer", key="normalizer_checkbox"):
             try:
                 if self.dataset is None or len(self.dataset) == 0:
                     raise ValueError("Dataset is empty or invalid!")
 
-                normalizer = Normalizer(norm=norm, axis=axis)
+                normalizer = Normalizer(norm=norm)
                 transformed_dataset = normalizer.fit_transform(self.dataset)
                 st.write("Transformation successful! Here are the first 5 rows:")
                 st.write(transformed_dataset[:5])
