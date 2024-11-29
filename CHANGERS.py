@@ -110,8 +110,6 @@ class Descritizers:
             transformed_data = discretiser.fit_transform(self.data)
             st.dataframe(transformed_data)
             return transformed_data
-from sklearn.preprocessing import Normalizer, Binarizer, LabelBinarizer, MultiLabelBinarizer
-import streamlit as st
 
 class PreprocessingMethods:
     def __init__(self, dataset):
@@ -152,15 +150,33 @@ class PreprocessingMethods:
         pos_label = st.number_input("Positive label value:", value=1, key="label_binarizer_pos_label")
         sparse_output = st.checkbox("Output in sparse format", key="label_binarizer_sparse_output")
         
+        # Validate neg_label and pos_label
+        if neg_label == pos_label:
+            st.error("Negative and positive labels must be distinct!")
+            return
+        
+        # Check for empty dataset
+        if self.dataset is None or len(self.dataset) == 0:
+            st.error("The dataset is empty or invalid!")
+            return
+        
         if st.button("Apply LabelBinarizer", key="label_binarizer_apply"):
             try:
+                # Validate if the dataset is suitable for LabelBinarizer
+                if not isinstance(self.dataset, (list, tuple)) and not hasattr(self.dataset, "__array__"):
+                    raise ValueError("Input data must be a list, tuple, or array-like object.")
+                
                 label_binarizer = LabelBinarizer(neg_label=neg_label, pos_label=pos_label, sparse_output=sparse_output)
                 transformed_dataset = label_binarizer.fit_transform(self.dataset)
+                
                 st.write("Transformation successful! Here are the results:")
                 st.write(transformed_dataset)
                 return transformed_dataset
+            except ValueError as e:
+                st.error(f"ValueError: {e}")
             except Exception as e:
-                st.error(f"An error occurred: {e}")
+                st.error(f"An unexpected error occurred: {e}")
+
 
     def multi_label_binarizer(self):
         st.subheader("MultiLabelBinarizer Parameters")
