@@ -391,6 +391,7 @@ elif selected=="Encode Categorical Data":
                         output=encoder_methods[i]()
                         st.session_state.availableDatasets[i]=output
 elif selected=="Normalize or Scale the Features":
+    methods=PreprocessingMethods(st.session_state.selected_dataset)
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
         selected_dataset_name = st.selectbox(
@@ -424,11 +425,31 @@ elif selected=="Normalize or Scale the Features":
                 'Decision Tree Discretiser': discretizers.decision_tree_discretiser,
                 'Geometric Width Discretiser': discretizers.geometric_width_discretiser
             }
+            normalizers = {
+                "normalizer": methods.normalizer,
+                "binarizer": methods.binarizer,
+                "label_binarizer": methods.label_binarizer,
+                "multi_label_binarizer": methods.multi_label_binarizer,
+                "min_max_scaler": methods.min_max_scaler,
+                "standard_scaler": methods.standard_scaler,
+                "robust_scaler": methods.robust_scaler
+            }
+
             st.subheader("Descritizers")
+            st.divider()
             for i in discretizer_methods.keys():
                 if st.checkbox(i):
                     with col2:
                         dataframe=discretizer_methods[i]()
                         st.session_state.availableDatasets[i]=dataframe
+            st.subheader("Normalizers")
+            st.divider()
+            for i in normalizers.keys():
+                if st.checkbox(i):
+                    with col2:
+                        dataframe=normalizers[i]()
+                        st.session_state.availableDatasets[i]=dataframe
+                
+            
                         
         
