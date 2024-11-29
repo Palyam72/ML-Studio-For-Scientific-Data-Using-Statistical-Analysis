@@ -431,9 +431,8 @@ elif selected=="Normalize or Scale the Features":
                 "binarizer": methods.binarizer,
                 "label_binarizer": methods.label_binarizer,
                 "multi_label_binarizer": methods.multi_label_binarizer,
-                "min_max_scaler": methods.min_max_scaler,
-                "standard_scaler": methods.standard_scaler,
-                "robust_scaler": methods.robust_scaler
+            
+            
             }
 
             st.subheader("Descritizers")
