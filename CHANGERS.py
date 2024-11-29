@@ -110,50 +110,70 @@ class Descritizers:
             transformed_data = discretiser.fit_transform(self.data)
             st.dataframe(transformed_data)
             return transformed_data
+from sklearn.preprocessing import Normalizer, Binarizer, LabelBinarizer, MultiLabelBinarizer
+import streamlit as st
+
 class PreprocessingMethods:
     def __init__(self, dataset):
         self.dataset = dataset
 
     def normalizer(self):
-        st.subheader("Parameters for Normalizer")
-        norm = st.selectbox("The normalization method to use. Can be 'l1', 'l2', or 'max'", ['l1', 'l2', 'max'], key="normalizer_norm")
-        axis = st.selectbox("Axis along which to normalize. If axis=0, each feature (column) is normalized. If axis=1, each sample (row) is normalized.", [0, 1], key="normalizer_axis")
+        st.subheader("Normalizer Parameters")
+        norm = st.selectbox("Normalization method ('l1', 'l2', or 'max'):", ['l1', 'l2', 'max'], key="normalizer_norm")
+        axis = st.selectbox("Axis to normalize along (0 for columns, 1 for rows):", [0, 1], key="normalizer_axis")
         
-        if st.checkbox("Confirm to apply normalizer", key="normalizer_checkbox"):
-            normalizer = Normalizer(norm=norm, axis=axis)
-            transformed_dataset = normalizer.fit_transform(self.dataset)
-            return transformed_dataset
+        if st.button("Apply Normalizer", key="normalizer_apply"):
+            try:
+                normalizer = Normalizer(norm=norm, axis=axis)
+                transformed_dataset = normalizer.fit_transform(self.dataset)
+                st.write("Transformation successful! Here are the first 5 rows:")
+                st.write(transformed_dataset[:5])
+                return transformed_dataset
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 
     def binarizer(self):
-        st.subheader("Parameters for Binarizer")
-        threshold = st.number_input("Threshold value for binarization", min_value=0.0, max_value=1.0, step=0.01, value=0.0, key="binarizer_threshold")
-        copy = st.checkbox("Confirm to apply binarizer", key="binarizer_copy")
+        st.subheader("Binarizer Parameters")
+        threshold = st.slider("Threshold value for binarization:", min_value=0.0, max_value=1.0, step=0.01, value=0.0, key="binarizer_threshold")
         
-        if st.checkbox("Confirm to apply binarizer", key="binarizer_checkbox"):
-            binarizer = Binarizer(threshold=threshold, copy=copy)
-            transformed_dataset = binarizer.fit_transform(self.dataset)
-            return transformed_dataset
+        if st.button("Apply Binarizer", key="binarizer_apply"):
+            try:
+                binarizer = Binarizer(threshold=threshold)
+                transformed_dataset = binarizer.fit_transform(self.dataset)
+                st.write("Transformation successful! Here are the first 5 rows:")
+                st.write(transformed_dataset[:5])
+                return transformed_dataset
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 
     def label_binarizer(self):
-        st.subheader("Parameters for LabelBinarizer")
-        neg_label = st.number_input("Negative label encoding value", value=0, key="label_binarizer_neg_label")
-        pos_label = st.number_input("Positive label encoding value", value=1, key="label_binarizer_pos_label")
+        st.subheader("LabelBinarizer Parameters")
+        neg_label = st.number_input("Negative label value:", value=0, key="label_binarizer_neg_label")
+        pos_label = st.number_input("Positive label value:", value=1, key="label_binarizer_pos_label")
         sparse_output = st.checkbox("Output in sparse format", key="label_binarizer_sparse_output")
         
-        if st.checkbox("Confirm to apply LabelBinarizer", key="label_binarizer_checkbox"):
-            label_binarizer = LabelBinarizer(neg_label=neg_label, pos_label=pos_label, sparse_output=sparse_output)
-            transformed_dataset = label_binarizer.fit_transform(self.dataset)
-            return transformed_dataset
+        if st.button("Apply LabelBinarizer", key="label_binarizer_apply"):
+            try:
+                label_binarizer = LabelBinarizer(neg_label=neg_label, pos_label=pos_label, sparse_output=sparse_output)
+                transformed_dataset = label_binarizer.fit_transform(self.dataset)
+                st.write("Transformation successful! Here are the results:")
+                st.write(transformed_dataset)
+                return transformed_dataset
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 
     def multi_label_binarizer(self):
-        st.subheader("Parameters for MultiLabelBinarizer")
-        classes_input = st.text_area("Enter the class labels (comma separated)", key="multi_label_binarizer_classes")
-        classes = classes_input.split(",") if classes_input else None
+        st.subheader("MultiLabelBinarizer Parameters")
+        classes_input = st.text_area("Enter class labels (comma-separated):", key="multi_label_binarizer_classes")
+        classes = [cls.strip() for cls in classes_input.split(",")] if classes_input else None
         sparse_output = st.checkbox("Output in sparse format", key="multi_label_binarizer_sparse_output")
         
-        if st.checkbox("Confirm to apply MultiLabelBinarizer", key="multi_label_binarizer_checkbox"):
-            multi_label_binarizer = MultiLabelBinarizer(classes=classes, sparse_output=sparse_output)
-            transformed_dataset = multi_label_binarizer.fit_transform(self.dataset)
-            return transformed_dataset
-
-        
+        if st.button("Apply MultiLabelBinarizer", key="multi_label_binarizer_apply"):
+            try:
+                multi_label_binarizer = MultiLabelBinarizer(classes=classes, sparse_output=sparse_output)
+                transformed_dataset = multi_label_binarizer.fit_transform(self.dataset)
+                st.write("Transformation successful! Here are the results:")
+                st.write(transformed_dataset)
+                return transformed_dataset
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
