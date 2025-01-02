@@ -38,14 +38,14 @@ class Regression:
 
             test_size = st.slider("Test size (as a proportion)", 0.1, 0.9, 0.2, 0.05)
             shuffle = st.checkbox("Shuffle the data before splitting", value=True)
-
-            self.xTrain, self.xTest, self.yTrain, self.yTest = train_test_split(
-                x_data, y_data, test_size=test_size, shuffle=shuffle
-            )
-
-            st.markdown("### Train-Test Split Completed!")
-            st.write("Training data shape:", self.xTrain.shape, self.yTrain.shape)
-            st.write("Testing data shape:", self.xTest.shape, self.yTest.shape)
+            if st.checkbox("Confirm to apply the train test split"):
+                self.xTrain, self.xTest, self.yTrain, self.yTest = train_test_split(
+                    x_data, y_data, test_size=test_size, shuffle=shuffle
+                )
+    
+                st.markdown("### Train-Test Split Completed!")
+                st.write("Training data shape:", self.xTrain.shape, self.yTrain.shape)
+                st.write("Testing data shape:", self.xTest.shape, self.yTest.shape)
 
     def linear_regression(self):
         with self.col2:
@@ -53,7 +53,7 @@ class Regression:
             fit_intercept = st.checkbox("Fit Intercept", value=True)
             positive = st.checkbox("Force Positive Coefficients", value=False)
 
-            if st.button("Train Linear Regression Model"):
+            if st.checkbox("Train Linear Regression Model"):
                 if self.xTrain is None or self.yTrain is None:
                     st.error("Train-test split not performed. Please perform it first.")
                     return
