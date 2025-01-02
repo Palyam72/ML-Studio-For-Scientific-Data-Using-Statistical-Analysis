@@ -1,6 +1,6 @@
 import streamlit as st
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import *
 from sklearn.metrics import (
     d2_absolute_error_score, d2_pinball_score, d2_tweedie_score,
     explained_variance_score, max_error, mean_absolute_error,
