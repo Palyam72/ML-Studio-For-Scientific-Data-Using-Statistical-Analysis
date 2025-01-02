@@ -8,6 +8,7 @@ from DATACLEANERS import PandasMethods, UnivariateImputers, OutliersTreatment  #
 from FEATURE_SELECTION import *
 from ENCODERS import *
 from CHANGERS import *
+from REGRESSION import *
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
 
@@ -473,10 +474,8 @@ elif selected=="Regression":
         fig1, ax1 = plt.subplots(figsize=(10, 5))
         mso.heatmap(st.session_state.selected_dataset, ax=ax1)
         st.pyplot(fig1)
-        col1,col2,col3=st.columns([1,1,1])
-        with col1:
-            st.subheader("apply train test split",divider="blue")
-            pass
+        
+        
             
                         
         
