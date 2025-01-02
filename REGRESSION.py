@@ -9,13 +9,7 @@ from sklearn.metrics import (
     mean_squared_log_error, mean_tweedie_deviance, median_absolute_error,
     r2_score
 )
-from streamlit_extras.metric_cards import *
 
-regressors = ["LinearRegression", "Ridge", "RidgeCV", "SGDRegressor", "ElasticNet", "ElasticNetCV", "Lars", "LarsCV", "Lasso", "LassoCV", "LassoLars", "LassoLarsCV", "LassoLarsIC", "OrthogonalMatchingPursuit", "OrthogonalMatchingPursuitCV", "ARDRegression", "BayesianRidge", "MultiTaskElasticNet", "MultiTaskElasticNetCV", "MultiTaskLasso", "MultiTaskLassoCV", "HuberRegressor", "QuantileRegressor", "RANSACRegressor", "TheilSenRegressor", "GammaRegressor", "PoissonRegressor", "TweedieRegressor"]
-for regressor in regressors:
-    if regressor not in st.session_state:
-        st.session_state[regressor]=None
-        
 class Regression:
     def __init__(self, dataset):
         self.dataset = dataset
@@ -28,22 +22,7 @@ class Regression:
             st.subheader("Classical Linear Model",divider='blue')
             classicalLinearModel=st.pills("Select the classical linear model",["Linear Regression","Ridge","RidgeCV","SGDRegressor"])
             if classicalLinearModel=="Linear Regression":
-                if st.session_state["LinearRegression"]:
-                    with self.col1:
-                        st.subheader("Train-Test Split Completed!", divider='blue')
-                        st.metric("Training Data Shape", f"{self.xTrain.shape}", delta=None)
-                        st.metric("Testing Data Shape", f"{self.xTest.shape}", delta=None)
-                        style_metric_cards()
-                    
-                    with self.col2:
-                        st.success("Linear Regression Model Trained Successfully!")
-                        st.markdown("### Model Attributes")
-                        st.metric("Coefficients", f"{self.model.coef_}", delta=None)
-                        st.metric_card("Intercept", f"{self.model.intercept_}", delta=None)
-                        style_metric_cards()
-                else:
-                    self.linear_regression()
-                    st.session_state["LinearRegression"]=True
+                self.linear_regression()
                                        
     def train_test_split(self):
         with self.col1:
@@ -91,276 +70,110 @@ class Regression:
     def regression_metrics(self):
         with self.col3:
             st.markdown("### Evaluate Regression Metrics")
-            metrics = [
-                "D2 Absolute Error", "D2 Pinball Loss", "D2 Tweedie Score",
-                "Explained Variance", "Max Error", "Mean Absolute Error",
-                "Mean Absolute Percentage Error", "Mean Gamma Deviance",
-                "Mean Pinball Loss", "Mean Poisson Deviance", "Mean Squared Error",
-                "Mean Squared Log Error", "Mean Tweedie Deviance", "Median Absolute Error",
-                "R2 Score"
-            ]
-            selectedMetric = st.pills("Select the metric", metrics)
-            if selectedMetric == metrics[0]:
-                self.d2AbsoluteError()
-            elif selectedMetric == metrics[1]:
-                self.d2PinballLoss()
-            elif selectedMetric == metrics[2]:
-                self.d2TweedieScore()
-            elif selectedMetric == metrics[3]:
-                self.explainedVariance()
-            elif selectedMetric == metrics[4]:
-                self.maxError()
-            elif selectedMetric == metrics[5]:
-                self.meanAbsoluteError()
-            elif selectedMetric == metrics[6]:
-                self.meanAbsolutePercentageError()
-            elif selectedMetric == metrics[7]:
-                self.meanGammaDeviance()
-            elif selectedMetric == metrics[8]:
-                self.meanPinballLoss()
-            elif selectedMetric == metrics[9]:
-                self.meanPoissonDeviance()
-            elif selectedMetric == metrics[10]:
-                self.meanSquaredError()
-            elif selectedMetric == metrics[11]:
-                self.meanSquaredLogError()
-            elif selectedMetric == metrics[12]:
-                self.meanTweedieDeviance()
-            elif selectedMetric == metrics[13]:
-                self.medianAbsoluteError()
-            elif selectedMetric == metrics[14]:
-                self.r2Score()
-
-    def d2AbsoluteError(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### D2 Absolute Error")
-        sample_weight = st.text_input("Enter sample weights (comma-separated, optional)", value="")
-        multioutput = st.selectbox("Select multioutput handling", ["uniform_average", "raw_values"])
-
-        # Parse sample weights if provided
-        if sample_weight.strip():
+    
+            # D2 Absolute Error
             try:
-                sample_weight = [float(x.strip()) for x in sample_weight.split(",")]
-            except ValueError:
-                st.error("Invalid sample weights format. Please provide a comma-separated list of numbers.")
-                return
-        else:
-            sample_weight = None
-
-        # Perform prediction and calculate the metric
-        y_pred = self.model.predict(self.xTest)
-        score = d2_absolute_error_score(
-            y_true=self.yTest,
-            y_pred=y_pred,
-            sample_weight=sample_weight,
-            multioutput=multioutput
-        )
-
-        st.write(f"**D2 Absolute Error Score:** {score}")
-
-    def d2PinballLoss(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### D2 Pinball Loss")
-        sample_weight = st.text_input("Enter sample weights (comma-separated, optional)", value="")
-        alpha = st.slider("Select alpha (quantile level)", 0.0, 1.0, 0.5, 0.05)
-        multioutput = st.selectbox("Select multioutput handling", ["uniform_average", "raw_values"])
-
-        # Parse sample weights if provided
-        if sample_weight.strip():
+                y_pred = self.model.predict(self.xTest)
+                d2_abs_error_score = d2_absolute_error_score(self.yTest, y_pred)
+                st.write(f"**D2 Absolute Error Score:** {d2_abs_error_score}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating D2 Absolute Error: {str(e)}")
+    
+            # D2 Pinball Loss
             try:
-                sample_weight = [float(x.strip()) for x in sample_weight.split(",")]
-            except ValueError:
-                st.error("Invalid sample weights format. Please provide a comma-separated list of numbers.")
-                return
-        else:
-            sample_weight = None
-
-        # Perform prediction and calculate the metric
-        y_pred = self.model.predict(self.xTest)
-        score = d2_pinball_score(
-            y_true=self.yTest,
-            y_pred=y_pred,
-            sample_weight=sample_weight,
-            alpha=alpha,
-            multioutput=multioutput
-        )
-
-        st.write(f"**D2 Pinball Loss Score:** {score}")
-
-    def d2TweedieScore(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### D2 Tweedie Score")
-        sample_weight = st.text_input("Enter sample weights (comma-separated, optional)", value="")
-        power = st.slider("Select Tweedie Power", -1.0, 3.0, 0.0, 0.1)
-
-        # Parse sample weights if provided
-        if sample_weight.strip():
+                d2_pinball_loss = d2_pinball_score(self.yTest, y_pred)
+                st.write(f"**D2 Pinball Loss Score:** {d2_pinball_loss}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating D2 Pinball Loss: {str(e)}")
+    
+            # D2 Tweedie Score
             try:
-                sample_weight = [float(x.strip()) for x in sample_weight.split(",")]
-            except ValueError:
-                st.error("Invalid sample weights format. Please provide a comma-separated list of numbers.")
-                return
-        else:
-            sample_weight = None
-
-        # Perform prediction and calculate the metric
-        y_pred = self.model.predict(self.xTest)
-        score = d2_tweedie_score(
-            y_true=self.yTest,
-            y_pred=y_pred,
-            sample_weight=sample_weight,
-            power=power
-        )
-
-        st.write(f"**D2 Tweedie Score:** {score}")
-
-    def explainedVariance(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Explained Variance Score")
-        sample_weight = st.text_input("Enter sample weights (comma-separated, optional)", value="")
-        multioutput = st.selectbox("Select multioutput handling", ["uniform_average", "raw_values", "variance_weighted"])
-        force_finite = st.checkbox("Force Finite (Replace NaN or -Inf with real numbers)", value=True)
-
-        # Parse sample weights if provided
-        if sample_weight.strip():
+                d2_tweedie_score = d2_tweedie_score(self.yTest, y_pred)
+                st.write(f"**D2 Tweedie Score:** {d2_tweedie_score}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating D2 Tweedie Score: {str(e)}")
+    
+            # Explained Variance
             try:
-                sample_weight = [float(x.strip()) for x in sample_weight.split(",")]
-            except ValueError:
-                st.error("Invalid sample weights format. Please provide a comma-separated list of numbers.")
-                return
-        else:
-            sample_weight = None
-
-        # Perform prediction and calculate the metric
-        y_pred = self.model.predict(self.xTest)
-        score = explained_variance_score(
-            y_true=self.yTest,
-            y_pred=y_pred,
-            sample_weight=sample_weight,
-            multioutput=multioutput,
-            force_finite=force_finite
-        )
-
-        st.write(f"**Explained Variance Score:** {score}")
-
-    def maxError(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Max Error Score")
-        y_pred = self.model.predict(self.xTest)
-        score = max_error(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Max Error Score:** {score}")
-
-    def meanAbsoluteError(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Mean Absolute Error")
-        y_pred = self.model.predict(self.xTest)
-        score = mean_absolute_error(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Mean Absolute Error (MAE):** {score}")
-
-    def meanAbsolutePercentageError(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Mean Absolute Percentage Error")
-        y_pred = self.model.predict(self.xTest)
-        score = mean_absolute_percentage_error(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Mean Absolute Percentage Error (MAPE):** {score}")
-
-    def meanGammaDeviance(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Mean Gamma Deviance")
-        y_pred = self.model.predict(self.xTest)
-        score = mean_gamma_deviance(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Mean Gamma Deviance:** {score}")
-
-    def meanPinballLoss(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Mean Pinball Loss")
-        y_pred = self.model.predict(self.xTest)
-        score = mean_pinball_loss(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Mean Pinball Loss:** {score}")
-
-    def meanPoissonDeviance(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Mean Poisson Deviance")
-        y_pred = self.model.predict(self.xTest)
-        score = mean_poisson_deviance(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Mean Poisson Deviance:** {score}")
-
-    def meanSquaredError(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Mean Squared Error")
-        y_pred = self.model.predict(self.xTest)
-        score = mean_squared_error(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Mean Squared Error (MSE):** {score}")
-
-    def meanSquaredLogError(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Mean Squared Logarithmic Error")
-        y_pred = self.model.predict(self.xTest)
-        score = mean_squared_log_error(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Mean Squared Logarithmic Error (MSLE):** {score}")
-
-    def meanTweedieDeviance(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Mean Tweedie Deviance")
-        y_pred = self.model.predict(self.xTest)
-        score = mean_tweedie_deviance(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Mean Tweedie Deviance:** {score}")
-
-    def medianAbsoluteError(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### Median Absolute Error")
-        y_pred = self.model.predict(self.xTest)
-        score = median_absolute_error(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**Median Absolute Error:** {score}")
-
-    def r2Score(self):
-        if self.yTest is None or self.model is None:
-            st.error("Model not trained or data split not performed. Please ensure both steps are completed.")
-            return
-
-        st.markdown("### R2 Score")
-        y_pred = self.model.predict(self.xTest)
-        score = r2_score(y_true=self.yTest, y_pred=y_pred)
-        st.write(f"**R2 Score:** {score}")
+                explained_variance = explained_variance_score(self.yTest, y_pred)
+                st.write(f"**Explained Variance Score:** {explained_variance}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Explained Variance: {str(e)}")
+    
+            # Max Error
+            try:
+                max_error_value = max_error(self.yTest, y_pred)
+                st.write(f"**Max Error Score:** {max_error_value}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Max Error: {str(e)}")
+    
+            # Mean Absolute Error
+            try:
+                mae = mean_absolute_error(self.yTest, y_pred)
+                st.write(f"**Mean Absolute Error (MAE):** {mae}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Mean Absolute Error: {str(e)}")
+    
+            # Mean Absolute Percentage Error
+            try:
+                mape = mean_absolute_percentage_error(self.yTest, y_pred)
+                st.write(f"**Mean Absolute Percentage Error (MAPE):** {mape}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Mean Absolute Percentage Error: {str(e)}")
+    
+            # Mean Gamma Deviance
+            try:
+                gamma_deviance = mean_gamma_deviance(self.yTest, y_pred)
+                st.write(f"**Mean Gamma Deviance:** {gamma_deviance}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Mean Gamma Deviance: {str(e)}")
+    
+            # Mean Pinball Loss
+            try:
+                pinball_loss = mean_pinball_loss(self.yTest, y_pred)
+                st.write(f"**Mean Pinball Loss:** {pinball_loss}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Mean Pinball Loss: {str(e)}")
+    
+            # Mean Poisson Deviance
+            try:
+                poisson_deviance = mean_poisson_deviance(self.yTest, y_pred)
+                st.write(f"**Mean Poisson Deviance:** {poisson_deviance}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Mean Poisson Deviance: {str(e)}")
+    
+            # Mean Squared Error
+            try:
+                mse = mean_squared_error(self.yTest, y_pred)
+                st.write(f"**Mean Squared Error (MSE):** {mse}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Mean Squared Error: {str(e)}")
+    
+            # Mean Squared Log Error
+            try:
+                msle = mean_squared_log_error(self.yTest, y_pred)
+                st.write(f"**Mean Squared Logarithmic Error (MSLE):** {msle}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Mean Squared Logarithmic Error: {str(e)}")
+    
+            # Mean Tweedie Deviance
+            try:
+                tweedie_deviance = mean_tweedie_deviance(self.yTest, y_pred)
+                st.write(f"**Mean Tweedie Deviance:** {tweedie_deviance}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Mean Tweedie Deviance: {str(e)}")
+    
+            # Median Absolute Error
+            try:
+                median_abs_error = median_absolute_error(self.yTest, y_pred)
+                st.write(f"**Median Absolute Error:** {median_abs_error}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating Median Absolute Error: {str(e)}")
+    
+            # R2 Score
+            try:
+                r2 = r2_score(self.yTest, y_pred)
+                st.write(f"**R2 Score:** {r2}")
+            except Exception as e:
+                st.error(f"An error occurred while calculating R2 Score: {str(e)}")
+    
