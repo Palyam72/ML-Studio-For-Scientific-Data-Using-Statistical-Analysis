@@ -9,6 +9,7 @@ from sklearn.metrics import (
     mean_squared_log_error, mean_tweedie_deviance, median_absolute_error,
     r2_score
 )
+from streamlit_extras import *
 regressors = ["LinearRegression", "Ridge", "RidgeCV", "SGDRegressor", "ElasticNet", "ElasticNetCV", "Lars", "LarsCV", "Lasso", "LassoCV", "LassoLars", "LassoLarsCV", "LassoLarsIC", "OrthogonalMatchingPursuit", "OrthogonalMatchingPursuitCV", "ARDRegression", "BayesianRidge", "MultiTaskElasticNet", "MultiTaskElasticNetCV", "MultiTaskLasso", "MultiTaskLassoCV", "HuberRegressor", "QuantileRegressor", "RANSACRegressor", "TheilSenRegressor", "GammaRegressor", "PoissonRegressor", "TweedieRegressor"]
 for regressor in regressors:
     if regressor not in st.session_state:
@@ -27,14 +28,15 @@ class Regression:
             if classicalLinearModel=="Linear Regression":
                 if st.session_state["LinearRegression"]:
                     with self.col1:
-                        st.markdown("### Train-Test Split Completed!")
-                        st.write("Training data shape:", self.xTrain.shape, self.yTrain.shape)
-                        st.write("Testing data shape:", self.xTest.shape, self.yTest.shape)
+                        st.subheader("Train-Test Split Completed!", divider='blue')
+                        metric_card("Training Data Shape", f"{self.xTrain.shape}", delta=None)
+                        metric_card("Testing Data Shape", f"{self.xTest.shape}", delta=None)
+                    
                     with self.col2:
                         st.success("Linear Regression Model Trained Successfully!")
                         st.markdown("### Model Attributes")
-                        st.write(f"**Coefficients:** {self.model.coef_}")
-                        st.write(f"**Intercept:** {self.model.intercept_}")
+                        metric_card("Coefficients", f"{self.model.coef_}", delta=None)
+                        metric_card("Intercept", f"{self.model.intercept_}", delta=None)
                 else:
                     self.linear_regression()
                                        
