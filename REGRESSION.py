@@ -16,7 +16,14 @@ class Regression:
         self.col1, self.col2, self.col3 = st.columns([1, 1, 1])
         self.xTrain, self.xTest, self.yTrain, self.yTest = None, None, None, None
         self.model = None
-
+    def display(self):
+        self.train_test_split()
+        with self.col2:
+            st.subheader("Classical Linear Model",divider='blue')
+            classicalLinearModel=st.pills("Select the classical linear model",["Linear Regression","Ridge","RidgeCV","SGDRegressor"])
+            if classicalLinearModel=="Linear Regression":
+                self.linear_regression()
+                                       
     def train_test_split(self):
         with self.col1:
             st.markdown("### Train-Test Split Configuration")
