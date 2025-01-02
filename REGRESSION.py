@@ -23,10 +23,18 @@ class Regression:
             classicalLinearModel=st.pills("Select the classical linear model",["Linear Regression","Ridge","RidgeCV","SGDRegressor"])
             if classicalLinearModel=="Linear Regression":
                 self.linear_regression()
+            elif classicalLinearModel=="Ridge":
+                self.ridge_regression()
+            elif classicalLinearModel=="RidgeCV":
+                self.ridge_cv()
+            elif classicalLinearModel=="SGDRegressor":
+                self.sgd_regressor()
+                
+                
                                        
     def train_test_split(self):
         with self.col1:
-            st.markdown("### Train-Test Split Configuration")
+            st.subheader("Train-Test Split Configuration",divider='blue')
             target_column = st.selectbox("Select the target column", self.dataset.columns)
 
             if not target_column:
@@ -49,7 +57,7 @@ class Regression:
 
     def linear_regression(self):
         with self.col2:
-            st.markdown("### Linear Regression Configuration")
+            st.subheader("Linear Regression Configuration",divider='blue')
             fit_intercept = st.checkbox("Fit Intercept", value=True)
             positive = st.checkbox("Force Positive Coefficients", value=False)
 
@@ -66,7 +74,114 @@ class Regression:
                 st.write(f"**Coefficients:** {self.model.coef_}")
                 st.write(f"**Intercept:** {self.model.intercept_}")
                 self.regression_metrics()
-
+    def ridge_regression(self):
+        with self.col2:
+            st.subheader("Ridge Regression Configuration", divider='blue')
+            
+            # Ridge-specific hyperparameters
+            alpha = st.slider("Alpha (Regularization Strength)", min_value=0.0, max_value=10.0, value=1.0, step=0.1)
+            fit_intercept = st.checkbox("Fit Intercept", value=True)
+            positive = st.checkbox("Force Positive Coefficients", value=False)
+            solver = st.selectbox("Solver", ["auto", "svd", "cholesky", "lsqr", "sparse_cg", "sag", "saga", "lbfgs"])
+            
+            if st.checkbox("Train Ridge Regression Model"):
+                if self.xTrain is None or self.yTrain is None:
+                    st.error("Train-test split not performed. Please perform it first.")
+                    return
+    
+                # Initialize and train the Ridge Regression model
+                self.model = Ridge(alpha=alpha, fit_intercept=fit_intercept, positive=positive, solver=solver)
+                self.model.fit(self.xTrain, self.yTrain)
+    
+                st.success("Ridge Regression Model Trained Successfully!")
+                
+                st.markdown("### Model Attributes")
+                st.write(f"**Coefficients:** {self.model.coef_}")
+                st.write(f"**Intercept:** {self.model.intercept_}")
+                
+                # Call regression metrics
+                self.regression_metrics()
+    def ridge_cv(self):
+        with self.col2:
+            st.subheader("RidgeCV Regression Configuration", divider='blue')
+    
+            # RidgeCV-specific hyperparameters
+            alphas = st.text_input("Alphas (Regularization Strength)", value="(0.1, 1.0, 10.0)")
+            alphas = eval(alphas)  # Convert input string to tuple of floats
+            fit_intercept = st.checkbox("Fit Intercept", value=True)
+            alpha_per_target = st.checkbox("Alpha Per Target", value=False)
+            scoring = st.selectbox("Scoring Method", ["None", "neg_mean_squared_error", "r2", "neg_mean_absolute_error"])
+            cv = st.number_input("Cross-validation Folds", min_value=2, max_value=10, value=5)
+            
+            if st.checkbox("Train RidgeCV Regression Model"):
+                if self.xTrain is None or self.yTrain is None:
+                    st.error("Train-test split not performed. Please perform it first.")
+                    return
+    
+                # Initialize and train the RidgeCV model
+                self.model = RidgeCV(alphas=alphas, fit_intercept=fit_intercept, alpha_per_target=alpha_per_target,
+                                     scoring=scoring if scoring != "None" else None, cv=cv)
+                self.model.fit(self.xTrain, self.yTrain)
+    
+                st.success("RidgeCV Regression Model Trained Successfully!")
+                
+                st.markdown("### Model Attributes")
+                st.write(f"**Coefficients:** {self.model.coef_}")
+                st.write(f"**Intercept:** {self.model.intercept_}")
+                st.write(f"**Best Alpha:** {self.model.alpha_}")
+                
+                # Call regression metrics
+                self.regression_metrics()
+    def sgd_regressor(self):
+        with self.col2:
+            st.subheader("SGD Regressor Configuration", divider='blue')
+    
+            # SGD Regressor-specific hyperparameters
+            loss = st.selectbox("Loss Function", ["squared_error", "huber", "epsilon_insensitive", "squared_epsilon_insensitive"], index=0)
+            penalty = st.selectbox("Penalty", ["l2", "l1", "elasticnet", "None"], index=0)
+            alpha = st.number_input("Alpha (Regularization Strength)", min_value=0.0, value=0.0001)
+            l1_ratio = st.slider("L1 Ratio (Elastic Net)", min_value=0.0, max_value=1.0, value=0.15)
+            fit_intercept = st.checkbox("Fit Intercept", value=True)
+            max_iter = st.number_input("Max Iterations", min_value=1, max_value=10000, value=1000)
+            tol = st.number_input("Tolerance", min_value=0.0, value=0.001)
+            shuffle = st.checkbox("Shuffle Data", value=True)
+            verbose = st.number_input("Verbose Level", min_value=0, value=0)
+            epsilon = st.number_input("Epsilon (Huber Loss)", min_value=0.0, value=0.1)
+            learning_rate = st.selectbox("Learning Rate", ["constant", "optimal", "invscaling", "adaptive"], index=2)
+            eta0 = st.number_input("Initial Learning Rate", min_value=0.0, value=0.01)
+            power_t = st.number_input("Power T for InvScaling", min_value=0.0, value=0.25)
+            early_stopping = st.checkbox("Early Stopping", value=False)
+            validation_fraction = st.number_input("Validation Fraction (for Early Stopping)", min_value=0.0, max_value=1.0, value=0.1)
+            n_iter_no_change = st.number_input("Number of Iterations with No Change", min_value=1, value=5)
+            warm_start = st.checkbox("Warm Start", value=False)
+            average = st.checkbox("Use Averaging for SGD", value=False)
+    
+            if st.checkbox("Train SGD Regressor Model"):
+                if self.xTrain is None or self.yTrain is None:
+                    st.error("Train-test split not performed. Please perform it first.")
+                    return
+    
+                # Initialize and train the SGDRegressor model
+                self.model = SGDRegressor(loss=loss, penalty=penalty, alpha=alpha, l1_ratio=l1_ratio,
+                                          fit_intercept=fit_intercept, max_iter=max_iter, tol=tol,
+                                          shuffle=shuffle, verbose=verbose, epsilon=epsilon,
+                                          learning_rate=learning_rate, eta0=eta0, power_t=power_t,
+                                          early_stopping=early_stopping, validation_fraction=validation_fraction,
+                                          n_iter_no_change=n_iter_no_change, warm_start=warm_start,
+                                          average=average)
+                self.model.fit(self.xTrain, self.yTrain)
+    
+                st.success("SGD Regressor Model Trained Successfully!")
+    
+                st.markdown("### Model Attributes")
+                st.write(f"**Coefficients:** {self.model.coef_}")
+                st.write(f"**Intercept:** {self.model.intercept_}")
+                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
+                st.write(f"**Total Updates:** {self.model.t_}")
+    
+                # Call regression metrics
+                self.regression_metrics()
+    
     def regression_metrics(self):
         with self.col3:
             st.markdown("### Evaluate Regression Metrics")
