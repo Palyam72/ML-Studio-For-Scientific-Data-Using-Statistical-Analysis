@@ -9,7 +9,7 @@ from sklearn.metrics import (
     mean_squared_log_error, mean_tweedie_deviance, median_absolute_error,
     r2_score
 )
-from streamlit_extras import *
+from streamlit_extras.metric_cards import *
 
 regressors = ["LinearRegression", "Ridge", "RidgeCV", "SGDRegressor", "ElasticNet", "ElasticNetCV", "Lars", "LarsCV", "Lasso", "LassoCV", "LassoLars", "LassoLarsCV", "LassoLarsIC", "OrthogonalMatchingPursuit", "OrthogonalMatchingPursuitCV", "ARDRegression", "BayesianRidge", "MultiTaskElasticNet", "MultiTaskElasticNetCV", "MultiTaskLasso", "MultiTaskLassoCV", "HuberRegressor", "QuantileRegressor", "RANSACRegressor", "TheilSenRegressor", "GammaRegressor", "PoissonRegressor", "TweedieRegressor"]
 for regressor in regressors:
@@ -31,14 +31,16 @@ class Regression:
                 if st.session_state["LinearRegression"]:
                     with self.col1:
                         st.subheader("Train-Test Split Completed!", divider='blue')
-                        metric_card("Training Data Shape", f"{self.xTrain.shape}", delta=None)
-                        metric_card("Testing Data Shape", f"{self.xTest.shape}", delta=None)
+                        st.metric("Training Data Shape", f"{self.xTrain.shape}", delta=None)
+                        st.metric("Testing Data Shape", f"{self.xTest.shape}", delta=None)
+                        style_metric_cards()
                     
                     with self.col2:
                         st.success("Linear Regression Model Trained Successfully!")
                         st.markdown("### Model Attributes")
-                        metric_card("Coefficients", f"{self.model.coef_}", delta=None)
-                        metric_card("Intercept", f"{self.model.intercept_}", delta=None)
+                        st.metric("Coefficients", f"{self.model.coef_}", delta=None)
+                        st.metric_card("Intercept", f"{self.model.intercept_}", delta=None)
+                        style_metric_cards()
                 else:
                     self.linear_regression()
                     st.session_state["LinearRegression"]=True
