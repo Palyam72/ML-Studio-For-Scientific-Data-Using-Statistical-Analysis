@@ -78,7 +78,7 @@ class Regression:
                 "Mean Squared Log Error", "Mean Tweedie Deviance", "Median Absolute Error",
                 "R2 Score"
             ]
-            selectedMetric = st.selectbox("Select the metric", metrics)
+            selectedMetric = st.pills("Select the metric", metrics)
             if selectedMetric == metrics[0]:
                 self.d2AbsoluteError()
             elif selectedMetric == metrics[1]:
