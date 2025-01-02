@@ -10,6 +10,12 @@ from sklearn.metrics import (
     r2_score
 )
 from streamlit_extras import *
+
+regressors = ["LinearRegression", "Ridge", "RidgeCV", "SGDRegressor", "ElasticNet", "ElasticNetCV", "Lars", "LarsCV", "Lasso", "LassoCV", "LassoLars", "LassoLarsCV", "LassoLarsIC", "OrthogonalMatchingPursuit", "OrthogonalMatchingPursuitCV", "ARDRegression", "BayesianRidge", "MultiTaskElasticNet", "MultiTaskElasticNetCV", "MultiTaskLasso", "MultiTaskLassoCV", "HuberRegressor", "QuantileRegressor", "RANSACRegressor", "TheilSenRegressor", "GammaRegressor", "PoissonRegressor", "TweedieRegressor"]
+for regressor in regressors:
+    if regressor not in st.session_state:
+        st.session_state[regressor]=None
+        
 class Regression:
     def __init__(self, dataset):
         self.dataset = dataset
