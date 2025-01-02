@@ -74,28 +74,33 @@ class Regression:
             # D2 Absolute Error
             try:
                 y_pred = self.model.predict(self.xTest)
-                d2_abs_error_score = d2_absolute_error_score(self.yTest, y_pred)
+                sample_weight = None
+                multioutput = "uniform_average"
+                d2_abs_error_score = d2_absolute_error_score(self.yTest, y_pred, sample_weight=sample_weight, multioutput=multioutput)
                 st.write(f"**D2 Absolute Error Score:** {d2_abs_error_score}")
             except Exception as e:
                 st.error(f"An error occurred while calculating D2 Absolute Error: {str(e)}")
     
             # D2 Pinball Loss
             try:
-                d2_pinball_loss = d2_pinball_score(self.yTest, y_pred)
+                alpha = 0.5
+                d2_pinball_loss = d2_pinball_score(self.yTest, y_pred, sample_weight=None, alpha=alpha, multioutput="uniform_average")
                 st.write(f"**D2 Pinball Loss Score:** {d2_pinball_loss}")
             except Exception as e:
                 st.error(f"An error occurred while calculating D2 Pinball Loss: {str(e)}")
     
             # D2 Tweedie Score
             try:
-                d2_tweedie_score = d2_tweedie_score(self.yTest, y_pred)
+                power = 0.0
+                d2_tweedie_score = d2_tweedie_score(self.yTest, y_pred, sample_weight=None, power=power)
                 st.write(f"**D2 Tweedie Score:** {d2_tweedie_score}")
             except Exception as e:
                 st.error(f"An error occurred while calculating D2 Tweedie Score: {str(e)}")
     
             # Explained Variance
             try:
-                explained_variance = explained_variance_score(self.yTest, y_pred)
+                force_finite = True
+                explained_variance = explained_variance_score(self.yTest, y_pred, sample_weight=None, multioutput="uniform_average", force_finite=force_finite)
                 st.write(f"**Explained Variance Score:** {explained_variance}")
             except Exception as e:
                 st.error(f"An error occurred while calculating Explained Variance: {str(e)}")
@@ -176,4 +181,3 @@ class Regression:
                 st.write(f"**R2 Score:** {r2}")
             except Exception as e:
                 st.error(f"An error occurred while calculating R2 Score: {str(e)}")
-    
