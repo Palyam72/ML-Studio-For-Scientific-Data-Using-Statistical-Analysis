@@ -27,8 +27,8 @@ with st.sidebar:
             "Data Upload", "Data Cleaning", "Identify & Select the Most Important Features",
             "Create New Features", "Encode Categorical Data",
             "Normalize or Scale the Features", "Exploratory Data Analysis",
-            "Splitting the Data", "Model Selection and Training",
-            "Model Evaluation", "Model Download"
+            "Regression", "Classification",
+            "Clustering", "Model Download"
         ],
         icons=[
             "cloud-upload", "eraser", "star", "plus-circle", "code",
@@ -450,6 +450,33 @@ elif selected=="Normalize or Scale the Features":
                         dataframe=normalizers[i]()
                         st.session_state.availableDatasets[i]=dataframe
                 
+elif selected=="Regression":
+    if st.session_state.availableDatasets:
+        # Dataset selection for cleaning
+        selected_dataset_name = st.selectbox(
+            "Select a dataset to clean",
+            list(st.session_state.availableDatasets.keys())
+        )
+
+    if selected_dataset_name:
+        # Load the selected dataset from session state
+        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+        dataset = st.session_state.selected_dataset
+        st.markdown("### Selected Dataset")
+        st.dataframe(dataset)
+        # Display missing value charts
+        st.divider()
+        st.markdown("### Missing Value Analysis")
+        fig, ax = plt.subplots(figsize=(10, 5))
+        mso.matrix(st.session_state.selected_dataset, ax=ax)
+        st.pyplot(fig)
+        fig1, ax1 = plt.subplots(figsize=(10, 5))
+        mso.heatmap(st.session_state.selected_dataset, ax=ax1)
+        st.pyplot(fig1)
+        col1,col2,col3=st.columns([1,1,1])
+        with col1:
+            st.subheader("apply train test split",divider="blue")
+            pass
             
                         
         
