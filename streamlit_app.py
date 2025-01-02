@@ -17,11 +17,6 @@ for key in ["availableDatasets", "selected_dataset"]:
     if key not in st.session_state:
         st.session_state[key] = {}
 
-regressors = ["LinearRegression", "Ridge", "RidgeCV", "SGDRegressor", "ElasticNet", "ElasticNetCV", "Lars", "LarsCV", "Lasso", "LassoCV", "LassoLars", "LassoLarsCV", "LassoLarsIC", "OrthogonalMatchingPursuit", "OrthogonalMatchingPursuitCV", "ARDRegression", "BayesianRidge", "MultiTaskElasticNet", "MultiTaskElasticNetCV", "MultiTaskLasso", "MultiTaskLassoCV", "HuberRegressor", "QuantileRegressor", "RANSACRegressor", "TheilSenRegressor", "GammaRegressor", "PoissonRegressor", "TweedieRegressor"]
-for regressor in regressors:
-    if regressor not in st.session_state:
-        st.session_state[regressor]=None
-
 # Title of the app
 st.title("Data Science Workflow Application")
 
