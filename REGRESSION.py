@@ -9,7 +9,10 @@ from sklearn.metrics import (
     mean_squared_log_error, mean_tweedie_deviance, median_absolute_error,
     r2_score
 )
-
+regressors = ["LinearRegression", "Ridge", "RidgeCV", "SGDRegressor", "ElasticNet", "ElasticNetCV", "Lars", "LarsCV", "Lasso", "LassoCV", "LassoLars", "LassoLarsCV", "LassoLarsIC", "OrthogonalMatchingPursuit", "OrthogonalMatchingPursuitCV", "ARDRegression", "BayesianRidge", "MultiTaskElasticNet", "MultiTaskElasticNetCV", "MultiTaskLasso", "MultiTaskLassoCV", "HuberRegressor", "QuantileRegressor", "RANSACRegressor", "TheilSenRegressor", "GammaRegressor", "PoissonRegressor", "TweedieRegressor"]
+for regressor in regressors:
+    if regressor not in st.session_state:
+        st.session_state[regressor]=None
 class Regression:
     def __init__(self, dataset):
         self.dataset = dataset
@@ -22,7 +25,18 @@ class Regression:
             st.subheader("Classical Linear Model",divider='blue')
             classicalLinearModel=st.pills("Select the classical linear model",["Linear Regression","Ridge","RidgeCV","SGDRegressor"])
             if classicalLinearModel=="Linear Regression":
-                self.linear_regression()
+                if st.session_state["LinearRegression"]:
+                    with self.col1:
+                        st.markdown("### Train-Test Split Completed!")
+                        st.write("Training data shape:", self.xTrain.shape, self.yTrain.shape)
+                        st.write("Testing data shape:", self.xTest.shape, self.yTest.shape)
+                    with self.col2:
+                        st.success("Linear Regression Model Trained Successfully!")
+                        st.markdown("### Model Attributes")
+                        st.write(f"**Coefficients:** {self.model.coef_}")
+                        st.write(f"**Intercept:** {self.model.intercept_}")
+                else:
+                    self.linear_regression()
                                        
     def train_test_split(self):
         with self.col1:
