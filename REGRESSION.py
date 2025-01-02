@@ -41,6 +41,7 @@ class Regression:
                         metric_card("Intercept", f"{self.model.intercept_}", delta=None)
                 else:
                     self.linear_regression()
+                    st.session_state["LinearRegression"]=True
                                        
     def train_test_split(self):
         with self.col1:
