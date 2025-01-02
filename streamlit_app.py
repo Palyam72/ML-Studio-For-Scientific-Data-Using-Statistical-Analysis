@@ -474,6 +474,8 @@ elif selected=="Regression":
         fig1, ax1 = plt.subplots(figsize=(10, 5))
         mso.heatmap(st.session_state.selected_dataset, ax=ax1)
         st.pyplot(fig1)
+        regression=Regression(st.session_state.selected_dataset)
+        regression.display()
         
         
             
