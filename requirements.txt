@@ -11,3 +11,7 @@ openpyxl
 feature-engine
 html5lib
 category-encoders
+
+
+
+streamlit-extras
