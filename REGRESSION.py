@@ -55,7 +55,7 @@ class Regression:
             elif Model == "LassoCV":
                 self.lasso_cv()
             elif Model == "LassoLars":
-                self.lasso_lars()
+                self.lassolars()
             elif Model == "LassoLarsCV":
                 self.lasso_lars_cv()
             elif Model == "LassoLarsIC":
@@ -242,7 +242,7 @@ class Regression:
     
                 # Call regression metrics
                 self.regression_metrics()
-    def elastic_net_regressor(self):
+    def elasticNet(self):
         with self.col2:
             st.subheader("ElasticNet Configuration", divider='blue')
     
@@ -281,7 +281,7 @@ class Regression:
     
                 # Call regression metrics
                 self.regression_metrics()
-    def elastic_net_cv(self):
+    def elasticNetCV(self):
         with self.col2:
             st.subheader("ElasticNetCV Configuration", divider="blue")
             
