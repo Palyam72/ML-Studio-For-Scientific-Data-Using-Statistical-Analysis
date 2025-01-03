@@ -788,7 +788,7 @@ class Regression:
     
                 # Display model attributes
                 st.markdown("### Model Attributes")
-                st.write(f"**Alpha:** {self.model.alpha_}")
+                st.write(f"**Alpha:** {self.model.alphas_}")
                 st.write(f"**Coefficients:** {self.model.coef_}")
                 st.write(f"**Intercept:** {self.model.intercept_}")
                 st.write(f"**Number of Iterations:** {self.model.n_iter_}")
