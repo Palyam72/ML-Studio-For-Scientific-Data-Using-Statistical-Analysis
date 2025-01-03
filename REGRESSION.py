@@ -902,7 +902,7 @@ class Regression:
                 # Plot the MSE path
                 st.markdown("### Mean Squared Error Path")
                 for i, mse_path in enumerate(self.model.mse_path_):
-                    st.line_chart(mse_path, height=200, width=700, caption=f"Fold {i+1}")
+                    st.line_chart(mse_path, height=200, width=700)
     
                 # Call regression metrics
                 self.regression_metrics()
