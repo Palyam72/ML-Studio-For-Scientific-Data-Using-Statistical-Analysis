@@ -9,6 +9,7 @@ from sklearn.metrics import (
     mean_squared_log_error, mean_tweedie_deviance, median_absolute_error,
     r2_score
 )
+import numpy as np
 
 class Regression:
     def __init__(self, dataset):
