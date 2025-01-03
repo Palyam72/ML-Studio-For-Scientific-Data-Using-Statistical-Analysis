@@ -852,7 +852,7 @@ class Regression:
             eps = st.number_input(
                 "Epsilon (eps)",
                 min_value=1e-6,
-                value=2.220446049250313e-16,
+                value=1e-6,
                 step=1e-6,
                 format="%.1e",
                 help="Machine precision regularization.",
