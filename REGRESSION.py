@@ -62,9 +62,9 @@ class Regression:
             elif Model == "LassoLarsIC":
                 self.lasso_lars_ic()
             elif Model == "OrthogonalMatchingPursuit":
-                self.omp()
+                self.orthogonal_matching_pursuit()
             elif Model == "OrthogonalMatchingPursuitCV":
-                self.omp_cv()
+                self.orthogonal_matching_pursuit_cv()
             elif Model == "ARDRegression":
                 self.ard_regression()
             elif Model == "BayesianRidge":
