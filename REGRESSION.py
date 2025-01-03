@@ -50,7 +50,7 @@ class Regression:
             elif Model == "Lars":
                 self.lars()
             elif Model == "LarsCV":
-                self.larscv()
+                self.lars_cv()
             elif Model == "Lasso":
                 self.lasso()
             elif Model == "LassoCV":
