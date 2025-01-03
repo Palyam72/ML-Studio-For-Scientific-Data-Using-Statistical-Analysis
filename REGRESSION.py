@@ -942,7 +942,7 @@ class Regression:
             eps = st.number_input(
                 "Epsilon (eps)",
                 min_value=1e-6,
-                value=2.220446049250313e-16,
+                value=1e-6,
                 step=1e-6,
                 format="%.1e",
                 help="Machine precision regularization.",
@@ -999,7 +999,7 @@ class Regression:
     
                 # Plot the information criterion values across alphas
                 st.markdown("### Information Criterion Path")
-                st.line_chart(self.model.criterion_, height=200, width=700, caption="AIC/BIC Path")
+                st.line_chart(self.model.criterion_, height=200, width=700)
     
                 # Call regression metrics
                 self.regression_metrics()
