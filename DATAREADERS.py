@@ -107,3 +107,5 @@ class DataExtractor:
                     except Exception as e:
                         st.error(f"Error reading HTML from .txt file: {e}")
         return df
+    def makeData(self):
+        pass
