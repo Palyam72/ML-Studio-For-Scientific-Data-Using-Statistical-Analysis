@@ -13,7 +13,7 @@ from sklearn import metrics
 import warnings
 from sklearn.linear_model import LogisticRegression
 
-session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier","Voting Classifier","LinearSVC"]
+session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier","Voting Classifier","LinearSVC","NuSVC"]
 for i in session_models:
     if i not in st.session_state:
         st.session_state[i]=None
@@ -553,6 +553,63 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["LinearSVC"])
+    def nu_svc_classifier(self, col2):
+        xtrain_key = col2.selectbox("Select X Train for NuSVC", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for NuSVC", list(st.session_state["availableDatasets"].keys()))
+    
+        # Model parameters selection
+        nu = col2.slider("Nu (Upper bound of margin errors)", min_value=0.01, max_value=1.0, value=0.5, step=0.01)
+        kernel = col2.selectbox("Kernel Type", ["linear", "poly", "rbf", "sigmoid", "precomputed"], index=2)
+        degree = col2.number_input("Degree (for poly kernel)", value=3, min_value=1, step=1)
+        gamma = col2.selectbox("Gamma", ["scale", "auto"], index=0)
+        coef0 = col2.number_input("Coef0 (for poly and sigmoid)", value=0.0, step=0.1)
+        shrinking = col2.checkbox("Use Shrinking Heuristic", True)
+        probability = col2.checkbox("Enable Probability Estimates (slower training)", False)
+        tol = col2.number_input("Tolerance for Stopping Criteria", value=0.001, step=0.0001, format="%.5f")
+        cache_size = col2.number_input("Cache Size (MB)", value=200, min_value=50, step=50)
+        class_weight = col2.selectbox("Class Weight", [None, "balanced"], index=0)
+        max_iter = col2.number_input("Max Iterations", value=-1, step=100)
+        decision_function_shape = col2.selectbox("Decision Function Shape", ["ovo", "ovr"], index=1)
+        break_ties = col2.checkbox("Break Ties (for multi-class prediction)", False)
+        random_state = col2.number_input("Random State (Optional)", value=None, format="%d")
+    
+        col2.divider()
+    
+        if col2.checkbox("Continue To Fit The Model"):
+            model = NuSVC(
+                nu=nu,
+                kernel=kernel,
+                degree=degree,
+                gamma=gamma,
+                coef0=coef0,
+                shrinking=shrinking,
+                probability=probability,
+                tol=tol,
+                cache_size=cache_size,
+                class_weight=class_weight if class_weight != "None" else None,
+                max_iter=max_iter,
+                decision_function_shape=decision_function_shape,
+                break_ties=break_ties,
+                random_state=random_state if random_state else None
+            )
+    
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+    
+            if st.session_state.get("NuSVC") is None:
+                st.session_state["NuSVC"] = model.fit(
+                    st.session_state["availableDatasets"][xtrain_key],
+                    st.session_state["availableDatasets"][ytrain_key]
+                )
+            else:
+                col2.success("Model Created")
+                delete = col2.checkbox("Do you want to recreate the model?")
+                if delete:
+                    st.session_state["NuSVC"] = None
+    
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["NuSVC"])
 
     
             
