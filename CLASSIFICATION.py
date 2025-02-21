@@ -304,13 +304,13 @@ class Classification:
             
             col2.subheader("Your Model", divider='blue')
             col2.write(model.get_params())
-            if st.session_state["Hist Gradient Boosting"] ==None:
-                st.session_state["Hist Gradient Boosting"]=model.fit(st.session_state["availableDatasets"][xtrain_key], st.session_state["availableDatasets"][ytrain_key])
+            if st.session_state["Hist Gradient Boosting Classifier"] ==None:
+                st.session_state["Hist Gradient Boosting Classifier"]=model.fit(st.session_state["availableDatasets"][xtrain_key], st.session_state["availableDatasets"][ytrain_key])
             else:
                 col2.success("Model Created")
                 delete=col2.checkbox("DO You Want o recreate model")
                 if delete:
-                    st.session_state["Hist Gradient Boosting"]=None
+                    st.session_state["Hist Gradient Boosting Classifier"]=None
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["Hist Gradient Boosting"])
