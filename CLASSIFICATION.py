@@ -80,6 +80,8 @@ class Classification:
                   self.nu_svc_classifier(col2)
               elif option =="One Class SVM":
                 self.one_class_svm_classifier(col2)
+              elif option == "SVC":
+                self.svc_classifier(col2)
                 
       with tab2:
           col1, col2 = st.columns([1, 2], border=True)
