@@ -88,9 +88,31 @@ class Classification:
     def voting_classifier(self, col2):
         pass
 
-    def decision_tree_classifier(self, col2):
-        pass
+    def decision_tree(self, col2):
+        st.write("### Decision Tree Classifier Settings")
+    
+        criterion = col2.selectbox("Select Criterion", ["gini", "entropy", "log_loss"], index=0)
+        splitter = col2.selectbox("Select Splitter Strategy", ["best", "random"], index=0)
+        max_depth = None if col2.checkbox("Use Default Max Depth") else col2.number_input("Max Depth (None for unlimited)", min_value=1, value=10)
+        min_samples_split = col2.number_input("Minimum Samples to Split", min_value=2, value=2)
+        min_samples_leaf = col2.number_input("Minimum Samples at a Leaf Node", min_value=1, value=1)
+        max_features = col2.selectbox("Max Features", [None, "sqrt", "log2"] + list(range(1, len(self.xtrain.columns) + 1)), index=0)
+        max_leaf_nodes = None if col2.checkbox("Use Default Max Leaf Nodes") else col2.number_input("Max Leaf Nodes (None for unlimited)", min_value=1, value=10)
+        min_impurity_decrease = col2.slider("Minimum Impurity Decrease", 0.0, 1.0, 0.0, 0.01)
+        random_state = col2.number_input("Random State (None for random)", min_value=0, value=42)
+    
+        if col2.checkbox("Train Decision Tree Model"):
+            model = DecisionTreeClassifier(criterion=criterion, splitter=splitter, max_depth=max_depth, min_samples_split=min_samples_split, 
+                                           min_samples_leaf=min_samples_leaf, max_features=max_features if max_features != "None" else None, 
+                                           max_leaf_nodes=max_leaf_nodes, min_impurity_decrease=min_impurity_decrease, random_state=random_state)
+            col2.subheader("Your Created Model",divider='blue')
+            col2.write(model)
+            model.fit(self.xtrain, self.ytrain)
+            self.metrics(col2, model)
 
+    def metrics(self,col2,model):
+        pass
+        
     def linear_svm(self, col2):
         pass
 
