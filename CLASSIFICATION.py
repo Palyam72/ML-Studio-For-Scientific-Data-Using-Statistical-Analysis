@@ -28,7 +28,12 @@ class Classification:
             if options=="View Data Frame":
                 col2.dataframe(self.dataset)
             if options=="View Missing Information":
-                pass
+                fig, ax = plt.subplots(figsize=(10, 5))
+                mso.matrix(self.dataset, ax=ax)
+                st.pyplot(fig)
+                fig1, ax1 = plt.subplots(figsize=(10, 5))
+                mso.heatmap(st.session_state.selected_dataset, ax=ax1)
+                st.pyplot(fig1)
 
         # Content for Delete Operations tab
         with tab3:
