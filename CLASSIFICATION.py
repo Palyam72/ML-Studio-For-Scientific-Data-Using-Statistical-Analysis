@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.naive_bayes import BernoulliNB, CategoricalNB, ComplementNB, GaussianNB, MultinomialNB
 from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier, StackingClassifier, VotingClassifier
 from sklearn.metrics import classification_report, confusion_matrix
-from dtreeviz.trees import dtreeviz
+from dtreeviz import dtreeviz
 
 if "availableDatasets" not in st.session_state:
     st.session_state["availableDatasets"]={}
