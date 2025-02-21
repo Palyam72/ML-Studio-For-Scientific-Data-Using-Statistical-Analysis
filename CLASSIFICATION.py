@@ -13,7 +13,7 @@ from sklearn import metrics
 import warnings
 from sklearn.linear_model import LogisticRegression
 
-session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier"]
+session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier","Voting Classifier"]
 for i in session_models:
     if i not in st.session_state:
         st.session_state[i]=None
@@ -433,6 +433,67 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["Stacking Classifier"])
-
+    def voting_classifier(self, col2):
+        xtrain_key = col2.selectbox("Select X Train for VotingClassifier", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for VotingClassifier", list(st.session_state["availableDatasets"].keys()))
+        
+        # Base estimators selection
+        estimators_selected = col2.multiselect("Select Base Estimators", ["RandomForest", "LogisticRegression", "SVC", "KNeighbors"], default=["RandomForest", "LogisticRegression"])
+        
+        selected_estimators = []
+        for estimator in estimators_selected:
+            if estimator == "RandomForest":
+                selected_estimators.append(("RandomForest", RandomForestClassifier(n_estimators=100)))
+            elif estimator == "LogisticRegression":
+                selected_estimators.append(("LogisticRegression", LogisticRegression()))
+            elif estimator == "SVC":
+                selected_estimators.append(("SVC", SVC(probability=True)))
+            elif estimator == "KNeighbors":
+                selected_estimators.append(("KNeighbors", KNeighborsClassifier()))
+        
+        # Voting type selection
+        voting_type = col2.selectbox("Select Voting Type", ["hard", "soft"], index=0)
+        
+        # Weights input (optional)
+        use_weights = col2.checkbox("Assign Weights to Estimators?")
+        weights = None
+        if use_weights:
+            weights = []
+            for estimator in estimators_selected:
+                weight = col2.number_input(f"Weight for {estimator}", value=1, min_value=1, step=1)
+                weights.append(weight)
+    
+        # Additional parameters
+        n_jobs = col2.number_input("Number of jobs (-1 for all CPUs)", value=None, format="%d")
+        verbose = col2.checkbox("Verbose", False)
+    
+        col2.divider()
+    
+        if col2.checkbox("Continue To Fit The Model"):
+            model = VotingClassifier(
+                estimators=selected_estimators,
+                voting=voting_type,
+                weights=weights,
+                n_jobs=n_jobs,
+                verbose=verbose
+            )
+    
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+    
+            if st.session_state.get("Voting Classifier") is None:
+                st.session_state["Voting Classifier"] = model.fit(
+                    st.session_state["availableDatasets"][xtrain_key],
+                    st.session_state["availableDatasets"][ytrain_key]
+                )
+            else:
+                col2.success("Model Created")
+                delete = col2.checkbox("Do you want to recreate the model?")
+                if delete:
+                    st.session_state["Voting Classifier"] = None
+    
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["Voting Classifier"])
 
             
