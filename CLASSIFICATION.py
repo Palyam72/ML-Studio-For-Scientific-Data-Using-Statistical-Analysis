@@ -919,7 +919,7 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["CategoricalNB"])
-  def complement_nb_classifier(self, col2):
+    def complement_nb_classifier(self, col2):
         xtrain_key = col2.selectbox("Select X Train for ComplementNB", list(st.session_state["availableDatasets"].keys()))
         ytrain_key = col2.selectbox("Select Y Train for ComplementNB", list(st.session_state["availableDatasets"].keys()))
       
