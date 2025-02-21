@@ -11,6 +11,8 @@ from sklearn.naive_bayes import BernoulliNB, CategoricalNB, ComplementNB, Gaussi
 from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier, StackingClassifier, VotingClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
+if "availableDatasets" not in st.session_state:
+    st.session_state["availableDatasets"]={}
 class Classification:
     def __init__(self, dataset):
         self.dataset = dataset
