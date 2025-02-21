@@ -119,7 +119,7 @@ class Classification:
             col2.subheader("Your Model Metrics On Test Data",divider='blue')
             self.metrics(col2)
     def metrics(self, col2):
-        warnings.simplefilter("ignore", category=UndefinedMetricWarning)
+        
         col2.subheader("Select Data for Metrics Calculation", divider="blue")
     
         try:
