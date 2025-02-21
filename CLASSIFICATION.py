@@ -247,7 +247,7 @@ class Classification:
         verbose=int(ol2.number_input("Controls the verbosity when fitting and predicting.",0))
         col2.divider()
         if col2.checkbox("Continue To Fit The Model"):
-            model=BaggingClassifier(n_estimators=nestimators, *, max_samples=max_samples, max_features=max_features,
+            model=BaggingClassifier(n_estimators=nestimators, max_samples=max_samples, max_features=max_features,
                                     bootstrap=bootstrap, bootstrap_features=bootstrap_features, oob_score=oob_score, 
                                     warm_start=warm_start, n_jobs=n_jobs, random_state=random_state, verbose=verbose)
             col2.subheader("Your Model",divider='blue')
