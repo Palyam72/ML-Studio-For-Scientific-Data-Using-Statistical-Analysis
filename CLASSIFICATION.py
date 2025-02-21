@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import missingno
+import matplotlib.pyplot as plt
 
 class Classification:
     def __init__(self, dataset):
