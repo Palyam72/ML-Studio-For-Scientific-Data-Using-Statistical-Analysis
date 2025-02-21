@@ -43,7 +43,8 @@ class Classification:
                                          "Decision Tree Classifier", "Linear SVM", "NuSVC", "One Class SVM", "SVC", 
                                          "KNeighbours Classifier", "Radius Neighbours Classifier", "BernoulliNB", 
                                          "CategoricalNB", "ComplementNB", "GaussianNB", "MultinomialNB"])
-
+                if option=="Decision Tree Classifier":
+                    self.decision_tree(col2)
         # Content for View Operations tab
         with tab2:
             col1, col2 = st.columns([1, 2], border=True)
