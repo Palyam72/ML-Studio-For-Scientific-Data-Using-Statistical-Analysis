@@ -966,43 +966,43 @@ class Classification:
           col2.divider()
           self.metrics(col2, st.session_state["ComplementNB"])
   def gaussian_nb_classifier(self, col2):
-      xtrain_key = col2.selectbox("Select X Train for GaussianNB", list(st.session_state["availableDatasets"].keys()))
-      ytrain_key = col2.selectbox("Select Y Train for GaussianNB", list(st.session_state["availableDatasets"].keys()))
-  
-      # Model parameters selection
-      priors_input = col2.text_input("Class Prior Probabilities (comma-separated, leave blank for None)")
-      var_smoothing = col2.number_input("Variance Smoothing", value=1e-9, min_value=0.0, format="%.10f")
-  
-      priors = None
-      if priors_input:
-          try:
-              priors = [float(x) for x in priors_input.split(",")]
-          except ValueError:
-              col2.error("Invalid class prior input. Enter numbers separated by commas.")
-  
-      col2.divider()
-  
-      if col2.checkbox("Continue To Fit The Model"):
-          model = GaussianNB(
-              priors=priors,
-              var_smoothing=var_smoothing
-          )
-  
-          col2.subheader("Your Model", divider='blue')
-          col2.write(model.get_params())
-  
-          if st.session_state.get("GaussianNB") is None:
-              st.session_state["GaussianNB"] = model.fit(
-                  st.session_state["availableDatasets"][xtrain_key],
-                  st.session_state["availableDatasets"][ytrain_key]
-              )
-          else:
-              col2.success("Model Created")
-              delete = col2.checkbox("Do you want to recreate the model?")
-              if delete:
-                  st.session_state["GaussianNB"] = None
-  
-          col2.success("Model Fitted Successfully")
-          col2.divider()
-          self.metrics(col2, st.session_state["GaussianNB"])
-  
+        xtrain_key = col2.selectbox("Select X Train for GaussianNB", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for GaussianNB", list(st.session_state["availableDatasets"].keys()))
+    
+        # Model parameters selection
+        priors_input = col2.text_input("Class Prior Probabilities (comma-separated, leave blank for None)")
+        var_smoothing = col2.number_input("Variance Smoothing", value=1e-9, min_value=0.0, format="%.10f")
+    
+        priors = None
+        if priors_input:
+            try:
+                priors = [float(x) for x in priors_input.split(",")]
+            except ValueError:
+                col2.error("Invalid class prior input. Enter numbers separated by commas.")
+    
+        col2.divider()
+    
+        if col2.checkbox("Continue To Fit The Model"):
+            model = GaussianNB(
+                priors=priors,
+                var_smoothing=var_smoothing
+            )
+    
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+    
+            if st.session_state.get("GaussianNB") is None:
+                st.session_state["GaussianNB"] = model.fit(
+                    st.session_state["availableDatasets"][xtrain_key],
+                    st.session_state["availableDatasets"][ytrain_key]
+                )
+            else:
+                col2.success("Model Created")
+                delete = col2.checkbox("Do you want to recreate the model?")
+                if delete:
+                    st.session_state["GaussianNB"] = None
+    
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["GaussianNB"])
+    
