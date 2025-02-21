@@ -314,5 +314,56 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["Hist Gradient Boosting Classifier"])
-    
+    def random_forest_classifier(self, col2):
+        xtrain_key = col2.selectbox("Select X Train for RandomForestClassifier", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for RandomForestClassifier", list(st.session_state["availableDatasets"].keys()))
+        
+        n_estimators = int(col2.number_input("Number of estimators", value=100, min_value=1, step=1))
+        criterion = col2.selectbox("Criterion", ["gini", "entropy", "log_loss"], index=0)
+        max_depth = int(col2.number_input("Max depth", value=None, min_value=1, step=1, format="%d"))
+        min_samples_split = int(col2.number_input("Min samples split", value=2, min_value=1, step=1))
+        min_samples_leaf = int(col2.number_input("Min samples leaf", value=1, min_value=1, step=1))
+        min_weight_fraction_leaf = col2.number_input("Min weight fraction leaf", value=0.0, min_value=0.0, max_value=1.0, step=0.01)
+        max_features = col2.selectbox("Max features", ["sqrt", "log2", None], index=0)
+        max_leaf_nodes = int(col2.number_input("Max leaf nodes", value=None, min_value=2, step=1, format="%d"))
+        min_impurity_decrease = col2.number_input("Min impurity decrease", value=0.0, min_value=0.0, step=0.01)
+        bootstrap = col2.checkbox("Bootstrap", True)
+        oob_score = col2.checkbox("Out-of-bag score", False)
+        n_jobs = col2.number_input("Number of jobs (-1 for all CPUs)", value=None, format="%d")
+        random_state = col2.number_input("Random state (leave blank for None)", value=None, format="%d")
+        warm_start = col2.checkbox("Warm start", False)
+        class_weight = col2.selectbox("Class weight", [None, "balanced", "balanced_subsample"], index=0)
+        ccp_alpha = col2.number_input("CCP alpha", value=0.0, min_value=0.0, step=0.01)
+        max_samples = col2.number_input("Max samples (for bootstrap)", value=None, min_value=0.0, max_value=1.0, step=0.01)
+        
+        col2.divider()
+        
+        if col2.checkbox("Continue To Fit The Model"):
+            model = RandomForestClassifier(
+                n_estimators=n_estimators, criterion=criterion, max_depth=max_depth,
+                min_samples_split=min_samples_split, min_samples_leaf=min_samples_leaf,
+                min_weight_fraction_leaf=min_weight_fraction_leaf, max_features=max_features,
+                max_leaf_nodes=max_leaf_nodes, min_impurity_decrease=min_impurity_decrease,
+                bootstrap=bootstrap, oob_score=oob_score, n_jobs=n_jobs, random_state=random_state,
+                warm_start=warm_start, class_weight=class_weight, ccp_alpha=ccp_alpha, max_samples=max_samples
+            )
+            
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+            
+            if st.session_state.get("Random Forest Classifier") is None:
+                st.session_state["Random Forest Classifier"] = model.fit(
+                    st.session_state["availableDatasets"][xtrain_key],
+                    st.session_state["availableDatasets"][ytrain_key]
+                )
+            else:
+                col2.success("Model Created")
+                delete = col2.checkbox("Do you want to recreate the model?")
+                if delete:
+                    st.session_state["Random Forest Classifier"] = None
+            
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["Random Forest Classifier"])
+
             
