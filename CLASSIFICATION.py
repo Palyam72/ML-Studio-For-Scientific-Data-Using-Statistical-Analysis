@@ -12,7 +12,7 @@ from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingCla
 from sklearn import metrics
 import warnings
 
-session_models=["Hist Gradient Boosting Classifiers"]
+session_models=["Hist Gradient Boosting Classifier"]
 for i in session_models:
     if i not in st.session_state:
         st.session_state[i]=None
