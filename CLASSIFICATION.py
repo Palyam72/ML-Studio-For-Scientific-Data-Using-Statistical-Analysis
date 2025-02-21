@@ -51,6 +51,10 @@ class Classification:
                                          "CategoricalNB", "ComplementNB", "GaussianNB", "MultinomialNB"])
                 if option == "Decision Tree Classifier":
                     self.decision_tree(col2)
+                elif option == "Ada Boost Classifier":
+                    self.ada_boost(col2)
+                elif option=="Extra Tree Classifier":
+                    self.extra_trees(col2)
 
         with tab2:
             col1, col2 = st.columns([1, 2], border=True)
@@ -118,61 +122,32 @@ class Classification:
             col2.pyplot(fig)
             col2.subheader("Your Model Metrics On Test Data",divider='blue')
             self.metrics(col2,model)
-    import streamlit as st
-import pandas as pd
-import missingno as mso
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier, RandomForestClassifier, ExtraTreesClassifier
-from sklearn.tree import *
-from sklearn.svm import SVC, NuSVC, OneClassSVM, LinearSVC
-from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
-from sklearn.naive_bayes import BernoulliNB, CategoricalNB, ComplementNB, GaussianNB, MultinomialNB
-from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier, StackingClassifier, VotingClassifier
-from sklearn import metrics
-import warnings
-
-if "availableDatasets" not in st.session_state:
-    st.session_state["availableDatasets"]={}
-class Classification:
-    def __init__(self, dataset):
-        self.dataset = dataset
-        self.xtrain, self.xtest, self.ytrain, self.ytest = None, None, None, None
-
-    def display(self):
-        tab1, tab2, tab3 = st.tabs(["Perform Operations", "View Operations", "Delete Operations"])
-
-        with tab1:
-            col1, col2 = st.columns([1, 2], border=True)
-            operation = col1.radio("Select Operation", ["Train Test Split", "Classifiers"])
-            if operation == "Train Test Split":
-                col2.subheader("You Are Going To Implement Train Test Split", divider=True)
-                test_columns = col2.selectbox("Select the target column", self.dataset.columns.tolist())
-                if col2.button("Apply Train Test Split", use_container_width=True, type='primary'):
-                    test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
-                    X = self.dataset.drop(columns=[test_columns])
-                    y = self.dataset[test_columns]
-                    self.xtrain, self.xtest, self.ytrain, self.ytest = train_test_split(X, y, test_size=test_size, random_state=42)
-                    st.session_state["availableDatasets"]["classification_train_test_split_xtrain"] = self.xtrain
-                    st.session_state["availableDatasets"]["classification_train_test_split_xtest"] = self.xtest
-                    st.session_state["availableDatasets"]["classification_train_test_split_ytrain"] = self.ytrain
-                    st.session_state["availableDatasets"]["classification_train_test_split_ytest"] = self.ytest
-                    col2.write(f"Train set size: {self.xtrain.shape[0]}")
-                    col2.write(f"Test set size: {self.xtest.shape[0]}")
-            elif operation == "Classifiers":
-                col2.subheader("You Make Model Here", divider='blue')
-                option = col2.selectbox("Select the classification model that you want", 
-                                        ["Ada Boost Classifier", "Bagging Classifier", "Extra Tree Classifier", 
-                                         "Gradient Boosting Classifier", "Hist Gradient Boosting Classifier", 
-                                         "Random Forest Classifier", "Stacking Classifier", "Voting Classifier", 
-                                         "Decision Tree Classifier", "Linear SVM", "NuSVC", "One Class SVM", "SVC", 
-                                         "KNeighbours Classifier", "Radius Neighbours Classifier", "BernoulliNB", 
-                                         "CategoricalNB", "ComplementNB", "GaussianNB", "MultinomialNB"])
-                if option == "Decision Tree Classifier":
-                    self.decision_tree(col2)
-                elif option == "Extra Tree Classifier":
-                    self.extra_trees(col2)
-
+            
+    def ada_boost(self, col2):
+        col2.subheader("Ada Boost Classifier Settings", divider='blue')
+        xtrain_key = col2.selectbox("Select X Train", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train", list(st.session_state["availableDatasets"].keys()))
+        
+        if "classification_train_test_split_xtrain" not in st.session_state["availableDatasets"] or "classification_train_test_split_ytrain" not in st.session_state["availableDatasets"]:
+            col2.error("Error: Train Test Split must be performed first!")
+            return
+        
+        xtrain = st.session_state["availableDatasets"][xtrain_key]
+        ytrain = st.session_state["availableDatasets"][ytrain_key]
+        
+        n_estimators = col2.number_input("Number of Estimators", min_value=1, value=50)
+        learning_rate = col2.number_input("Learning Rate", min_value=0.01, value=1.0, step=0.01)
+        random_state = col2.number_input("Random State (None for random)", min_value=0, value=42)
+        
+        if col2.checkbox("Train Ada Boost Model"):
+            model = AdaBoostClassifier(n_estimators=n_estimators, learning_rate=learning_rate, random_state=random_state)
+            col2.subheader("Your Created Model", divider='blue')
+            col2.write(model)
+            model.fit(xtrain, ytrain)
+            col2.subheader("Here are the detailed list of parameters", divider='blue')
+            col2.write(f"Trained Model Parameters:\n{model.get_params()}")
+            col2.subheader("Your Model Metrics On Test Data", divider='blue')
+            self.metrics(col2, model)
     def extra_trees(self, col2):
         col2.subheader("Extra Trees Classifier Settings", divider='blue')
         xtrain_key = col2.selectbox("Select X Train", list(st.session_state["availableDatasets"].keys()))
