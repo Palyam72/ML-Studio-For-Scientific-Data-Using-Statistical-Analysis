@@ -27,7 +27,7 @@ class Classification:
             if operation == "Train Test Split":
                 col2.subheader("You Are Going To Iplement Train Test Split",divider=True)
                 test_columns=col2.selectbox("Selct the target columnn",self.dataset.columns.tolist())
-                if col2.nutton("Apply Train Test Split",use_container_width=True,type='primary'):
+                if col2.button("Apply Train Test Split",use_container_width=True,type='primary'):
                     test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
                     X = self.dataset.drop(columns=['target'])
                     y = self.dataset['target']
