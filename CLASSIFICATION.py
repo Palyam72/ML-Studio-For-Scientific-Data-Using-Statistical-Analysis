@@ -244,7 +244,7 @@ class Classification:
         random_state=int(col2.number_input("Controls the random resampling of the original dataset (sample wise and feature wise). If the base estimator accepts a random_state attribute, a different seed is generated for each instance in the ensemble. Pass an int for reproducible output across multiple function calls"))
         if not random_state:
             random_state=None
-        verbose=int(ol2.number_input("Controls the verbosity when fitting and predicting.",0))
+        verbose=int(col2.number_input("Controls the verbosity when fitting and predicting.",0))
         col2.divider()
         if col2.checkbox("Continue To Fit The Model"):
             model=BaggingClassifier(n_estimators=nestimators, max_samples=max_samples, max_features=max_features,
