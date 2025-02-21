@@ -10,6 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.naive_bayes import BernoulliNB, CategoricalNB, ComplementNB, GaussianNB, MultinomialNB
 from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier, StackingClassifier, VotingClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+from dtreeviz.trees import dtreeviz
 
 if "availableDatasets" not in st.session_state:
     st.session_state["availableDatasets"]={}
@@ -93,7 +94,7 @@ class Classification:
     
         if col2.checkbox("Train Decision Tree Model"):
             model = DecisionTreeClassifier(criterion=criterion, splitter=splitter, max_depth=max_depth, min_samples_split=min_samples_split, 
-                                           min_samples_leaf=min_samples_leaf, max_features=max_features if max_features != "None" else None, 
+                                           min_samples_leaf=min_samples_leaf, max_features = None if max_features == "None" else max_features, 
                                            max_leaf_nodes=max_leaf_nodes, min_impurity_decrease=min_impurity_decrease, random_state=random_state)
             col2.subheader("Your Created Model", divider='blue')
             col2.write(model)
@@ -109,4 +110,8 @@ class Classification:
             col2.write(f"Feature Names: {getattr(model, 'feature_names_in_', 'Not Available')}")
             col2.write(f"Number of Outputs: {model.n_outputs_}")
             col2.write(f"Tree Structure: {model.tree_}")
+            col2.subheader("Visualize the model",divider='blue')
+            viz = dtreeviz(model, xtrain, ytrain, target_name="target", feature_names=xtrain.columns, class_names=list(model.classes_))
+            viz.save("tree_viz.svg")  # Save as an image file
+            col2.image("tree_viz.svg", caption="Decision Tree Visualization")
 
