@@ -21,8 +21,13 @@ class Classification:
 
         # Content for View Operations tab
         with tab2:
-            st.subheader("View All Of Your Operations Result Here:",divider='blue')
-            st.dataframe(self.dataset)
+            col1,col2=st.columns([1,2],border=True)
+            col1.subheader("select The View Mode",divider='blue')
+            options=col1.radio("Options",["View Data Frame","View Missing Information"])
+            if options=="View Data Frame":
+                col2.dataframe(self.dataset)
+            if option=="View Missing Information":
+                pass
 
         # Content for Delete Operations tab
         with tab3:
