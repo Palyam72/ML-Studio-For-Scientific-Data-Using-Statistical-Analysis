@@ -55,6 +55,8 @@ class Classification:
                     self.ada_boost(col2)
                 elif option=="Extra Tree Classifier":
                     self.extra_trees(col2)
+                elif option =="Bagging Classifier":
+                    self.bagging_classifier(col2)
 
         with tab2:
             col1, col2 = st.columns([1, 2], border=True)
@@ -226,3 +228,32 @@ class Classification:
                     col2.code(result)
                 except Exception as e:
                     col2.warning(f"{metric_name} could not be calculated: {str(e)}")
+    def bagging_classifier(self,col2):
+        xtrain_key = col2.selectbox("Select X Train for bagging classifier", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for bagging classifer", list(st.session_state["availableDatasets"].keys()))
+        nestimators=int(col2.number_input("Please enter the number of estimators",10))
+        max_samples=col2.number_input("Please enetr the max samples",1.0)
+        max_features=col2.number_input("Please enter the max features",1.0)
+        bootstrap=col2.checkbox("Whether samples are drawn with replacement. If False, sampling without replacement is performed.",True)
+        bootstrap_features=col2.checkbox("Whether features are drawn with replacement.",False)
+        oob_score=col2.checkbox("Whether to use out-of-bag samples to estimate the generalization error. Only available if bootstrap=True.",False)
+        warm_start=col2.checkbox("When set to True, reuse the solution of the previous call to fit and add more estimators to the ensemble, otherwise, just fit a whole new ensemble",False)
+        n_jobs=int(col2.number_input("The number of jobs to run in parallel for both fit and predict. None means 1 unless in a joblib.parallel_backend context. -1 means using all processors. "))
+        if not n_jobs:
+            n_jobs=None
+        random_state=int(col2.number_input("Controls the random resampling of the original dataset (sample wise and feature wise). If the base estimator accepts a random_state attribute, a different seed is generated for each instance in the ensemble. Pass an int for reproducible output across multiple function calls"))
+        if not random_state:
+            random_state=None
+        verbose=int(ol2.number_input("Controls the verbosity when fitting and predicting.",0))
+        col2.divider()
+        if col2.checkbox("Continue To Fit The Model"):
+            model=BaggingClassifier(estimator=None, n_estimators=nestimators, *, max_samples=max_samples, max_features=max_features,
+                                    bootstrap=bootstrap, bootstrap_features=bootstrap_features, oob_score=oob_score, 
+                                    warm_start=warm_start, n_jobs=n_jobs, random_state=random_state, verbose=verbose)
+            col2.subheader("Your Model",divider='blue')
+            col2.write(model.get_params())
+            model.fit(st.session_state["availableDatasets"][xtrain_key],st.session_state["availableDatasets"][ytrain_key])
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2,model)
+        
