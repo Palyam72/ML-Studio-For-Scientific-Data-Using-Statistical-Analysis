@@ -31,7 +31,16 @@ class Classification:
     def display(self):
       # Create three tabs
       tab1, tab2, tab3 = st.tabs(["Perform Operations", "View Operations", "Delete Operations"])
-
+      with tab3:
+        col1,col2=st.columns([1,2],border=True)
+        fileToDelete=col1.selectbox("Select the file to delete",st.session_state["availableDatasets"].keys())
+        if fileToDelete:
+          col2.dataframe(fileToDelete)
+          if col2.button("Delete This File",use_container_width=True):
+            value=st.session_state["availableDatasets"].pop(fileToDelete)
+            if value !=None:
+              col2.success("file Is Deleted Not Stored In Memory")
+        
       with tab1:
           col1, col2 = st.columns([1, 2], border=True)
           operation = col1.radio("Select Operation", ["Train Test Split", "Classifiers"])
