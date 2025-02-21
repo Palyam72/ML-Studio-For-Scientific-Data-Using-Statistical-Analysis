@@ -614,108 +614,108 @@ class Classification:
           col2.success("Model Fitted Successfully")
           col2.divider()
           self.metrics(col2, st.session_state["NuSVC"])
-  def one_class_svm_classifier(self, col2):
-    xtrain_key = col2.selectbox("Select X Train for OneClassSVM", list(st.session_state["availableDatasets"].keys()))
-
-    # Model parameters selection
-    kernel = col2.selectbox("Kernel Type", ["linear", "poly", "rbf", "sigmoid", "precomputed"], index=2)
-    degree = col2.number_input("Degree (for poly kernel)", value=3, min_value=1, step=1)
-    gamma = col2.selectbox("Gamma", ["scale", "auto"], index=0)
-    coef0 = col2.number_input("Coef0 (for poly and sigmoid)", value=0.0, step=0.1)
-    tol = col2.number_input("Tolerance for Stopping Criteria", value=0.001, step=0.0001, format="%.5f")
-    nu = col2.slider("Nu (Fraction of training errors and support vectors)", min_value=0.01, max_value=1.0, value=0.5, step=0.01)
-    shrinking = col2.checkbox("Use Shrinking Heuristic", True)
-    cache_size = col2.number_input("Cache Size (MB)", value=200, min_value=50, step=50)
-    max_iter = col2.number_input("Max Iterations", value=-1, step=100)
-
-    col2.divider()
-
-    if col2.checkbox("Continue To Fit The Model"):
-        model = OneClassSVM(
+    def one_class_svm_classifier(self, col2):
+      xtrain_key = col2.selectbox("Select X Train for OneClassSVM", list(st.session_state["availableDatasets"].keys()))
+  
+      # Model parameters selection
+      kernel = col2.selectbox("Kernel Type", ["linear", "poly", "rbf", "sigmoid", "precomputed"], index=2)
+      degree = col2.number_input("Degree (for poly kernel)", value=3, min_value=1, step=1)
+      gamma = col2.selectbox("Gamma", ["scale", "auto"], index=0)
+      coef0 = col2.number_input("Coef0 (for poly and sigmoid)", value=0.0, step=0.1)
+      tol = col2.number_input("Tolerance for Stopping Criteria", value=0.001, step=0.0001, format="%.5f")
+      nu = col2.slider("Nu (Fraction of training errors and support vectors)", min_value=0.01, max_value=1.0, value=0.5, step=0.01)
+      shrinking = col2.checkbox("Use Shrinking Heuristic", True)
+      cache_size = col2.number_input("Cache Size (MB)", value=200, min_value=50, step=50)
+      max_iter = col2.number_input("Max Iterations", value=-1, step=100)
+  
+      col2.divider()
+  
+      if col2.checkbox("Continue To Fit The Model"):
+          model = OneClassSVM(
+              kernel=kernel,
+              degree=degree,
+              gamma=gamma,
+              coef0=coef0,
+              tol=tol,
+              nu=nu,
+              shrinking=shrinking,
+              cache_size=cache_size,
+              max_iter=max_iter
+          )
+  
+          col2.subheader("Your Model", divider='blue')
+          col2.write(model.get_params())
+  
+          if st.session_state.get("OneClassSVM") is None:
+              st.session_state["OneClassSVM"] = model.fit(
+                  st.session_state["availableDatasets"][xtrain_key]
+              )
+          else:
+              col2.success("Model Created")
+              delete = col2.checkbox("Do you want to recreate the model?")
+              if delete:
+                  st.session_state["OneClassSVM"] = None
+  
+          col2.success("Model Fitted Successfully")
+          col2.divider()
+          self.metrics(col2, st.session_state["OneClassSVM"])
+    def svc_classifier(self, col2):
+      xtrain_key = col2.selectbox("Select X Train for SVC", list(st.session_state["availableDatasets"].keys()))
+      ytrain_key = col2.selectbox("Select Y Train for SVC", list(st.session_state["availableDatasets"].keys()))
+      
+      # Model parameters selection
+      C = col2.number_input("Regularization Parameter (C)", value=1.0, min_value=0.01, step=0.1)
+      kernel = col2.selectbox("Kernel Type", ["linear", "poly", "rbf", "sigmoid", "precomputed"], index=2)
+      degree = col2.number_input("Degree (for poly kernel)", value=3, min_value=1, step=1)
+      gamma = col2.selectbox("Gamma", ["scale", "auto"], index=0)
+      coef0 = col2.number_input("Coef0 (for poly and sigmoid)", value=0.0, step=0.1)
+      shrinking = col2.checkbox("Use Shrinking Heuristic", True)
+      probability = col2.checkbox("Enable Probability Estimates", False)
+      tol = col2.number_input("Tolerance for Stopping Criteria", value=0.001, step=0.0001, format="%.5f")
+      cache_size = col2.number_input("Cache Size (MB)", value=200, min_value=50, step=50)
+      class_weight = col2.selectbox("Class Weight", [None, "balanced"], index=0)
+      max_iter = col2.number_input("Max Iterations", value=-1, step=100)
+      decision_function_shape = col2.selectbox("Decision Function Shape", ["ovr", "ovo"], index=0)
+      break_ties = col2.checkbox("Break Ties", False)
+      random_state = col2.number_input("Random State (Optional)", value=None, step=1, format="%d")
+      
+      col2.divider()
+      
+      if col2.checkbox("Continue To Fit The Model"):
+        model = SVC(
+            C=C,
             kernel=kernel,
             degree=degree,
             gamma=gamma,
             coef0=coef0,
-            tol=tol,
-            nu=nu,
             shrinking=shrinking,
+            probability=probability,
+            tol=tol,
             cache_size=cache_size,
-            max_iter=max_iter
+            class_weight=class_weight,
+            max_iter=max_iter,
+            decision_function_shape=decision_function_shape,
+            break_ties=break_ties,
+            random_state=random_state if random_state else None
         )
-
+      
         col2.subheader("Your Model", divider='blue')
         col2.write(model.get_params())
-
-        if st.session_state.get("OneClassSVM") is None:
-            st.session_state["OneClassSVM"] = model.fit(
-                st.session_state["availableDatasets"][xtrain_key]
+      
+        if st.session_state.get("SVC") is None:
+            st.session_state["SVC"] = model.fit(
+                st.session_state["availableDatasets"][xtrain_key],
+                st.session_state["availableDatasets"][ytrain_key]
             )
         else:
             col2.success("Model Created")
             delete = col2.checkbox("Do you want to recreate the model?")
             if delete:
-                st.session_state["OneClassSVM"] = None
-
+                st.session_state["SVC"] = None
+      
         col2.success("Model Fitted Successfully")
         col2.divider()
-        self.metrics(col2, st.session_state["OneClassSVM"])
-  def svc_classifier(self, col2):
-    xtrain_key = col2.selectbox("Select X Train for SVC", list(st.session_state["availableDatasets"].keys()))
-    ytrain_key = col2.selectbox("Select Y Train for SVC", list(st.session_state["availableDatasets"].keys()))
-    
-    # Model parameters selection
-    C = col2.number_input("Regularization Parameter (C)", value=1.0, min_value=0.01, step=0.1)
-    kernel = col2.selectbox("Kernel Type", ["linear", "poly", "rbf", "sigmoid", "precomputed"], index=2)
-    degree = col2.number_input("Degree (for poly kernel)", value=3, min_value=1, step=1)
-    gamma = col2.selectbox("Gamma", ["scale", "auto"], index=0)
-    coef0 = col2.number_input("Coef0 (for poly and sigmoid)", value=0.0, step=0.1)
-    shrinking = col2.checkbox("Use Shrinking Heuristic", True)
-    probability = col2.checkbox("Enable Probability Estimates", False)
-    tol = col2.number_input("Tolerance for Stopping Criteria", value=0.001, step=0.0001, format="%.5f")
-    cache_size = col2.number_input("Cache Size (MB)", value=200, min_value=50, step=50)
-    class_weight = col2.selectbox("Class Weight", [None, "balanced"], index=0)
-    max_iter = col2.number_input("Max Iterations", value=-1, step=100)
-    decision_function_shape = col2.selectbox("Decision Function Shape", ["ovr", "ovo"], index=0)
-    break_ties = col2.checkbox("Break Ties", False)
-    random_state = col2.number_input("Random State (Optional)", value=None, step=1, format="%d")
-    
-    col2.divider()
-    
-    if col2.checkbox("Continue To Fit The Model"):
-      model = SVC(
-          C=C,
-          kernel=kernel,
-          degree=degree,
-          gamma=gamma,
-          coef0=coef0,
-          shrinking=shrinking,
-          probability=probability,
-          tol=tol,
-          cache_size=cache_size,
-          class_weight=class_weight,
-          max_iter=max_iter,
-          decision_function_shape=decision_function_shape,
-          break_ties=break_ties,
-          random_state=random_state if random_state else None
-      )
-    
-      col2.subheader("Your Model", divider='blue')
-      col2.write(model.get_params())
-    
-      if st.session_state.get("SVC") is None:
-          st.session_state["SVC"] = model.fit(
-              st.session_state["availableDatasets"][xtrain_key],
-              st.session_state["availableDatasets"][ytrain_key]
-          )
-      else:
-          col2.success("Model Created")
-          delete = col2.checkbox("Do you want to recreate the model?")
-          if delete:
-              st.session_state["SVC"] = None
-    
-      col2.success("Model Fitted Successfully")
-      col2.divider()
-      self.metrics(col2, st.session_state["SVC"])
-    
-        
-                
+        self.metrics(col2, st.session_state["SVC"])
+      
+          
+                  
