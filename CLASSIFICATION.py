@@ -119,22 +119,22 @@ class Classification:
             col2.subheader("Your Model Metrics On Test Data",divider='blue')
             self.metrics(col2)
     def metrics(self, col2):
+        """Computes and displays classification metrics with exception handling. Only successful metrics are shown."""
         
         col2.subheader("Select Data for Metrics Calculation", divider="blue")
     
         try:
-            # Select datasets
-            xtrain_key = col2.selectbox("Select X Train", list(st.session_state["availableDatasets"].keys()))
-            xtest_key = col2.selectbox("Select X Test", list(st.session_state["availableDatasets"].keys()))
-            ytrain_key = col2.selectbox("Select Y Train", list(st.session_state["availableDatasets"].keys()))
-            ytest_key = col2.selectbox("Select Y Test", list(st.session_state["availableDatasets"].keys()))
+            # Select datasets with unique keys
+            xtrain_key = col2.selectbox("Select X Train", list(st.session_state["availableDatasets"].keys()), key="xtrain_select")
+            xtest_key = col2.selectbox("Select X Test", list(st.session_state["availableDatasets"].keys()), key="xtest_select")
+            ytrain_key = col2.selectbox("Select Y Train", list(st.session_state["availableDatasets"].keys()), key="ytrain_select")
+            ytest_key = col2.selectbox("Select Y Test", list(st.session_state["availableDatasets"].keys()), key="ytest_select")
     
             xtrain = st.session_state["availableDatasets"][xtrain_key]
             xtest = st.session_state["availableDatasets"][xtest_key]
             ytrain = st.session_state["availableDatasets"][ytrain_key]
             ytest = st.session_state["availableDatasets"][ytest_key]
     
-            # Ensure model is available
             if not hasattr(self, "model"):
                 col2.error("Error: No trained model found. Train a model first!")
                 return
@@ -145,110 +145,103 @@ class Classification:
             y_pred = model.predict(xtest)
             y_train_pred = model.predict(xtrain)
             
-            # Get prediction probabilities (if model supports it)
+            # Get prediction probabilities (if supported)
             try:
-                y_proba = model.predict_proba(xtest)[:, 1]  # Only for binary classification
+                y_proba = model.predict_proba(xtest)[:, 1]
             except AttributeError:
                 y_proba = None
     
             col2.subheader("📊 Model Evaluation Metrics", divider="blue")
     
-            # Dictionary to store computed metrics
             successful_metrics = {}
-    
-            # Compute all metrics with exception handling
-            def compute_metric(metric_name, func, *args, **kwargs):
-                try:
-                    result = func(*args, **kwargs)
-                    successful_metrics[metric_name] = result
-                except Exception:
-                    pass  # Ignore any failing metric
-    
-            # Standard Metrics
-            compute_metric("Accuracy Score", metrics.accuracy_score, ytest, y_pred)
-            compute_metric("Balanced Accuracy Score", metrics.balanced_accuracy_score, ytest, y_pred)
-            compute_metric("F1 Score", metrics.f1_score, ytest, y_pred, average="weighted")
-            compute_metric("F-Beta Score (β=0.5)", metrics.fbeta_score, ytest, y_pred, beta=0.5, average="weighted")
-            compute_metric("Precision Score", metrics.precision_score, ytest, y_pred, average="weighted", zero_division=0)
-            compute_metric("Recall Score", metrics.recall_score, ytest, y_pred, average="weighted")
-            compute_metric("Jaccard Score", metrics.jaccard_score, ytest, y_pred, average="weighted")
-            compute_metric("Matthews Correlation Coefficient", metrics.matthews_corrcoef, ytest, y_pred)
-            compute_metric("Cohen's Kappa Score", metrics.cohen_kappa_score, ytest, y_pred)
-            compute_metric("Hamming Loss", metrics.hamming_loss, ytest, y_pred)
-            compute_metric("Zero-One Loss", metrics.zero_one_loss, ytest, y_pred)
-    
-            # Log Loss & Brier Score (only if y_proba is available)
-            if y_proba is not None:
-                compute_metric("Log Loss", metrics.log_loss, ytest, y_proba)
-                compute_metric("Brier Score Loss", metrics.brier_score_loss, ytest, y_proba)
-            
-            # Confusion Matrix
-            conf_matrix = None
-            try:
-                conf_matrix = metrics.confusion_matrix(ytest, y_pred)
-                fig, ax = plt.subplots(figsize=(5, 4))
-                sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", ax=ax)
-                col2.pyplot(fig)
-            except Exception:
-                pass  # Ignore if confusion matrix fails
-    
-            # Multilabel Confusion Matrix
-            compute_metric("Multilabel Confusion Matrix", metrics.multilabel_confusion_matrix, ytest, y_pred)
-    
-            # Classification Report
-            try:
-                class_report = metrics.classification_report(ytest, y_pred, output_dict=True)
-                col2.dataframe(pd.DataFrame(class_report).transpose())
-            except Exception:
-                pass  # Ignore if classification report fails
-    
-            # Ranking Metrics
-            compute_metric("Discounted Cumulative Gain (DCG)", metrics.dcg_score, [ytest], [y_pred])
-            compute_metric("Normalized DCG", metrics.ndcg_score, [ytest], [y_pred])
-    
-            # ROC & AUC Metrics (only for binary classification)
-            if len(set(ytest)) == 2 and y_proba is not None:
-                compute_metric("ROC AUC Score", metrics.roc_auc_score, ytest, y_proba)
-    
-                try:
-                    precision, recall, _ = metrics.precision_recall_curve(ytest, y_proba)
-                    fig, ax = plt.subplots()
-                    ax.plot(recall, precision, marker=".")
-                    ax.set_title("Precision-Recall Curve")
-                    ax.set_xlabel("Recall")
-                    ax.set_ylabel("Precision")
-                    col2.pyplot(fig)
-                except Exception:
-                    pass  # Ignore if precision-recall curve fails
-    
-                try:
-                    fpr, tpr, _ = metrics.roc_curve(ytest, y_proba)
-                    fig, ax = plt.subplots()
-                    ax.plot(fpr, tpr, marker=".")
-                    ax.set_title("ROC Curve")
-                    ax.set_xlabel("False Positive Rate")
-                    ax.set_ylabel("True Positive Rate")
-                    col2.pyplot(fig)
-                except Exception:
-                    pass  # Ignore if ROC curve fails
-    
-            # Top-K Accuracy Score
-            try:
-                y_proba_full = model.predict_proba(xtest) if hasattr(model, "predict_proba") else np.zeros((len(ytest), 1))
-                compute_metric("Top-K Accuracy Score (k=3)", metrics.top_k_accuracy_score, ytest, y_proba_full, k=3)
-            except Exception:
-                pass  # Ignore if Top-K Accuracy Score fails
-    
-            # Display computed metrics
-            col2.subheader("📊 Computed Metrics Summary", divider="blue")
-            if successful_metrics:
-                metrics_df = pd.DataFrame(successful_metrics.items(), columns=["Metric", "Value"])
-                col2.dataframe(metrics_df)
-            else:
-                col2.warning("⚠️ No metrics were successfully computed.")
-    
-        except KeyError as e:
-            col2.error(f"Key Error: {str(e)} - Please check dataset selections.")
-        except Exception as e:
-            col2.error(f"Unexpected error: {str(e)}")
-    
+
+    def compute_metric(metric_name, func, *args, **kwargs):
+        """Safely compute metrics and store successful ones."""
+        try:
+            result = func(*args, **kwargs)
+            successful_metrics[metric_name] = result
+        except Exception:
+            pass  # Ignore failing metrics
+
+    compute_metric("Accuracy Score", metrics.accuracy_score, ytest, y_pred)
+    compute_metric("Balanced Accuracy Score", metrics.balanced_accuracy_score, ytest, y_pred)
+    compute_metric("F1 Score", metrics.f1_score, ytest, y_pred, average="weighted")
+    compute_metric("Precision Score", metrics.precision_score, ytest, y_pred, average="weighted", zero_division=0)
+    compute_metric("Recall Score", metrics.recall_score, ytest, y_pred, average="weighted")
+    compute_metric("Jaccard Score", metrics.jaccard_score, ytest, y_pred, average="weighted")
+    compute_metric("Matthews Correlation Coefficient", metrics.matthews_corrcoef, ytest, y_pred)
+    compute_metric("Cohen's Kappa Score", metrics.cohen_kappa_score, ytest, y_pred)
+    compute_metric("Hamming Loss", metrics.hamming_loss, ytest, y_pred)
+    compute_metric("Zero-One Loss", metrics.zero_one_loss, ytest, y_pred)
+
+    if y_proba is not None:
+        compute_metric("Log Loss", metrics.log_loss, ytest, y_proba)
+        compute_metric("Brier Score Loss", metrics.brier_score_loss, ytest, y_proba)
+
+    # Confusion Matrix
+    try:
+        conf_matrix = metrics.confusion_matrix(ytest, y_pred)
+        fig, ax = plt.subplots(figsize=(5, 4))
+        sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", ax=ax)
+        col2.pyplot(fig)
+    except Exception:
+        pass  
+
+    # Multilabel Confusion Matrix
+    compute_metric("Multilabel Confusion Matrix", metrics.multilabel_confusion_matrix, ytest, y_pred)
+
+    # Classification Report
+    try:
+        class_report = metrics.classification_report(ytest, y_pred, output_dict=True)
+        col2.dataframe(pd.DataFrame(class_report).transpose())
+    except Exception:
+        pass  
+
+    # Ranking Metrics
+    compute_metric("DCG Score", metrics.dcg_score, [ytest], [y_pred])
+    compute_metric("NDCG Score", metrics.ndcg_score, [ytest], [y_pred])
+
+    # ROC & AUC Metrics (binary classification only)
+    if len(set(ytest)) == 2 and y_proba is not None:
+        compute_metric("ROC AUC Score", metrics.roc_auc_score, ytest, y_proba)
+
+        try:
+            precision, recall, _ = metrics.precision_recall_curve(ytest, y_proba)
+            fig, ax = plt.subplots()
+            ax.plot(recall, precision, marker=".")
+            ax.set_title("Precision-Recall Curve")
+            ax.set_xlabel("Recall")
+            ax.set_ylabel("Precision")
+            col2.pyplot(fig)
+        except Exception:
+            pass  
+
+        try:
+            fpr, tpr, _ = metrics.roc_curve(ytest, y_proba)
+            fig, ax = plt.subplots()
+            ax.plot(fpr, tpr, marker=".")
+            ax.set_title("ROC Curve")
+            ax.set_xlabel("False Positive Rate")
+            ax.set_ylabel("True Positive Rate")
+            col2.pyplot(fig)
+        except Exception:
+            pass  
+
+    # Top-K Accuracy Score
+    try:
+        y_proba_full = model.predict_proba(xtest) if hasattr(model, "predict_proba") else np.zeros((len(ytest), 1))
+        compute_metric("Top-K Accuracy Score (k=3)", metrics.top_k_accuracy_score, ytest, y_proba_full, k=3)
+    except Exception:
+        pass  
+
+    col2.subheader("📊 Computed Metrics Summary", divider="blue")
+    if successful_metrics:
+        metrics_df = pd.DataFrame(successful_metrics.items(), columns=["Metric", "Value"])
+        col2.dataframe(metrics_df)
+    else:
+        col2.warning("⚠️ No metrics were successfully computed.")
+
+except KeyError as e:
+    col2.error(f"Key Error: {str(e)} - Please check dataset selections.")
+except Exception as e:
+    col2.error(f"Unexpected error: {str(e)}")
