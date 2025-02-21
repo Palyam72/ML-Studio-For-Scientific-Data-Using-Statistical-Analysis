@@ -308,7 +308,7 @@ class Classification:
                 st.session_state["Hist Gradient Boosting Classifier"]=model.fit(st.session_state["availableDatasets"][xtrain_key], st.session_state["availableDatasets"][ytrain_key])
             else:
                 col2.success("Model Created")
-                delete=col2.checkbox("DO You Want o recreate model")
+                delete=col2.checkbox("DO You Want to recreate model")
                 if delete:
                     st.session_state["Hist Gradient Boosting Classifier"]=None
             col2.success("Model Fitted Successfully")
