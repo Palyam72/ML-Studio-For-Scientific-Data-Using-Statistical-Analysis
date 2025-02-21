@@ -345,53 +345,53 @@ elif selected=="Encode Categorical Data":
             list(st.session_state.availableDatasets.keys())
         )
 
-    if selected_dataset_name:
-        # Load the selected dataset from session state
-        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
-        dataset = st.session_state.selected_dataset
-        st.markdown("### Selected Dataset")
-        st.dataframe(dataset)
-        # Display missing value charts
-        st.divider()
-        st.markdown("### Missing Value Analysis")
-        fig, ax = plt.subplots(figsize=(10, 5))
-        mso.matrix(st.session_state.selected_dataset, ax=ax)
-        st.pyplot(fig)
-        fig1, ax1 = plt.subplots(figsize=(10, 5))
-        mso.heatmap(st.session_state.selected_dataset, ax=ax1)
-        st.pyplot(fig1)
-        # layout for encoders
-        col1,col2=st.columns([1,2])
-        encoders=Encoders(st.session_state.selected_dataset)
-        encoder_methods = {
-            "TargetEncoder": encoders.apply_target_encoder,
-            "WOEEncoder": encoders.apply_woe_encoder,
-            "SummaryEncoder": encoders.apply_summary_encoder,
-            "SumEncoder": encoders.apply_sum_encoder,
-            "RankhotEncoder": encoders.apply_rankhot_encoder,
-            "QuantileEncoder": encoders.apply_quantile_encoder,
-            "PolynomialEncoder": encoders.apply_polynomial_encoder,
-            "OrdinalEncoder": encoders.apply_ordinal_encoder,
-            "OneHotEncoder": encoders.apply_one_hot_encoder,
-            "LeaveOneOutEncoder": encoders.apply_leave_one_out_encoder,
-            "MEstimateEncoder": encoders.apply_m_estimate_encoder,
-            "JamesSteinEncoder": encoders.apply_james_stein_encoder,
-            "HelmertEncoder": encoders.apply_helmert_encoder,
-            "HashingEncoder": encoders.apply_hashing_encoder,
-            "GrayEncoder": encoders.apply_gray_encoder,
-            "GeneralizedLinearMixedModel": encoders.generalized_linear_mixed_model,
-            "CountEncoder": encoders.apply_count_encoder,
-            "CatboostEncoder": encoders.apply_catboost_encoder,
-            "BinaryEncoder": encoders.apply_binary_encoder,
-            "BasenEncoder": encoders.apply_basen_encoder
-        }
-        with col1:
-            st.subheader("Encoder Techniques")
-            for i in encoder_methods.keys():
-                if st.checkbox(i):
-                    with col2:
-                        output=encoder_methods[i]()
-                        st.session_state.availableDatasets[i]=output
+        if selected_dataset_name:
+            # Load the selected dataset from session state
+            st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+            dataset = st.session_state.selected_dataset
+            st.markdown("### Selected Dataset")
+            st.dataframe(dataset)
+            # Display missing value charts
+            st.divider()
+            st.markdown("### Missing Value Analysis")
+            fig, ax = plt.subplots(figsize=(10, 5))
+            mso.matrix(st.session_state.selected_dataset, ax=ax)
+            st.pyplot(fig)
+            fig1, ax1 = plt.subplots(figsize=(10, 5))
+            mso.heatmap(st.session_state.selected_dataset, ax=ax1)
+            st.pyplot(fig1)
+            # layout for encoders
+            col1,col2=st.columns([1,2])
+            encoders=Encoders(st.session_state.selected_dataset)
+            encoder_methods = {
+                "TargetEncoder": encoders.apply_target_encoder,
+                "WOEEncoder": encoders.apply_woe_encoder,
+                "SummaryEncoder": encoders.apply_summary_encoder,
+                "SumEncoder": encoders.apply_sum_encoder,
+                "RankhotEncoder": encoders.apply_rankhot_encoder,
+                "QuantileEncoder": encoders.apply_quantile_encoder,
+                "PolynomialEncoder": encoders.apply_polynomial_encoder,
+                "OrdinalEncoder": encoders.apply_ordinal_encoder,
+                "OneHotEncoder": encoders.apply_one_hot_encoder,
+                "LeaveOneOutEncoder": encoders.apply_leave_one_out_encoder,
+                "MEstimateEncoder": encoders.apply_m_estimate_encoder,
+                "JamesSteinEncoder": encoders.apply_james_stein_encoder,
+                "HelmertEncoder": encoders.apply_helmert_encoder,
+                "HashingEncoder": encoders.apply_hashing_encoder,
+                "GrayEncoder": encoders.apply_gray_encoder,
+                "GeneralizedLinearMixedModel": encoders.generalized_linear_mixed_model,
+                "CountEncoder": encoders.apply_count_encoder,
+                "CatboostEncoder": encoders.apply_catboost_encoder,
+                "BinaryEncoder": encoders.apply_binary_encoder,
+                "BasenEncoder": encoders.apply_basen_encoder
+            }
+            with col1:
+                st.subheader("Encoder Techniques")
+                for i in encoder_methods.keys():
+                    if st.checkbox(i):
+                        with col2:
+                            output=encoder_methods[i]()
+                            st.session_state.availableDatasets[i]=output
 elif selected=="Normalize or Scale the Features":
     if st.session_state.availableDatasets:
         # Dataset selection for cleaning
@@ -400,57 +400,57 @@ elif selected=="Normalize or Scale the Features":
             list(st.session_state.availableDatasets.keys())
         )
 
-    if selected_dataset_name:
-        # Load the selected dataset from session state
-        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
-        dataset = st.session_state.selected_dataset
-        st.markdown("### Selected Dataset")
-        st.dataframe(dataset)
-        # Display missing value charts
-        st.divider()
-        st.markdown("### Missing Value Analysis")
-        fig, ax = plt.subplots(figsize=(10, 5))
-        mso.matrix(st.session_state.selected_dataset, ax=ax)
-        st.pyplot(fig)
-        fig1, ax1 = plt.subplots(figsize=(10, 5))
-        mso.heatmap(st.session_state.selected_dataset, ax=ax1)
-        st.pyplot(fig1)
-        methods=PreprocessingMethods(st.session_state.selected_dataset)
-        discretizers = Descritizers(st.session_state.selected_dataset)
-        
-
-        # Create a dictionary mapping technique names to methods
-        col1,col2=st.columns([1,2])                
-        with col1:
-            discretizer_methods = {
-                'Equal Width Discretiser': discretizers.equal_width_discretiser,
-                'Equal Frequency Discretiser': discretizers.equal_frequency_discretiser,
-                'Decision Tree Discretiser': discretizers.decision_tree_discretiser,
-                'Geometric Width Discretiser': discretizers.geometric_width_discretiser
-            }
-            normalizers = {
-                "normalizer": methods.normalizer,
-                "binarizer": methods.binarizer,
-                "label_binarizer": methods.label_binarizer,
-                "multi_label_binarizer": methods.multi_label_binarizer,
-            
-            
-            }
-
-            st.subheader("Descritizers")
+        if selected_dataset_name:
+            # Load the selected dataset from session state
+            st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+            dataset = st.session_state.selected_dataset
+            st.markdown("### Selected Dataset")
+            st.dataframe(dataset)
+            # Display missing value charts
             st.divider()
-            for i in discretizer_methods.keys():
-                if st.checkbox(i):
-                    with col2:
-                        dataframe=discretizer_methods[i]()
-                        st.session_state.availableDatasets[i]=dataframe
-            st.subheader("Normalizers")
-            st.divider()
-            for i in normalizers.keys():
-                if st.checkbox(i):
-                    with col2:
-                        dataframe=normalizers[i]()
-                        st.session_state.availableDatasets[i]=dataframe
+            st.markdown("### Missing Value Analysis")
+            fig, ax = plt.subplots(figsize=(10, 5))
+            mso.matrix(st.session_state.selected_dataset, ax=ax)
+            st.pyplot(fig)
+            fig1, ax1 = plt.subplots(figsize=(10, 5))
+            mso.heatmap(st.session_state.selected_dataset, ax=ax1)
+            st.pyplot(fig1)
+            methods=PreprocessingMethods(st.session_state.selected_dataset)
+            discretizers = Descritizers(st.session_state.selected_dataset)
+            
+    
+            # Create a dictionary mapping technique names to methods
+            col1,col2=st.columns([1,2])                
+            with col1:
+                discretizer_methods = {
+                    'Equal Width Discretiser': discretizers.equal_width_discretiser,
+                    'Equal Frequency Discretiser': discretizers.equal_frequency_discretiser,
+                    'Decision Tree Discretiser': discretizers.decision_tree_discretiser,
+                    'Geometric Width Discretiser': discretizers.geometric_width_discretiser
+                }
+                normalizers = {
+                    "normalizer": methods.normalizer,
+                    "binarizer": methods.binarizer,
+                    "label_binarizer": methods.label_binarizer,
+                    "multi_label_binarizer": methods.multi_label_binarizer,
+                
+                
+                }
+    
+                st.subheader("Descritizers")
+                st.divider()
+                for i in discretizer_methods.keys():
+                    if st.checkbox(i):
+                        with col2:
+                            dataframe=discretizer_methods[i]()
+                            st.session_state.availableDatasets[i]=dataframe
+                st.subheader("Normalizers")
+                st.divider()
+                for i in normalizers.keys():
+                    if st.checkbox(i):
+                        with col2:
+                            dataframe=normalizers[i]()
+                            st.session_state.availableDatasets[i]=dataframe
                 
 elif selected=="Regression":
     if st.session_state.availableDatasets:
@@ -460,23 +460,23 @@ elif selected=="Regression":
             list(st.session_state.availableDatasets.keys())
         )
 
-    if selected_dataset_name:
-        # Load the selected dataset from session state
-        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
-        dataset = st.session_state.selected_dataset
-        st.markdown("### Selected Dataset")
-        st.dataframe(dataset)
-        # Display missing value charts
-        st.divider()
-        st.markdown("### Missing Value Analysis")
-        fig, ax = plt.subplots(figsize=(10, 5))
-        mso.matrix(st.session_state.selected_dataset, ax=ax)
-        st.pyplot(fig)
-        fig1, ax1 = plt.subplots(figsize=(10, 5))
-        mso.heatmap(st.session_state.selected_dataset, ax=ax1)
-        st.pyplot(fig1)
-        regression=Regression(st.session_state.selected_dataset)
-        regression.display()
+        if selected_dataset_name:
+            # Load the selected dataset from session state
+            st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+            dataset = st.session_state.selected_dataset
+            st.markdown("### Selected Dataset")
+            st.dataframe(dataset)
+            # Display missing value charts
+            st.divider()
+            st.markdown("### Missing Value Analysis")
+            fig, ax = plt.subplots(figsize=(10, 5))
+            mso.matrix(st.session_state.selected_dataset, ax=ax)
+            st.pyplot(fig)
+            fig1, ax1 = plt.subplots(figsize=(10, 5))
+            mso.heatmap(st.session_state.selected_dataset, ax=ax1)
+            st.pyplot(fig1)
+            regression=Regression(st.session_state.selected_dataset)
+            regression.display()
 
 
 elif selected == "Classification":
