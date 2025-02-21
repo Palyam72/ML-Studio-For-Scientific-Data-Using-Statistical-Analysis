@@ -31,7 +31,7 @@ class Classification:
                     test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
                     X = self.dataset.drop(columns=['target'])
                     y = self.dataset['target']
-                    self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+                    self.xtrain, self.xtest, self.ytrain, self.ytest = train_test_split(X, y, test_size=test_size, random_state=42)
                     col2.write(f"Train set size: {self.X_train.shape[0]}")
                     col2.write(f"Test set size: {self.X_test.shape[0]}")
             elif operation == "Classifiers":
