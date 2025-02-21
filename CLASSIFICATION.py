@@ -72,7 +72,7 @@ class Classification:
         xtrain_key = col2.selectbox("Select X Train", list(st.session_state["availableDatasets"].keys()))
         ytrain_key = col2.selectbox("Select Y Train", list(st.session_state["availableDatasets"].keys()))
 
-        if xtrain_key not in st.session_state["availableDatasets"] or ytrain_key not in st.session_state["availableDatasets"]:
+        if "classification_train_test_split_xtrain" not in st.session_state["availableDatasets"] or "classification_train_test_split_ytrain" not in st.session_state["availableDatasets"]:
             col2.error("Error: Train Test Split must be performed first!")
             return
 
