@@ -67,6 +67,9 @@ class Classification:
                     self.hist_gradient_boosting_classifier(col2)
                 elif option == "Random Forest Classifier":
                     self.random_forest_classifier(col2)
+                elif option == "Stacking Classifier":
+                    self.stacking_classifier(col2)
+                    
                     
         with tab2:
             col1, col2 = st.columns([1, 2], border=True)
