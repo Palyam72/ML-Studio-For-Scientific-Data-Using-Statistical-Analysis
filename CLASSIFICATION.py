@@ -70,6 +70,8 @@ class Classification:
                     self.random_forest_classifier(col2)
                 elif option == "Stacking Classifier":
                     self.stacking_classifier(col2)
+                elif option == "Voting Classifier":
+                    self.voting_classifier(col2)
                     
                     
         with tab2:
