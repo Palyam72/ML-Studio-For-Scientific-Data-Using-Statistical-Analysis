@@ -12,7 +12,7 @@ from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingCla
 from sklearn import metrics
 import warnings
 
-session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier"]
+session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier"]
 for i in session_models:
     if i not in st.session_state:
         st.session_state[i]=None
@@ -367,5 +367,68 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["Random Forest Classifier"])
+    def stacking_classifier(self, col2):
+        xtrain_key = col2.selectbox("Select X Train for StackingClassifier", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for StackingClassifier", list(st.session_state["availableDatasets"].keys()))
+        
+        base_estimators = [
+            ("RandomForest", RandomForestClassifier(n_estimators=100)),
+            ("LogisticRegression", LogisticRegression())
+        ]
+        final_estimator = LogisticRegression()
+        
+        estimators_selected = col2.multiselect("Select Base Estimators", ["RandomForest", "LogisticRegression", "SVC", "KNeighbors"], default=["RandomForest", "LogisticRegression"])
+        
+        selected_estimators = []
+        for estimator in estimators_selected:
+            if estimator == "RandomForest":
+                selected_estimators.append(("RandomForest", RandomForestClassifier(n_estimators=100)))
+            elif estimator == "LogisticRegression":
+                selected_estimators.append(("LogisticRegression", LogisticRegression()))
+            elif estimator == "SVC":
+                selected_estimators.append(("SVC", SVC(probability=True)))
+            elif estimator == "KNeighbors":
+                selected_estimators.append(("KNeighbors", KNeighborsClassifier()))
+        
+        final_estimator_choice = col2.selectbox("Select Final Estimator", ["LogisticRegression", "SVC", "RandomForest"], index=0)
+        
+        if final_estimator_choice == "LogisticRegression":
+            final_estimator = LogisticRegression()
+        elif final_estimator_choice == "SVC":
+            final_estimator = SVC(probability=True)
+        elif final_estimator_choice == "RandomForest":
+            final_estimator = RandomForestClassifier(n_estimators=100)
+        
+        cv = col2.number_input("Cross-validation folds", value=5, min_value=2, step=1)
+        passthrough = col2.checkbox("Pass-through original features", False)
+        
+        col2.divider()
+        
+        if col2.checkbox("Continue To Fit The Model"):
+            model = StackingClassifier(
+                estimators=selected_estimators,
+                final_estimator=final_estimator,
+                cv=cv,
+                passthrough=passthrough
+            )
+            
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+            
+            if st.session_state.get("Stacking Classifier") is None:
+                st.session_state["Stacking Classifier"] = model.fit(
+                    st.session_state["availableDatasets"][xtrain_key],
+                    st.session_state["availableDatasets"][ytrain_key]
+                )
+            else:
+                col2.success("Model Created")
+                delete = col2.checkbox("Do you want to recreate the model?")
+                if delete:
+                    st.session_state["Stacking Classifier"] = None
+            
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["Stacking Classifier"])
+
 
             
