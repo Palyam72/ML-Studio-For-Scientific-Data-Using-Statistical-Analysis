@@ -21,7 +21,8 @@ class Classification:
 
         # Content for View Operations tab
         with tab2:
-            st.write("View Operations content goes here")
+            st.subheader("View All Of Your Operations Result Here:",divider='blue')
+            st.dataframe(self.dataset)
 
         # Content for Delete Operations tab
         with tab3:
