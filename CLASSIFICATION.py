@@ -13,7 +13,7 @@ from sklearn import metrics
 import warnings
 from sklearn.linear_model import LogisticRegression
 
-session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier","Voting Classifier"]
+session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier","Voting Classifier","LinearSVC"]
 for i in session_models:
     if i not in st.session_state:
         st.session_state[i]=None
@@ -72,6 +72,9 @@ class Classification:
                     self.stacking_classifier(col2)
                 elif option == "Voting Classifier":
                     self.voting_classifier(col2)
+                elif option == "Linear SVM":
+                    self.linear_svc_classifier(col2)
+                    
                     
                     
         with tab2:
@@ -497,5 +500,59 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["Voting Classifier"])
+    def linear_svc_classifier(self, col2):
+        xtrain_key = col2.selectbox("Select X Train for LinearSVC", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for LinearSVC", list(st.session_state["availableDatasets"].keys()))
+    
+        # Model parameters selection
+        penalty = col2.selectbox("Penalty", ["l1", "l2"], index=1)
+        loss = col2.selectbox("Loss Function", ["hinge", "squared_hinge"], index=1)
+        dual = col2.selectbox("Dual Optimization", ["auto", True, False], index=0)
+        tol = col2.number_input("Tolerance for stopping criteria", value=0.0001, step=0.0001, format="%.5f")
+        C = col2.number_input("Regularization parameter (C)", value=1.0, min_value=0.01, step=0.1)
+        multi_class = col2.selectbox("Multi-class Strategy", ["ovr", "crammer_singer"], index=0)
+        fit_intercept = col2.checkbox("Fit Intercept", True)
+        intercept_scaling = col2.number_input("Intercept Scaling", value=1.0, min_value=0.1, step=0.1)
+        class_weight = col2.selectbox("Class Weight", [None, "balanced"], index=0)
+        max_iter = col2.number_input("Max Iterations", value=1000, min_value=100, step=100)
+        verbose = col2.checkbox("Verbose", False)
+        random_state = col2.number_input("Random State (Optional)", value=None, format="%d")
+    
+        col2.divider()
+    
+        if col2.checkbox("Continue To Fit The Model"):
+            model = LinearSVC(
+                penalty=penalty,
+                loss=loss,
+                dual=dual if dual != "auto" else "auto",
+                tol=tol,
+                C=C,
+                multi_class=multi_class,
+                fit_intercept=fit_intercept,
+                intercept_scaling=intercept_scaling,
+                class_weight=class_weight if class_weight != "None" else None,
+                max_iter=max_iter,
+                verbose=verbose,
+                random_state=random_state if random_state else None
+            )
+    
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+    
+            if st.session_state.get("LinearSVC") is None:
+                st.session_state["LinearSVC"] = model.fit(
+                    st.session_state["availableDatasets"][xtrain_key],
+                    st.session_state["availableDatasets"][ytrain_key]
+                )
+            else:
+                col2.success("Model Created")
+                delete = col2.checkbox("Do you want to recreate the model?")
+                if delete:
+                    st.session_state["LinearSVC"] = None
+    
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["LinearSVC"])
+
     
             
