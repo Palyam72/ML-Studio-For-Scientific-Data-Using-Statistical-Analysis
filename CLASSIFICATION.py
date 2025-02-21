@@ -154,6 +154,8 @@ class Classification:
             col2.subheader("📊 Model Evaluation Metrics", divider="blue")
     
             successful_metrics = {}
+        except Exception:
+            col2.warning("Some Exception HAppens")
 
     def compute_metric(metric_name, func, *args, **kwargs):
         """Safely compute metrics and store successful ones."""
