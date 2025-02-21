@@ -9,7 +9,6 @@ from sklearn.svm import SVC, NuSVC, OneClassSVM, LinearSVC
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.naive_bayes import BernoulliNB, CategoricalNB, ComplementNB, GaussianNB, MultinomialNB
 from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier, StackingClassifier, VotingClassifier
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
 class Classification:
@@ -35,53 +34,13 @@ class Classification:
                 col2.write(f"Test set size: {X_test.shape[0]}")
             elif operation == "Classifiers":
                 col2.subheader("You Make Model Here", divider='blue')
-                option = col2.selectbox("Select the classification model that you want",
-                                        ["Ada Boost Classifier", "Bagging Classifier", "Extra Tree Classifier",
-                                         "Gradient Boosting Classifier", "Hist Gradient Boosting Classifier",
-                                         "Random Forest Classifier", "Stacking Classifier", "Voting Classifier",
-                                         "Decision Tree Classifier", "Linear SVM", "NuSVC", "One Class SVM", "SVC",
-                                         "KNeighbours Classifier", "Radius Neighbours Classifier", "BernoulliNB",
+                option = col2.selectbox("Select the classification model that you want", 
+                                        ["Ada Boost Classifier", "Bagging Classifier", "Extra Tree Classifier", 
+                                         "Gradient Boosting Classifier", "Hist Gradient Boosting Classifier", 
+                                         "Random Forest Classifier", "Stacking Classifier", "Voting Classifier", 
+                                         "Decision Tree Classifier", "Linear SVM", "NuSVC", "One Class SVM", "SVC", 
+                                         "KNeighbours Classifier", "Radius Neighbours Classifier", "BernoulliNB", 
                                          "CategoricalNB", "ComplementNB", "GaussianNB", "MultinomialNB"])
-                if option == "Ada Boost Classifier":
-                    self.ada_boost_classifier(col2)
-                elif option == "Bagging Classifier":
-                    self.bagging_classifier(col2)
-                elif option == "Extra Tree Classifier":
-                    self.extra_tree_classifier(col2)
-                elif option == "Gradient Boosting Classifier":
-                    self.gradient_boosting_classifier(col2)
-                elif option == "Hist Gradient Boosting Classifier":
-                    self.hist_gradient_boosting_classifier(col2)
-                elif option == "Random Forest Classifier":
-                    self.random_forest_classifier(col2)
-                elif option == "Stacking Classifier":
-                    self.stacking_classifier(col2)
-                elif option == "Voting Classifier":
-                    self.voting_classifier(col2)
-                elif option == "Decision Tree Classifier":
-                    self.decision_tree_classifier(col2)
-                elif option == "Linear SVM":
-                    self.linear_svm(col2)
-                elif option == "NuSVC":
-                    self.nu_svc(col2)
-                elif option == "One Class SVM":
-                    self.one_class_svm(col2)
-                elif option == "SVC":
-                    self.svc(col2)
-                elif option == "KNeighbours Classifier":
-                    self.k_neighbors_classifier(col2)
-                elif option == "Radius Neighbours Classifier":
-                    self.radius_neighbors_classifier(col2)
-                elif option == "BernoulliNB":
-                    self.bernoulli_nb(col2)
-                elif option == "CategoricalNB":
-                    self.categorical_nb(col2)
-                elif option == "ComplementNB":
-                    self.complement_nb(col2)
-                elif option == "GaussianNB":
-                    self.gaussian_nb(col2)
-                elif option == "MultinomialNB":
-                    self.multinomial_nb(col2)
 
         # Content for View Operations tab
         with tab2:
@@ -104,82 +63,61 @@ class Classification:
             st.write("Delete Operations content goes here")
 
     def ada_boost_classifier(self, col2):
-        col2.write("You selected Ada Boost Classifier")
-        X = self.dataset.drop(columns=['target'])
-        y = self.dataset['target']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        model = AdaBoostClassifier()
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        col2.write("Classification Report:")
-        col2.write(classification_report(y_test, y_pred))
-        col2.write("Confusion Matrix:")
-        col2.write(confusion_matrix(y_test, y_pred))
+        pass
 
     def bagging_classifier(self, col2):
-        col2.write("You selected Bagging Classifier")
-        X = self.dataset.drop(columns=['target'])
-        y = self.dataset['target']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        model = BaggingClassifier()
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        col2.write("Classification Report:")
-        col2.write(classification_report(y_test, y_pred))
-        col2.write("Confusion Matrix:")
-        col2.write(confusion_matrix(y_test, y_pred))
+        pass
 
     def extra_tree_classifier(self, col2):
-        col2.write("You selected Extra Tree Classifier")
-        X = self.dataset.drop(columns=['target'])
-        y = self.dataset['target']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        model = ExtraTreeClassifier()
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        col2.write("Classification Report:")
-        col2.write(classification_report(y_test, y_pred))
-        col2.write("Confusion Matrix:")
-        col2.write(confusion_matrix(y_test, y_pred))
+        pass
 
     def gradient_boosting_classifier(self, col2):
-        col2.write("You selected Gradient Boosting Classifier")
-        X = self.dataset.drop(columns=['target'])
-        y = self.dataset['target']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        model = GradientBoostingClassifier()
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        col2.write("Classification Report:")
-        col2.write(classification_report(y_test, y_pred))
-        col2.write("Confusion Matrix:")
-        col2.write(confusion_matrix(y_test, y_pred))
+        pass
 
     def hist_gradient_boosting_classifier(self, col2):
-        col2.write("You selected Hist Gradient Boosting Classifier")
-        X = self.dataset.drop(columns=['target'])
-        y = self.dataset['target']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        model = HistGradientBoostingClassifier()
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        col2.write("Classification Report:")
-        col2.write(classification_report(y_test, y_pred))
-        col2.write("Confusion Matrix:")
-        col2.write(confusion_matrix(y_test, y_pred))
+        pass
 
     def random_forest_classifier(self, col2):
-        col2.write("You selected Random Forest Classifier")
-        X = self.dataset.drop(columns=['target'])
-        y = self.dataset['target']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        model = RandomForestClassifier()
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-        col2.write("Classification Report:")
-        col2.write(classification_report(y_test, y_pred))
-        col2.write("Confusion Matrix:")
-        col2.write(confusion_matrix(y_test, y_pred))
+        pass
 
     def stacking_classifier(self, col2):
-        col2
+        pass
+
+    def voting_classifier(self, col2):
+        pass
+
+    def decision_tree_classifier(self, col2):
+        pass
+
+    def linear_svm(self, col2):
+        pass
+
+    def nu_svc(self, col2):
+        pass
+
+    def one_class_svm(self, col2):
+        pass
+
+    def svc(self, col2):
+        pass
+
+    def k_neighbors_classifier(self, col2):
+        pass
+
+    def radius_neighbors_classifier(self, col2):
+        pass
+
+    def bernoulli_nb(self, col2):
+        pass
+
+    def categorical_nb(self, col2):
+        pass
+
+    def complement_nb(self, col2):
+        pass
+
+    def gaussian_nb(self, col2):
+        pass
+
+    def multinomial_nb(self, col2):
+        pass
