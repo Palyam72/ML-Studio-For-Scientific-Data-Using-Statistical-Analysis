@@ -497,5 +497,5 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["Voting Classifier"])
-
+    
             
