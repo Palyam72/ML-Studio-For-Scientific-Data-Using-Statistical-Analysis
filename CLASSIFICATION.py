@@ -98,3 +98,5 @@ class Classification:
             col2.subheader("Your Created Model", divider='blue')
             col2.write(model)
             model.fit(xtrain, ytrain)
+            col2.write(f"Trained Model Parameters:\n{model.get_params()}")
+
