@@ -4,13 +4,12 @@ import missingno as mso
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier, RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import *
 from sklearn.svm import SVC, NuSVC, OneClassSVM, LinearSVC
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
 from sklearn.naive_bayes import BernoulliNB, CategoricalNB, ComplementNB, GaussianNB, MultinomialNB
 from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier, StackingClassifier, VotingClassifier
 from sklearn.metrics import classification_report, confusion_matrix
-from dtreeviz import dtreeviz
 
 if "availableDatasets" not in st.session_state:
     st.session_state["availableDatasets"]={}
@@ -110,8 +109,10 @@ class Classification:
             col2.write(f"Feature Names: {getattr(model, 'feature_names_in_', 'Not Available')}")
             col2.write(f"Number of Outputs: {model.n_outputs_}")
             col2.write(f"Tree Structure: {model.tree_}")
-            col2.subheader("Visualize the model",divider='blue')
-            viz = dtreeviz(model, xtrain, ytrain, target_name="target", feature_names=xtrain.columns, class_names=list(model.classes_))
-            viz.save("tree_viz.svg")  # Save as an image file
-            col2.image("tree_viz.svg", caption="Decision Tree Visualization")
+            col2.subheader("Decision Tree Visualization", divider='blue')
+            feature_names = list(map(str, xtrain.columns))  # Ensure feature names are strings
+            
+            fig, ax = plt.subplots(figsize=(12, 6))
+            plot_tree(model, filled=True, feature_names=feature_names, class_names=list(map(str, model.classes_)), ax=ax)
+            col2.pyplot(fig)
 
