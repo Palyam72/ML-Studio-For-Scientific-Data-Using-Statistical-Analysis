@@ -22,7 +22,7 @@ class Classification:
         # Content for Perform Operations tab
         with tab1:
             # Create two columns with a ratio of 1:2
-            col1, col2 = st.columns([1, 2], gap="large")
+            col1, col2 = st.columns([1, 2],border=True)
             operation = col1.radio("Select Operation", ["Train Test Split", "Classifiers"])
             if operation == "Train Test Split":
                 col2.subheader("You Are Going To Iplement Train Test Split",divider=True)
@@ -46,7 +46,7 @@ class Classification:
 
         # Content for View Operations tab
         with tab2:
-            col1, col2 = st.columns([1, 2], gap="large")
+            col1, col2 = st.columns([1, 2], border=True)
             col1.subheader("Select The View Mode", divider='blue')
             options = col1.radio("Options", ["View Data Frame", "View Missing Information"])
             if options == "View Data Frame":
