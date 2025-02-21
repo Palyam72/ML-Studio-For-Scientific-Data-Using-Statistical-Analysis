@@ -14,6 +14,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 class Classification:
     def __init__(self, dataset):
         self.dataset = dataset
+        self.xtrain, self.xtest, self.ytrain, self.ytest = None, None, None, None
 
     def display(self):
         # Create three tabs
@@ -63,6 +64,10 @@ class Classification:
             st.write("Delete Operations content goes here")
 
     def decision_tree(self, col2):
+        if self.xtrain is None or self.ytrain is None:
+            col2.error("Error: Train Test Split must be performed first!")
+            return
+
         st.write("### Decision Tree Classifier Settings")
     
         criterion = col2.selectbox("Select Criterion", ["gini", "entropy", "log_loss"], index=0)
@@ -70,7 +75,7 @@ class Classification:
         max_depth = None if col2.checkbox("Use Default Max Depth") else col2.number_input("Max Depth (None for unlimited)", min_value=1, value=10)
         min_samples_split = col2.number_input("Minimum Samples to Split", min_value=2, value=2)
         min_samples_leaf = col2.number_input("Minimum Samples at a Leaf Node", min_value=1, value=1)
-        max_features = col2.selectbox("Max Features", [None, "sqrt", "log2"] + list(range(1, len(self.xtrain.columns) + 1)), index=0)
+        max_features = col2.selectbox("Max Features", [None, "sqrt", "log2"] + (list(range(1, len(self.xtrain.columns) + 1)) if self.xtrain is not None else []), index=0)
         max_leaf_nodes = None if col2.checkbox("Use Default Max Leaf Nodes") else col2.number_input("Max Leaf Nodes (None for unlimited)", min_value=1, value=10)
         min_impurity_decrease = col2.slider("Minimum Impurity Decrease", 0.0, 1.0, 0.0, 0.01)
         random_state = col2.number_input("Random State (None for random)", min_value=0, value=42)
