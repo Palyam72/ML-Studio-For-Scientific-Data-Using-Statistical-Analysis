@@ -56,7 +56,7 @@ class Classification:
                 elif option=="Extra Tree Classifier":
                     self.extra_trees(col2)
                 elif option =="Bagging Classifier":
-                    self.bagging_classifie(col2)
+                    self.bagging_classifier(col2)
 
         with tab2:
             col1, col2 = st.columns([1, 2], border=True)
