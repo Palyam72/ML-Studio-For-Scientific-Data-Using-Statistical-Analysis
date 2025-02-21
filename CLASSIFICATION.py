@@ -13,7 +13,9 @@ from sklearn import metrics
 import warnings
 from sklearn.linear_model import LogisticRegression
 
-session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier","Voting Classifier","LinearSVC","NuSVC"]
+session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier",
+                "Stacking Classifier","Voting Classifier","LinearSVC","NuSVC",
+               "OneClassSVM"]
 for i in session_models:
     if i not in st.session_state:
         st.session_state[i]=None
@@ -612,6 +614,51 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["NuSVC"])
-
+    def one_class_svm_classifier(self, col2):
+        xtrain_key = col2.selectbox("Select X Train for OneClassSVM", list(st.session_state["availableDatasets"].keys()))
     
-            
+        # Model parameters selection
+        kernel = col2.selectbox("Kernel Type", ["linear", "poly", "rbf", "sigmoid", "precomputed"], index=2)
+        degree = col2.number_input("Degree (for poly kernel)", value=3, min_value=1, step=1)
+        gamma = col2.selectbox("Gamma", ["scale", "auto"], index=0)
+        coef0 = col2.number_input("Coef0 (for poly and sigmoid)", value=0.0, step=0.1)
+        tol = col2.number_input("Tolerance for Stopping Criteria", value=0.001, step=0.0001, format="%.5f")
+        nu = col2.slider("Nu (Fraction of training errors and support vectors)", min_value=0.01, max_value=1.0, value=0.5, step=0.01)
+        shrinking = col2.checkbox("Use Shrinking Heuristic", True)
+        cache_size = col2.number_input("Cache Size (MB)", value=200, min_value=50, step=50)
+        max_iter = col2.number_input("Max Iterations", value=-1, step=100)
+    
+        col2.divider()
+    
+        if col2.checkbox("Continue To Fit The Model"):
+            model = OneClassSVM(
+                kernel=kernel,
+                degree=degree,
+                gamma=gamma,
+                coef0=coef0,
+                tol=tol,
+                nu=nu,
+                shrinking=shrinking,
+                cache_size=cache_size,
+                max_iter=max_iter
+            )
+    
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+    
+            if st.session_state.get("OneClassSVM") is None:
+                st.session_state["OneClassSVM"] = model.fit(
+                    st.session_state["availableDatasets"][xtrain_key]
+                )
+            else:
+                col2.success("Model Created")
+                delete = col2.checkbox("Do you want to recreate the model?")
+                if delete:
+                    st.session_state["OneClassSVM"] = None
+    
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["OneClassSVM"])
+    
+        
+                
