@@ -487,14 +487,14 @@ elif selected == "Classification":
             list(st.session_state.availableDatasets.keys())
         )
 
-    if selected_dataset_name:
-        # Load the selected dataset from session state
-        st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
-        dataset = st.session_state.selected_dataset
-        st.markdown("### Selected Dataset")
-        st.dataframe(dataset)
-        object=Classification(dataset)
-        object.disply()
+        if selected_dataset_name:
+            # Load the selected dataset from session state
+            st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+            dataset = st.session_state.selected_dataset
+            st.markdown("### Selected Dataset")
+            st.dataframe(dataset)
+            object=Classification(dataset)
+            object.disply()
             
                         
         
