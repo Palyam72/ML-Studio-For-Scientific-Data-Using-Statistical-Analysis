@@ -57,7 +57,9 @@ class Classification:
                     self.extra_trees(col2)
                 elif option =="Bagging Classifier":
                     self.bagging_classifier(col2)
-
+                elif option == "Hist Gradient Boosting Classifier":
+                    self.hist_gradient_boosting_classifier(col2)
+                    
         with tab2:
             col1, col2 = st.columns([1, 2], border=True)
             col1.subheader("Select The View Mode", divider='blue')
@@ -256,4 +258,55 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2,model)
+    def hist_gradient_boosting_classifier(self, col2):
+        xtrain_key = col2.selectbox("Select X Train for HistGradientBoostingClassifier", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for HistGradientBoostingClassifier", list(st.session_state["availableDatasets"].keys()))
         
+        loss = col2.selectbox("Loss function", ["log_loss"], index=0)
+        learning_rate = col2.number_input("Learning rate", value=0.1, min_value=0.001, step=0.01)
+        max_iter = col2.number_input("Max iterations", value=100, min_value=1, step=1)
+        max_leaf_nodes = col2.number_input("Max leaf nodes", value=31, min_value=2, step=1)
+        max_depth = col2.number_input("Max depth", value=None, min_value=1, step=1, format="%d")
+        min_samples_leaf = col2.number_input("Min samples per leaf", value=20, min_value=1, step=1)
+        l2_regularization = col2.number_input("L2 regularization", value=0.0, step=0.01)
+        max_features = col2.number_input("Max features", value=1.0, min_value=0.1, max_value=1.0, step=0.1)
+        max_bins = col2.number_input("Max bins", value=255, min_value=2, step=1)
+        
+        warm_start = col2.checkbox("Warm start", False)
+        early_stopping = col2.selectbox("Early stopping", ["auto", True, False], index=0)
+        scoring = col2.selectbox("Scoring", ["loss", None], index=0)
+        validation_fraction = col2.number_input("Validation fraction", value=0.1, min_value=0.0, max_value=1.0, step=0.01)
+        n_iter_no_change = col2.number_input("Number of iterations with no change for early stopping", value=10, min_value=1, step=1)
+        tol = col2.number_input("Tolerance", value=1e-7, min_value=0.0, step=1e-7, format="%e")
+        verbose = col2.number_input("Verbosity level", value=0, min_value=0, step=1)
+        random_state = col2.number_input("Random state (leave blank for None)", value=None, format="%d")
+        if not random_state:
+            random_state = None
+        
+        class_weight = col2.selectbox("Class weight", [None, "balanced"], index=0)
+        
+        col2.divider()
+        
+        if col2.checkbox("Continue To Fit The Model"):
+            model = HistGradientBoostingClassifier(
+                loss=loss, learning_rate=learning_rate, max_iter=max_iter, max_leaf_nodes=max_leaf_nodes,
+                max_depth=max_depth, min_samples_leaf=min_samples_leaf, l2_regularization=l2_regularization,
+                max_features=max_features, max_bins=max_bins, warm_start=warm_start, early_stopping=early_stopping,
+                scoring=scoring, validation_fraction=validation_fraction, n_iter_no_change=n_iter_no_change,
+                tol=tol, verbose=verbose, random_state=random_state, class_weight=class_weight
+            )
+            
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+            if st.session_state["Hist Gradient Boosting"] ==None:
+                st.session_state["Hist Gradient Boosting"]=model.fit(st.session_state["availableDatasets"][xtrain_key], st.session_state["availableDatasets"][ytrain_key])
+            else:
+                col2.success("Model Created")
+                delete=col2.checkbox("DO You Want o recreate model")
+                if delete:
+                    st.session_state["Hist Gradient Boosting"]=None
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["Hist Gradient Boosting"])
+    
+            
