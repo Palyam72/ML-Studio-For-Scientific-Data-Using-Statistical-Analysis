@@ -25,13 +25,15 @@ class Classification:
             col1, col2 = st.columns([1, 2], gap="large")
             operation = col1.radio("Select Operation", ["Train Test Split", "Classifiers"])
             if operation == "Train Test Split":
-                col2.write("You selected Train Test Split")
-                test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
-                X = self.dataset.drop(columns=['target'])
-                y = self.dataset['target']
-                X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
-                col2.write(f"Train set size: {X_train.shape[0]}")
-                col2.write(f"Test set size: {X_test.shape[0]}")
+                col2.subheader("You Are Going To Iplement Train Test Split",divider=True)
+                test_columns=col2.selectbox("Selct the target columnn",self.dataset.columns.tolist())
+                if col2.nutton("Apply Train Test Split",use_container_width=True,type='primary'):
+                    test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
+                    X = self.dataset.drop(columns=['target'])
+                    y = self.dataset['target']
+                    self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+                    col2.write(f"Train set size: {self.X_train.shape[0]}")
+                    col2.write(f"Test set size: {self.X_test.shape[0]}")
             elif operation == "Classifiers":
                 col2.subheader("You Make Model Here", divider='blue')
                 option = col2.selectbox("Select the classification model that you want", 
