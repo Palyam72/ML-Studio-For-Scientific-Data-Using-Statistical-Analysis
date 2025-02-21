@@ -916,49 +916,49 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["CategoricalNB"])
-  def complement_nb_classifier(self, col2):
-      xtrain_key = col2.selectbox("Select X Train for ComplementNB", list(st.session_state["availableDatasets"].keys()))
-      ytrain_key = col2.selectbox("Select Y Train for ComplementNB", list(st.session_state["availableDatasets"].keys()))
-  
-      # Model parameters selection
-      alpha = col2.number_input("Smoothing Parameter (alpha)", value=1.0, min_value=0.0, step=0.1)
-      force_alpha = col2.checkbox("Force Alpha to Remain Unchanged", value=True)
-      fit_prior = col2.checkbox("Learn Class Prior Probabilities (Used Only in Single-Class Case)", value=True)
-      class_prior_input = col2.text_input("Class Prior Probabilities (comma-separated, leave blank for None)")
-      norm = col2.checkbox("Perform Second Normalization of Weights", value=False)
-  
-      class_prior = None
-      if class_prior_input:
-          try:
-              class_prior = [float(x) for x in class_prior_input.split(",")]
-          except ValueError:
-              col2.error("Invalid class prior input. Enter numbers separated by commas.")
-  
-      col2.divider()
-  
-      if col2.checkbox("Continue To Fit The Model"):
-          model = ComplementNB(
-              alpha=alpha,
-              force_alpha=force_alpha,
-              fit_prior=fit_prior,
-              class_prior=class_prior,
-              norm=norm
-          )
-  
-          col2.subheader("Your Model", divider='blue')
-          col2.write(model.get_params())
-  
-          if st.session_state.get("ComplementNB") is None:
-              st.session_state["ComplementNB"] = model.fit(
-                  st.session_state["availableDatasets"][xtrain_key],
-                  st.session_state["availableDatasets"][ytrain_key]
-              )
-          else:
-              col2.success("Model Created")
-              delete = col2.checkbox("Do you want to recreate the model?")
-              if delete:
-                  st.session_state["ComplementNB"] = None
-  
-          col2.success("Model Fitted Successfully")
-          col2.divider()
-          self.metrics(col2, st.session_state["ComplementNB"])
+    def complement_nb_classifier(self, col2):
+        xtrain_key = col2.selectbox("Select X Train for ComplementNB", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train for ComplementNB", list(st.session_state["availableDatasets"].keys()))
+    
+        # Model parameters selection
+        alpha = col2.number_input("Smoothing Parameter (alpha)", value=1.0, min_value=0.0, step=0.1)
+        force_alpha = col2.checkbox("Force Alpha to Remain Unchanged", value=True)
+        fit_prior = col2.checkbox("Learn Class Prior Probabilities (Used Only in Single-Class Case)", value=True)
+        class_prior_input = col2.text_input("Class Prior Probabilities (comma-separated, leave blank for None)")
+        norm = col2.checkbox("Perform Second Normalization of Weights", value=False)
+    
+        class_prior = None
+        if class_prior_input:
+            try:
+                class_prior = [float(x) for x in class_prior_input.split(",")]
+            except ValueError:
+                col2.error("Invalid class prior input. Enter numbers separated by commas.")
+    
+        col2.divider()
+    
+        if col2.checkbox("Continue To Fit The Model"):
+            model = ComplementNB(
+                alpha=alpha,
+                force_alpha=force_alpha,
+                fit_prior=fit_prior,
+                class_prior=class_prior,
+                norm=norm
+            )
+    
+            col2.subheader("Your Model", divider='blue')
+            col2.write(model.get_params())
+    
+            if st.session_state.get("ComplementNB") is None:
+                st.session_state["ComplementNB"] = model.fit(
+                    st.session_state["availableDatasets"][xtrain_key],
+                    st.session_state["availableDatasets"][ytrain_key]
+                )
+            else:
+                col2.success("Model Created")
+                delete = col2.checkbox("Do you want to recreate the model?")
+                if delete:
+                    st.session_state["ComplementNB"] = None
+    
+            col2.success("Model Fitted Successfully")
+            col2.divider()
+            self.metrics(col2, st.session_state["ComplementNB"])
