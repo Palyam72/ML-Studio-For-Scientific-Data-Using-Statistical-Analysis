@@ -26,11 +26,15 @@ class Classification:
             if operation == "Train Test Split":
                 col2.subheader("You Are Going To Implement Train Test Split", divider=True)
                 test_columns = col2.selectbox("Select the target column", self.dataset.columns.tolist())
-                test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
-                if col2.checkbox("Apply Train Test Split"):
+                if col2.button("Apply Train Test Split", use_container_width=True, type='primary'):
+                    test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
                     X = self.dataset.drop(columns=[test_columns])
                     y = self.dataset[test_columns]
                     self.xtrain, self.xtest, self.ytrain, self.ytest = train_test_split(X, y, test_size=test_size, random_state=42)
+                    st.session_state["availableDatasets"]["classification_train_test_split_xtrain"] = self.xtrain
+                    st.session_state["availableDatasets"]["classification_train_test_split_xtest"] = self.xtest
+                    st.session_state["availableDatasets"]["classification_train_test_split_ytrain"] = self.ytrain
+                    st.session_state["availableDatasets"]["classification_train_test_split_ytest"] = self.ytest
                     col2.write(f"Train set size: {self.xtrain.shape[0]}")
                     col2.write(f"Test set size: {self.xtest.shape[0]}")
             elif operation == "Classifiers":
@@ -64,18 +68,23 @@ class Classification:
             st.write("Delete Operations content goes here")
 
     def decision_tree(self, col2):
-        if self.xtrain is None or self.ytrain is None:
+        st.write("### Decision Tree Classifier Settings")
+        xtrain_key = col2.selectbox("Select X Train", list(st.session_state["availableDatasets"].keys()))
+        ytrain_key = col2.selectbox("Select Y Train", list(st.session_state["availableDatasets"].keys()))
+
+        if xtrain_key not in st.session_state["availableDatasets"] or ytrain_key not in st.session_state["availableDatasets"]:
             col2.error("Error: Train Test Split must be performed first!")
             return
 
-        st.write("### Decision Tree Classifier Settings")
+        xtrain = st.session_state["availableDatasets"][xtrain_key]
+        ytrain = st.session_state["availableDatasets"][ytrain_key]
     
         criterion = col2.selectbox("Select Criterion", ["gini", "entropy", "log_loss"], index=0)
         splitter = col2.selectbox("Select Splitter Strategy", ["best", "random"], index=0)
         max_depth = None if col2.checkbox("Use Default Max Depth") else col2.number_input("Max Depth (None for unlimited)", min_value=1, value=10)
         min_samples_split = col2.number_input("Minimum Samples to Split", min_value=2, value=2)
         min_samples_leaf = col2.number_input("Minimum Samples at a Leaf Node", min_value=1, value=1)
-        max_features = col2.selectbox("Max Features", [None, "sqrt", "log2"] + (list(range(1, len(self.xtrain.columns) + 1)) if self.xtrain is not None else []), index=0)
+        max_features = col2.selectbox("Max Features", [None, "sqrt", "log2"] + list(range(1, len(xtrain.columns) + 1)), index=0)
         max_leaf_nodes = None if col2.checkbox("Use Default Max Leaf Nodes") else col2.number_input("Max Leaf Nodes (None for unlimited)", min_value=1, value=10)
         min_impurity_decrease = col2.slider("Minimum Impurity Decrease", 0.0, 1.0, 0.0, 0.01)
         random_state = col2.number_input("Random State (None for random)", min_value=0, value=42)
@@ -86,31 +95,4 @@ class Classification:
                                            max_leaf_nodes=max_leaf_nodes, min_impurity_decrease=min_impurity_decrease, random_state=random_state)
             col2.subheader("Your Created Model", divider='blue')
             col2.write(model)
-            model.fit(self.xtrain, self.ytrain)
-            
-    def ada_boost_classifier(self, col2):
-        pass
-
-    def bagging_classifier(self, col2):
-        pass
-
-    def extra_tree_classifier(self, col2):
-        pass
-
-    def gradient_boosting_classifier(self, col2):
-        pass
-
-    def hist_gradient_boosting_classifier(self, col2):
-        pass
-
-    def random_forest_classifier(self, col2):
-        pass
-
-    def stacking_classifier(self, col2):
-        pass
-
-    def voting_classifier(self, col2):
-        pass
-
-    def metrics(self, col2, model):
-        pass
+            model.fit(xtrain, ytrain)
