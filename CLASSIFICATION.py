@@ -36,7 +36,7 @@ class Classification:
         fileToDelete=col1.selectbox("Select the file to delete",st.session_state["availableDatasets"].keys())
         if fileToDelete:
           col2.dataframe(st.session_state["availableDatasets"][fileToDelete])
-          if col2.button("Delete This File",use_container_width=True):
+          if col2.button("Delete This File",use_container_width=True,type='primary'):
             del st.session_state["availableDatasets"][fileToDelete]
             col2.success(f"File '{fileToDelete}' has been deleted from memory.")
             st.rerun()
