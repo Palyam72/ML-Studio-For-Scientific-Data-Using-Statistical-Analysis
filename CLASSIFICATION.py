@@ -100,4 +100,13 @@ class Classification:
             model.fit(xtrain, ytrain)
             col2.subheader("Here are the detailed list of parameters",divider='blue')
             col2.write(f"Trained Model Parameters:\n{model.get_params()}")
+            col2.subheader("Decision Tree Model Attributes", divider='blue')
+            col2.write(f"Classes: {model.classes_}")
+            col2.write(f"Feature Importances: {model.feature_importances_}")
+            col2.write(f"Max Features: {model.max_features_}")
+            col2.write(f"Number of Classes: {model.n_classes_}")
+            col2.write(f"Number of Features: {model.n_features_in_}")
+            col2.write(f"Feature Names: {getattr(model, 'feature_names_in_', 'Not Available')}")
+            col2.write(f"Number of Outputs: {model.n_outputs_}")
+            col2.write(f"Tree Structure: {model.tree_}")
 
