@@ -74,6 +74,8 @@ class Classification:
                     self.voting_classifier(col2)
                 elif option == "Linear SVM":
                     self.linear_svc_classifier(col2)
+                elif option == "NuSVC":
+                    self.nu_svc_classifier(col2)
                     
                     
                     
