@@ -78,9 +78,9 @@ class Classification:
                     self.linear_svc_classifier(col2)
                 elif option == "NuSVC":
                     self.nu_svc_classifier(col2)
-                    
-                    
-                    
+                elif option =="One Class SVM":
+                  self.one_class_svm_classifier(col2)
+                  
         with tab2:
             col1, col2 = st.columns([1, 2], border=True)
             col1.subheader("Select The View Mode", divider='blue')
