@@ -494,7 +494,7 @@ elif selected == "Classification":
             st.markdown("### Selected Dataset")
             st.dataframe(dataset)
             object=Classification(dataset)
-            object.disply()
+            object.display()
             
                         
         
