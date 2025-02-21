@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import missingno
 
 class Classification:
     def __init__(self, dataset):
@@ -26,7 +27,7 @@ class Classification:
             options=col1.radio("Options",["View Data Frame","View Missing Information"])
             if options=="View Data Frame":
                 col2.dataframe(self.dataset)
-            if option=="View Missing Information":
+            if options=="View Missing Information":
                 pass
 
         # Content for Delete Operations tab
