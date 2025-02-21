@@ -70,7 +70,7 @@ class Classification:
             st.write("Delete Operations content goes here")
 
     def decision_tree(self, col2):
-        st.write("### Decision Tree Classifier Settings")
+        col2.subheader("Decision Tree Classifier Settings",divider='blue')
         xtrain_key = col2.selectbox("Select X Train", list(st.session_state["availableDatasets"].keys()))
         ytrain_key = col2.selectbox("Select Y Train", list(st.session_state["availableDatasets"].keys()))
 
