@@ -15,7 +15,7 @@ from sklearn.linear_model import LogisticRegression
 
 session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier",
                 "Stacking Classifier","Voting Classifier","LinearSVC","NuSVC",
-               "OneClassSVM"]
+               "OneClassSVM","KNN"]
 for i in session_models:
     if i not in st.session_state:
         st.session_state[i]=None
