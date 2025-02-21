@@ -11,7 +11,7 @@ from sklearn.naive_bayes import BernoulliNB, CategoricalNB, ComplementNB, Gaussi
 from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier, StackingClassifier, VotingClassifier
 from sklearn import metrics
 import warnings
-from sklear.linear_models import LogisticRegression
+from sklearn.linear_models import LogisticRegression
 
 session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier","Stacking Classifier"]
 for i in session_models:
