@@ -118,48 +118,48 @@ class Classification:
             col2.pyplot(fig)
             col2.subheader("Your Model Metrics On Test Data",divider='blue')
             self.metrics(col2,model)
-        def metrics(self, col2, model):
-            col2.subheader("Metrics On Predictions", divider='blue')
+    def metrics(self, col2, model):
+        col2.subheader("Metrics On Predictions", divider='blue')
+        
+        xtrain = col2.selectbox("Select the xtrain dataset from the available datasets", list(st.session_state["availableDatasets"].keys()))
+        ytrain = col2.selectbox("Select the ytrain dataset from the available datasets", list(st.session_state["availableDatasets"].keys()))
+        xtest = col2.selectbox("Select the xtest dataset from the available datasets", list(st.session_state["availableDatasets"].keys()))
+        ytest = col2.selectbox("Select the ytest dataset from the available datasets", list(st.session_state["availableDatasets"].keys()))
+        
+        if col2.button("Evaluate Metrics", use_container_width=True):
+            try:
+                ypred = model.predict(st.session_state["availableDatasets"][xtest])
+                col2.success("Predictions Successful, below is the evaluation")
+            except Exception as e:
+                col2.error(f"Error in prediction: {str(e)}")
+                return
             
-            xtrain = col2.selectbox("Select the xtrain dataset from the available datasets", list(st.session_state["availableDatasets"].keys()))
-            ytrain = col2.selectbox("Select the ytrain dataset from the available datasets", list(st.session_state["availableDatasets"].keys()))
-            xtest = col2.selectbox("Select the xtest dataset from the available datasets", list(st.session_state["availableDatasets"].keys()))
-            ytest = col2.selectbox("Select the ytest dataset from the available datasets", list(st.session_state["availableDatasets"].keys()))
+            ytest_data = st.session_state["availableDatasets"][ytest]
             
-            if col2.button("Evaluate Metrics", use_container_width=True):
+            metrics_list = {
+                "Accuracy Score": metrics.accuracy_score,
+                "AUC Score": metrics.roc_auc_score,
+                "Average Precision Score": metrics.average_precision_score,
+                "Balanced Accuracy Score": metrics.balanced_accuracy_score,
+                "Classification Report": metrics.classification_report,
+                "Confusion Matrix": metrics.confusion_matrix,
+                "F1 Score": metrics.f1_score,
+                "FBeta Score": lambda y_true, y_pred: metrics.fbeta_score(y_true, y_pred, beta=1),
+                "Hamming Loss": metrics.hamming_loss,
+                "Jaccard Score": metrics.jaccard_score,
+                "Log Loss": metrics.log_loss,
+                "Matthews Correlation Coefficient": metrics.matthews_corrcoef,
+                "Multilabel Confusion Matrix": metrics.multilabel_confusion_matrix,
+                "Precision Recall F-score Support": metrics.precision_recall_fscore_support,
+                "Precision Score": metrics.precision_score,
+                "Recall Score": metrics.recall_score,
+                "Zero-One Loss": metrics.zero_one_loss,
+            }
+            
+            for metric_name, metric_func in metrics_list.items():
                 try:
-                    ypred = model.predict(st.session_state["availableDatasets"][xtest])
-                    col2.success("Predictions Successful, below is the evaluation")
+                    result = metric_func(ytest_data, ypred)
+                    col2.write(f"**{metric_name}:**")
+                    col2.code(result)
                 except Exception as e:
-                    col2.error(f"Error in prediction: {str(e)}")
-                    return
-                
-                ytest_data = st.session_state["availableDatasets"][ytest]
-                
-                metrics_list = {
-                    "Accuracy Score": metrics.accuracy_score,
-                    "AUC Score": metrics.roc_auc_score,
-                    "Average Precision Score": metrics.average_precision_score,
-                    "Balanced Accuracy Score": metrics.balanced_accuracy_score,
-                    "Classification Report": metrics.classification_report,
-                    "Confusion Matrix": metrics.confusion_matrix,
-                    "F1 Score": metrics.f1_score,
-                    "FBeta Score": lambda y_true, y_pred: metrics.fbeta_score(y_true, y_pred, beta=1),
-                    "Hamming Loss": metrics.hamming_loss,
-                    "Jaccard Score": metrics.jaccard_score,
-                    "Log Loss": metrics.log_loss,
-                    "Matthews Correlation Coefficient": metrics.matthews_corrcoef,
-                    "Multilabel Confusion Matrix": metrics.multilabel_confusion_matrix,
-                    "Precision Recall F-score Support": metrics.precision_recall_fscore_support,
-                    "Precision Score": metrics.precision_score,
-                    "Recall Score": metrics.recall_score,
-                    "Zero-One Loss": metrics.zero_one_loss,
-                }
-                
-                for metric_name, metric_func in metrics_list.items():
-                    try:
-                        result = metric_func(ytest_data, ypred)
-                        col2.write(f"**{metric_name}:**")
-                        col2.code(result)
-                    except Exception as e:
-                        col2.warning(f"{metric_name} could not be calculated: {str(e)}")
+                    col2.warning(f"{metric_name} could not be calculated: {str(e)}")
