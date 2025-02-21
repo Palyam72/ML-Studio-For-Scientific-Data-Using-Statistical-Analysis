@@ -15,7 +15,7 @@ from sklearn.linear_model import LogisticRegression
 
 session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier",
                 "Stacking Classifier","Voting Classifier","LinearSVC","NuSVC",
-               "OneClassSVM","KNN","RadiusNeighbors","BernoulliNB","CategoricalNB","ComplementNB","GaussianNB"]
+               "OneClassSVM","KNN","RadiusNeighbors","BernoulliNB","CategoricalNB","ComplementNB","GaussianNB","MultinomialNB"]
 for i in session_models:
     if i not in st.session_state:
         st.session_state[i]=None
@@ -94,6 +94,8 @@ class Classification:
                 self.complement_nb_classifier(col2)
               elif option == "GaussianNB":
                 self.gaussian_nb_classifier(col2)
+              elif option == "MultinomialNB":
+                self.multinomial_nb_classifier(col2)
                 
                 
       with tab2:
@@ -1005,4 +1007,48 @@ class Classification:
             col2.success("Model Fitted Successfully")
             col2.divider()
             self.metrics(col2, st.session_state["GaussianNB"])
-    
+    def multinomial_nb_classifier(self, col2):
+      xtrain_key = col2.selectbox("Select X Train for MultinomialNB", list(st.session_state["availableDatasets"].keys()))
+      ytrain_key = col2.selectbox("Select Y Train for MultinomialNB", list(st.session_state["availableDatasets"].keys()))
+  
+      # Model parameters selection
+      alpha = col2.number_input("Laplace Smoothing (Alpha)", value=1.0, min_value=0.0, format="%.3f")
+      force_alpha = col2.checkbox("Force Alpha", value=True)
+      fit_prior = col2.checkbox("Fit Prior", value=True)
+      class_prior_input = col2.text_input("Class Prior Probabilities (comma-separated, leave blank for None)")
+  
+      class_prior = None
+      if class_prior_input:
+          try:
+              class_prior = [float(x) for x in class_prior_input.split(",")]
+          except ValueError:
+              col2.error("Invalid class prior input. Enter numbers separated by commas.")
+  
+      col2.divider()
+  
+      if col2.checkbox("Continue To Fit The Model"):
+          model = MultinomialNB(
+              alpha=alpha,
+              force_alpha=force_alpha,
+              fit_prior=fit_prior,
+              class_prior=class_prior
+          )
+  
+          col2.subheader("Your Model", divider='blue')
+          col2.write(model.get_params())
+  
+          if st.session_state.get("MultinomialNB") is None:
+              st.session_state["MultinomialNB"] = model.fit(
+                  st.session_state["availableDatasets"][xtrain_key],
+                  st.session_state["availableDatasets"][ytrain_key]
+              )
+          else:
+              col2.success("Model Created")
+              delete = col2.checkbox("Do you want to recreate the model?")
+              if delete:
+                  st.session_state["MultinomialNB"] = None
+  
+          col2.success("Model Fitted Successfully")
+          col2.divider()
+          self.metrics(col2, st.session_state["MultinomialNB"])
+  
