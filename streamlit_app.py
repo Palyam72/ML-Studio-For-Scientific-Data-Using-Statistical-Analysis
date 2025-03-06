@@ -26,15 +26,12 @@ with st.sidebar:
     selected = option_menu(
         menu_title="Main Menu",
         options=[
-            "Data Upload", "Data Cleaning", "Identify & Select the Most Important Features",
-            "Create New Features", "Encode Categorical Data",
-            "Normalize or Scale the Features", "Exploratory Data Analysis",
-            "Regression", "Classification",
-            "Clustering", "Model Download"
+            "Data Upload", "Data Preprocessing", "Exploratory Data Analysis",
+            "Feature Engineering","Regression", "Classification","Clustering", "Model Download","Deploy Model"
         ],
         icons=[
             "cloud-upload", "eraser", "star", "plus-circle", "code",
-            "arrow-down-up", "bar-chart", "scissors", "gear", "check-circle", "download"
+            "arrow-down-up", "bar-chart", "scissors", "gear"
         ],
         menu_icon="cast",
         default_index=0,
