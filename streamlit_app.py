@@ -74,7 +74,7 @@ if selected == "Data Upload":
 
 # Data Cleaning Section
 elif selected == "Data Preprocessing":
-    st.link_button("Click Here To Perform Data Preprocessing","https://datapreproceappr-m2zchk4e2zac9vywzaz3nx-rohith.streamlit.app/")
+    st.link_button("Click Here To Perform Data Preprocessing","https://datapreproceappr-frjkrtp8guvqoh6spdz6l3-rohith.streamlit.app/")
 elif selected == "Feature Engineering":
     pass
 elif selected=="Exploratory Data Analysis":
