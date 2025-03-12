@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.cluster import *
-
+import streamlit as st
 class clusters:
   def __init__(self,df):
     self.dataset=df
