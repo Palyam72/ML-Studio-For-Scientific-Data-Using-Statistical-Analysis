@@ -9,6 +9,7 @@ from FEATURE_SELECTION import *
 from ENCODERS import *
 from CHANGERS import *
 from REGRESSION import *
+from clustering import clustering
 from CLASSIFICATION import Classification
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
@@ -119,6 +120,20 @@ elif selected == "Classification":
             st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
             dataset = st.session_state.selected_dataset
             object=Classification(dataset)
+            object.display()
+elif selected == "Clustering":
+    if st.session_state.availableDatasets:
+        # Dataset selection for cleaning
+        selected_dataset_name = st.selectbox(
+            "Select a dataset to clean",
+            list(st.session_state.availableDatasets.keys())
+        )
+
+        if selected_dataset_name:
+            # Load the selected dataset from session state
+            st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+            dataset = st.session_state.selected_dataset
+            object=cluster(dataset)
             object.display()
             
                         
