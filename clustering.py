@@ -260,7 +260,7 @@ class clusters:
         store_centers = None if store_centers == "None" else store_centers
     
         if st.button("Apply", use_container_width=True, type='primary'):
-            return hdbscan.HDBSCAN(
+            return HDBSCAN(
                 min_cluster_size=min_cluster_size,
                 min_samples=min_samples,
                 cluster_selection_epsilon=cluster_selection_epsilon,
