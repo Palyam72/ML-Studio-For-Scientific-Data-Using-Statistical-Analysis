@@ -133,7 +133,7 @@ elif selected == "Clustering":
             # Load the selected dataset from session state
             st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
             dataset = st.session_state.selected_dataset
-            object=cluster(dataset)
+            object=clusters(dataset)
             object.display()
             
                         
