@@ -9,7 +9,7 @@ from FEATURE_SELECTION import *
 from ENCODERS import *
 from CHANGERS import *
 from REGRESSION import *
-from clustering import clustering
+from clustering import clusters
 from CLASSIFICATION import Classification
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
