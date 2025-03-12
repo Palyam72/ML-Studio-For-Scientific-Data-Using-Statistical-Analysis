@@ -40,7 +40,7 @@ class clusters:
                     with col2:
                         try:
                             model = clustering_dict[clustering_options]()
-                            self.evaluate(model)
+                            self.evaluate_metrics(model)
                         except Exception as e:
                             st.warning(e)
     def evaluate_metrics(self, model):
