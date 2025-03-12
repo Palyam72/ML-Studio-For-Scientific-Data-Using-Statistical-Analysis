@@ -25,8 +25,14 @@ class clusters:
                     "BisectingKMeans": self.bisecting_kmeans,
                     "FeatureAgglomeration": self.feature_agglomeration,
                     "HDBSCAN": self.hdbscan_clustering,
-                    "MeanShift": self.mean_shift_clustering
+                    "MeanShift": self.mean_shift_clustering,
+                    "MiniBatchKMeans": self.mini_batch_kmeans_clustering,
+                    "OPTICS": self.optics_clustering,
+                    "SpectralBiclustering": self.spectral_biclustering,
+                    "SpectralClustering": self.spectral_clustering,
+                    "SpectralCoclustering": self.spectral_coclustering
                 }
+
 
                 clustering_options = col2.selectbox("Select clustering type", clustering_dict.keys())
                 
@@ -274,6 +280,163 @@ class clusters:
                 allow_single_cluster=allow_single_cluster,
                 store_centers=store_centers,
                 copy=copy
+            )
+    def mini_batch_kmeans_clustering(self):
+        n_clusters = st.number_input("Number of Clusters", min_value=1, value=8)
+        init = st.selectbox("Initialization Method", ["k-means++", "random"])
+        max_iter = st.number_input("Max Iterations", min_value=1, value=100)
+        batch_size = st.number_input("Batch Size", min_value=1, value=1024)
+        compute_labels = st.checkbox("Compute Labels", value=True)
+        tol = st.number_input("Tolerance", min_value=0.0, value=0.0, format="%.6f")
+        max_no_improvement = st.number_input("Max No Improvement", min_value=1, value=10)
+        init_size = st.text_input("Init Size (int or 'None')", "None")
+        n_init = st.text_input("Number of Initializations ('auto' or int)", "auto")
+        reassignment_ratio = st.number_input("Reassignment Ratio", min_value=0.0, value=0.01, format="%.6f")
+    
+        # Handling None values
+        init_size = None if init_size.lower() == "none" else int(init_size)
+        n_init = "auto" if n_init.lower() == "auto" else int(n_init)
+    
+        if st.button("Apply", use_container_width=True, type='primary'):
+            return MiniBatchKMeans(
+                n_clusters=n_clusters,
+                init=init,
+                max_iter=max_iter,
+                batch_size=batch_size,
+                compute_labels=compute_labels,
+                tol=tol,
+                max_no_improvement=max_no_improvement,
+                init_size=init_size,
+                n_init=n_init,
+                reassignment_ratio=reassignment_ratio
+            )
+    def optics_clustering(self):
+        min_samples = st.number_input("Minimum Samples", min_value=2, value=5)
+        max_eps = st.number_input("Max Epsilon", min_value=0.0, value=float("inf"), format="%.6f")
+        metric = st.selectbox("Distance Metric", ["minkowski", "cityblock", "cosine", "euclidean", "l1", "l2", "manhattan"])
+        p = st.number_input("Minkowski p-parameter", min_value=1.0, value=2.0, format="%.6f")
+        cluster_method = st.selectbox("Cluster Extraction Method", ["xi", "dbscan"])
+        eps = st.text_input("Epsilon (Only for DBSCAN method, or leave blank)", "")
+        xi = st.number_input("Xi (for xi method)", min_value=0.0, max_value=1.0, value=0.05, format="%.6f")
+        predecessor_correction = st.checkbox("Enable Predecessor Correction", value=True)
+        min_cluster_size = st.text_input("Minimum Cluster Size (int or fraction, or leave blank)", "")
+        algorithm = st.selectbox("Algorithm", ["auto", "ball_tree", "kd_tree", "brute"])
+        leaf_size = st.number_input("Leaf Size", min_value=1, value=30)
+        n_jobs = st.text_input("Number of Jobs (-1 for all processors, or leave blank)", "")
+    
+        # Handling None values
+        eps = None if eps.strip() == "" else float(eps)
+        min_cluster_size = None if min_cluster_size.strip() == "" else (int(min_cluster_size) if "." not in min_cluster_size else float(min_cluster_size))
+        n_jobs = None if n_jobs.strip() == "" else int(n_jobs)
+    
+        if st.button("Apply", use_container_width=True, type='primary'):
+            return OPTICS(
+                min_samples=min_samples,
+                max_eps=max_eps,
+                metric=metric,
+                p=p,
+                cluster_method=cluster_method,
+                eps=eps,
+                xi=xi,
+                predecessor_correction=predecessor_correction,
+                min_cluster_size=min_cluster_size,
+                algorithm=algorithm,
+                leaf_size=leaf_size,
+                n_jobs=n_jobs
+            )
+    def spectral_biclustering(self):
+        n_clusters = st.text_input("Number of Clusters (int or tuple e.g., (2,3))", "3")
+        method = st.selectbox("Normalization Method", ["bistochastic", "scale", "log"])
+        n_components = st.number_input("Number of Singular Vectors", min_value=1, value=6)
+        n_best = st.number_input("Number of Best Singular Vectors", min_value=1, value=3)
+        svd_method = st.selectbox("SVD Method", ["randomized", "arpack"])
+        n_svd_vecs = st.text_input("Number of SVD Vectors (or leave blank)", "")
+        mini_batch = st.checkbox("Use Mini-Batch K-Means", value=False)
+        init = st.selectbox("K-Means Initialization", ["k-means++", "random"])
+        n_init = st.number_input("Number of K-Means Initializations", min_value=1, value=10)
+        random_state = st.text_input("Random State (or leave blank)", "")
+    
+        # Handling None values
+        n_clusters = eval(n_clusters) if "," in n_clusters or "(" in n_clusters else int(n_clusters)
+        n_svd_vecs = None if n_svd_vecs.strip() == "" else int(n_svd_vecs)
+        random_state = None if random_state.strip() == "" else int(random_state)
+    
+        if st.button("Apply", use_container_width=True, type='primary'):
+            return SpectralBiclustering(
+                n_clusters=n_clusters,
+                method=method,
+                n_components=n_components,
+                n_best=n_best,
+                svd_method=svd_method,
+                n_svd_vecs=n_svd_vecs,
+                mini_batch=mini_batch,
+                init=init,
+                n_init=n_init,
+                random_state=random_state
+            )
+    def spectral_clustering(self):
+        n_clusters = st.number_input("Number of Clusters", min_value=2, value=8)
+        eigen_solver = st.selectbox("Eigen Solver", [None, "arpack", "lobpcg", "amg"])
+        n_components = st.text_input("Number of Eigenvectors (or leave blank)", "")
+        random_state = st.text_input("Random State (or leave blank)", "")
+        n_init = st.number_input("Number of K-Means Initializations", min_value=1, value=10)
+        gamma = st.number_input("Gamma (Kernel Coefficient)", min_value=0.0, value=1.0)
+        affinity = st.selectbox("Affinity Type", ["rbf", "nearest_neighbors", "precomputed", "precomputed_nearest_neighbors"])
+        n_neighbors = st.number_input("Number of Neighbors (ignored for RBF)", min_value=1, value=10)
+        eigen_tol = st.text_input("Eigen Tolerance (or 'auto')", "auto")
+        assign_labels = st.selectbox("Label Assignment Method", ["kmeans", "discretize", "cluster_qr"])
+        degree = st.number_input("Polynomial Kernel Degree", min_value=1, value=3)
+        coef0 = st.number_input("Zero Coefficient for Poly/Sigmoid Kernels", value=1.0)
+        kernel_params = st.text_area("Kernel Parameters (dict format or leave blank)", "")
+        n_jobs = st.selectbox("Number of Parallel Jobs", [None, -1, 1, 2, 4, 8])
+        verbose = st.checkbox("Enable Verbose Mode", value=False)
+    
+        # Handling None and dictionary values
+        n_components = None if n_components.strip() == "" else int(n_components)
+        random_state = None if random_state.strip() == "" else int(random_state)
+        eigen_tol = "auto" if eigen_tol.strip().lower() == "auto" else float(eigen_tol)
+        kernel_params = None if kernel_params.strip() == "" else eval(kernel_params)
+    
+        if st.button("Apply", use_container_width=True, type='primary'):
+            return SpectralClustering(
+                n_clusters=n_clusters,
+                eigen_solver=eigen_solver,
+                n_components=n_components,
+                random_state=random_state,
+                n_init=n_init,
+                gamma=gamma,
+                affinity=affinity,
+                n_neighbors=n_neighbors,
+                eigen_tol=eigen_tol,
+                assign_labels=assign_labels,
+                degree=degree,
+                coef0=coef0,
+                kernel_params=kernel_params,
+                n_jobs=n_jobs,
+                verbose=verbose
+            )
+    def spectral_coclustering(self):
+        n_clusters = st.number_input("Number of Biclusters", min_value=2, value=3)
+        svd_method = st.selectbox("SVD Method", ["randomized", "arpack"])
+        n_svd_vecs = st.text_input("Number of SVD Vectors (or leave blank)", "")
+        mini_batch = st.checkbox("Use Mini-Batch K-Means?", value=False)
+        init = st.selectbox("Initialization Method", ["k-means++", "random"])
+        n_init = st.number_input("Number of Initializations", min_value=1, value=10)
+        random_state = st.text_input("Random State (or leave blank)", "")
+    
+        # Handling optional parameters
+        n_svd_vecs = None if n_svd_vecs.strip() == "" else int(n_svd_vecs)
+        random_state = None if random_state.strip() == "" else int(random_state)
+    
+        if st.button("Apply", use_container_width=True, type='primary'):
+            return SpectralCoclustering(
+                n_clusters=n_clusters,
+                svd_method=svd_method,
+                n_svd_vecs=n_svd_vecs,
+                mini_batch=mini_batch,
+                init=init,
+                n_init=n_init,
+                random_state=random_state
             )
     def evaluate(self, model):
         model = model.fit_predict(self.dataset)
