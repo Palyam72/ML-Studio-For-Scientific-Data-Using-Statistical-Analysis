@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.cluster import DBSCAN, KMeans
+from sklearn.cluster import *
 import streamlit as st
 
 class clusters:
