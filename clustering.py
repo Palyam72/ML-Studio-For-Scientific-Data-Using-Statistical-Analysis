@@ -33,7 +33,7 @@ class clusters:
       random_state=int(random_state)
     algorithm=st.selectbox("K-means algorithm to use.",["lloyd","elkan"])
     if st.button("Apply",use_container_width=True,type='primary'):
-      return KMeans(n_clusters=n_clusters,init=init,max_iter=max_iter,random_state=random_state,algprithm=algorithm)
+      return KMeans(n_clusters=n_clusters,init=init,max_iter=max_iter,random_state=random_state,algorithm=algorithm)
   def evaluate(self,model):
     model=model.fit_transform(self.dataset)
     st.success("Model Fitted & Transformed")
