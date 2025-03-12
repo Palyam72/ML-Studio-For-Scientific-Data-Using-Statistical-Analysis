@@ -475,6 +475,3 @@ class clusters:
                 n_init=n_init,
                 random_state=random_state
             )
-    def evaluate(self, model):
-        model = model.fit(self.dataset)
-        st.success("Model Fitted & Transformed")
