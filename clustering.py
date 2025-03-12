@@ -43,7 +43,44 @@ class clusters:
                             self.evaluate(model)
                         except Exception as e:
                             st.warning(e)
-
+    def evaluate_metrics(self, model):
+        st.subheader("Evaluate Clustering Metrics")
+        try:
+            labels = model.fit_predict(self.dataset)
+        except Exception as e:
+            st.warning(f"Error fitting model: {e}")
+            return
+            
+        ground_truth_column = st.selectbox("Select ground truth column (optional)", ["None"] + list(self.dataset.columns))
+        ground_truth = self.dataset[ground_truth_column].values if ground_truth_column != "None" else None
+    
+        # Compute metrics
+        metrics = {
+            "Calinski-Harabasz Score": calinski_harabasz_score(self.dataset, labels),
+            "Davies-Bouldin Score": davies_bouldin_score(self.dataset, labels),
+            "Silhouette Score": silhouette_score(self.dataset, labels),
+        }
+    
+        if ground_truth is not None:
+            try:
+                metrics.update({
+                    "Adjusted Mutual Information": adjusted_mutual_info_score(ground_truth, labels),
+                    "Adjusted Rand Score": adjusted_rand_score(ground_truth, labels),
+                    "Completeness Score": completeness_score(ground_truth, labels),
+                    "Fowlkes-Mallows Score": fowlkes_mallows_score(ground_truth, labels),
+                    "Homogeneity Score": homogeneity_score(ground_truth, labels),
+                    "Mutual Information Score": mutual_info_score(ground_truth, labels),
+                    "Normalized Mutual Information Score": normalized_mutual_info_score(ground_truth, labels),
+                    "Rand Score": rand_score(ground_truth, labels),
+                    "V-Measure Score": v_measure_score(ground_truth, labels),
+                })
+            except Exception as e:
+                st.warning(f"Error computing supervised metrics: {e}")
+    
+        # Display results
+        st.write("### Clustering Evaluation Results")
+        for metric, value in metrics.items():
+            st.write(f"**{metric}:** {value:.4f}")
     def Kmeans(self):
         n_clusters = int(st.number_input("The number of clusters to form as well as the number of centroids to generate.", min_value=1, value=8))
         init = st.selectbox("Method For Initialization", ["k-means++", "random"])
