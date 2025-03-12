@@ -17,8 +17,11 @@ class clusters:
         clustering_options=col2.selectbox("Select clustering type",clustering_dict.keys())
         if clustering_options:
           with col2:
-            model=clustering_dict[clustering_options]()
-            self.evaluate(model)
+            try:
+              model=clustering_dict[clustering_options]()
+              self.evaluate(model)
+            except Exception as e:
+              st.warning(e)
   def Kmeans(self):
     n_clusters=int(st.number_input("The number of clusters to form as well as the number of centroids to generate.",min_value=1,value=8))
     init=st.selectbox("Method For Initialization",["k-means++","random"])
