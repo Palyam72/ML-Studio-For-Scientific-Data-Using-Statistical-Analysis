@@ -439,5 +439,5 @@ class clusters:
                 random_state=random_state
             )
     def evaluate(self, model):
-        model = model.fit_predict(self.dataset)
+        model = model.fit(self.dataset)
         st.success("Model Fitted & Transformed")
