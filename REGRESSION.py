@@ -8,8 +8,8 @@ session_variables=['regressionLinear','regressionRidge','regressionRidgeCV','reg
                    'regressionSGD','regressionElasticNet','regressionElasticNetCV','regressionLars','regressionLarsCV',
                    'regressionLasso','regressionLassoCV',"regressionLassoLars",'regressionLassoLarsCV','regressionLassoLarsIC','regressionOMP',
                   'regressionOMPCV','regressionARD','regressionBayesianRidge','regressionMTElasticNet','regressionMTLasso','regressionMTElasticNetCV',
-                   'regressionHuber','regressionQuantile','regressionRANSAC','regressionPoisson','regressionTheilSen','regressionTweedie'
-                  ]
+                   'regressionHuber','regressionQuantile','regressionRANSAC','regressionPoisson','regressionTheilSen','regressionTweedie','regresionXTrain',
+                  'regresionYTrain','regresionXTest','regresionYTest']
 for i in session_variables:
     if i not in st.session_state:
         st.session_state[i]=None
