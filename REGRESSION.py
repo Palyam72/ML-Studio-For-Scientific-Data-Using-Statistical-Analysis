@@ -58,14 +58,14 @@ class Regression:
                     st.markdown("### Model Attributes")
                     st.write(f"**Coefficients:** {self.model.coef_}")
                     st.write(f"**Intercept:** {self.model.intercept_}")
-                    self.regression_metrics()
+                    self.regression_metrics(st.session_state['regressionLinear'])
         else:
             with self.col2:
                 st.success("Linear Regression Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
                 st.write(f"**Coefficients:** {st.session_state['regressionLinear'].coef_}")
                 st.write(f"**Intercept:** {st.session_state['regressionLinear'].intercept_}")
-                self.regression_metrics()
+                self.regression_metrics(st.session_state['regressionLinear'])
                 if st.button("Re Train The Model",use_container_width=True,type='primary'):
                     st.session_state['regressionLinear']=None
     def ridge_regression(self):
@@ -88,16 +88,16 @@ class Regression:
                         st.markdown("### Model Attributes")
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionRidge'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Ridge Regression Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:** {st.session_state.get('regressionRidge').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionRidge').intercept_}")
+                self.regression_metrics(st.session_state.get('regressionRidge'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionRidge'] = None
     def ridge_cv(self):
@@ -123,17 +123,17 @@ class Regression:
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
                         st.write(f"**Best Alpha:** {self.model.alpha_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionRidgeCV'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("RidgeCV Regression Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Best Alpha:** {self.model.alpha_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:** {st.session_state.get('regressionRidgeCV').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionRidgeCV').intercept_}")
+                st.write(f"**Best Alpha:** {st.session_state.get('regressionRidgeCV').alpha_}")
+                self.regression_metrics(st.session_state.get('regressionRidgeCV'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionRidgeCV'] = None
     def sgd_regressor(self):
@@ -179,11 +179,11 @@ class Regression:
             with self.col2:
                 st.success("SGD Regressor Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Total Updates:** {self.model.t_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:** {st.session_state.get('regressionSGD').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionSGD').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionSGD').n_iter_}")
+                st.write(f"**Total Updates:** {st.session_state.get('regressionSGD').t_}")
+                self.regression_metrics(st.session_state.get('regressionSGD'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionSGD'] = None
     def elasticNet(self):
@@ -213,17 +213,17 @@ class Regression:
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionElasticNet'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("ElasticNet Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:** {st.session_state.get('regressionElasticNet').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionElasticNet').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionElasticNet').n_iter_}")
+                self.regression_metrics(st.session_state.get('regressionElasticNet'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionElasticNet'] = None
     def elasticNetCV(self):
@@ -263,12 +263,12 @@ class Regression:
             with self.col2:
                 st.success("ElasticNetCV Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Alpha (Best Regularization):** {self.model.alpha_}")
-                st.write(f"**L1 Ratio (Best Mix):** {self.model.l1_ratio_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                self.regression_metrics()
+                st.write(f"**Alpha (Best Regularization):** {st.session_state.get('regressionElasticNetCV').alpha_}")
+                st.write(f"**L1 Ratio (Best Mix):** {st.session_state.get('regressionElasticNetCV').l1_ratio_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionElasticNetCV').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionElasticNetCV').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionElasticNetCV').n_iter_}")
+                self.regression_metrics(st.session_state.get('regressionElasticNetCV'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionElasticNetCV'] = None
     def lars(self):
@@ -299,19 +299,19 @@ class Regression:
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionLars'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Lars Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Alpha Values:** {self.model.alphas_}")
-                st.write(f"**Active Variables:** {self.model.active_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                self.regression_metrics()
+                st.write(f"**Alpha Values:** {st.session_state.get('regressionLars').alphas_}")
+                st.write(f"**Active Variables:** {st.session_state.get('regressionLars').active_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionLars').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionLars').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionLars').n_iter_}")
+                self.regression_metrics(st.session_state.get('regressionLars'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionLars'] = None
     def lars_cv(self):
@@ -346,20 +346,20 @@ class Regression:
                         st.write(f"**Intercept:** {self.model.intercept_}")
                         st.write(f"**Mean Squared Error Path:** {self.model.mse_path_}")
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionLarsCV'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("LarsCV Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Alpha Values:** {self.model.alphas_}")
-                st.write(f"**Optimal Alpha:** {self.model.alpha_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Mean Squared Error Path:** {self.model.mse_path_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                self.regression_metrics()
+                st.write(f"**Alpha Values:** {st.session_state.get('regressionLarsCV').alphas_}")
+                st.write(f"**Optimal Alpha:** {st.session_state.get('regressionLarsCV').alpha_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionLarsCV').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionLarsCV').intercept_}")
+                st.write(f"**Mean Squared Error Path:** {st.session_state.get('regressionLarsCV').mse_path_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionLarsCV').n_iter_}")
+                self.regression_metrics(st.session_state.get('regressionLarsCV'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionLarsCV'] = None
     def lasso(self):
@@ -388,17 +388,17 @@ class Regression:
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionLasso'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Lasso Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:** {st.session_state.get('regressionLasso').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionLasso').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionLasso').n_iter_}")
+                self.regression_metrics(st.session_state.get('regressionLasso'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionLasso'] = None
     def lassocv(self):
@@ -434,22 +434,22 @@ class Regression:
                         st.markdown("### Mean Squared Error Path")
                         for i, mse_path in enumerate(self.model.mse_path_):
                             st.line_chart(mse_path, height=200, width=700)
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionLassoCV'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("LassoCV Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Optimal Alpha:** {self.model.alpha_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Alphas Grid:** {self.model.alphas_}")
+                st.write(f"**Optimal Alpha:** {st.session_state.get('regressionLassoCV').alpha_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionLassoCV').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionLassoCV').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionLassoCV').n_iter_}")
+                st.write(f"**Alphas Grid:** {st.session_state.get('regressionLassoCV').alphas_}")
                 st.markdown("### Mean Squared Error Path")
-                for i, mse_path in enumerate(self.model.mse_path_):
+                for i, mse_path in enumerate(st.session_state.get('regressionLassoCV').mse_path_):
                     st.line_chart(mse_path, height=200, width=700)
-                self.regression_metrics()
+                self.regression_metrics(st.session_state.get('regressionLassoCV'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionLassoCV'] = None
     def lassolars(self):
@@ -494,17 +494,17 @@ class Regression:
             with self.col2:
                 st.success("LassoLars Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Alpha:** {self.model.alphas_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Active Variables:** {self.model.active_}")
-                st.write(f"**Alphas Grid:** {self.model.alphas_}")
-                if hasattr(self.model, 'mse_path_'):
+                st.write(f"**Alpha:** {st.session_state.get('regressionLassoLars').alphas_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionLassoLars').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionLassoLars').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionLassoLars').n_iter_}")
+                st.write(f"**Active Variables:** {st.session_state.get('regressionLassoLars').active_}")
+                st.write(f"**Alphas Grid:** {st.session_state.get('regressionLassoLars').alphas_}")
+                if hasattr(st.session_state.get('regressionLassoLars'), 'mse_path_'):
                     st.markdown("### Mean Squared Error Path")
-                    for i, mse_path in enumerate(self.model.mse_path_):
+                    for i, mse_path in enumerate(st.session_state.get('regressionLassoLars').mse_path_):
                         st.line_chart(mse_path, height=200, width=700, caption=f"Fold {i+1}")
-                self.regression_metrics()
+                self.regression_metrics(st.session_state.get('regressionLassoLars'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionLassoLars'] = None
     def lasso_lars_cv(self):
@@ -539,22 +539,22 @@ class Regression:
                         st.markdown("### Mean Squared Error Path")
                         for i, mse_path in enumerate(self.model.mse_path_):
                             st.line_chart(mse_path, height=200, width=700)
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionLassoLarsCV'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("LassoLarsCV Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Optimal Alpha:** {self.model.alpha_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Alphas Grid:** {self.model.alphas_}")
+                st.write(f"**Optimal Alpha:** {st.session_state.get('regressionLassoLarsCV').alpha_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionLassoLarsCV').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionLassoLarsCV').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionLassoLarsCV').n_iter_}")
+                st.write(f"**Alphas Grid:** {st.session_state.get('regressionLassoLarsCV').alphas_}")
                 st.markdown("### Mean Squared Error Path")
-                for i, mse_path in enumerate(self.model.mse_path_):
+                for i, mse_path in enumerate(st.session_state.get('regressionLassoLarsCV').mse_path_):
                     st.line_chart(mse_path, height=200, width=700)
-                self.regression_metrics()
+                self.regression_metrics(st.session_state.get('regressionLassoLarsCV'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionLassoLarsCV'] = None
     def lasso_lars_ic(self):
@@ -595,15 +595,15 @@ class Regression:
             with self.col2:
                 st.success("LassoLarsIC Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Optimal Alpha:** {self.model.alpha_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Criterion Values (AIC/BIC):** {self.model.criterion_}")
-                st.write(f"**Noise Variance:** {self.model.noise_variance_}")
+                st.write(f"**Optimal Alpha:** {st.session_state.get('regressionLassoLarsIC').alpha_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionLassoLarsIC').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionLassoLarsIC').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionLassoLarsIC').n_iter_}")
+                st.write(f"**Criterion Values (AIC/BIC):** {st.session_state.get('regressionLassoLarsIC').criterion_}")
+                st.write(f"**Noise Variance:** {st.session_state.get('regressionLassoLarsIC').noise_variance_}")
                 st.markdown("### Information Criterion Path")
-                st.line_chart(self.model.criterion_, height=200, width=700)
-                self.regression_metrics()
+                st.line_chart(st.session_state.get('regressionLassoLarsIC').criterion_, height=200, width=700)
+                self.regression_metrics(st.session_state.get('regressionLassoLarsIC'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionLassoLarsIC'] = None
     def orthogonal_matching_pursuit(self):
@@ -635,11 +635,11 @@ class Regression:
             with self.col2:
                 st.success("OrthogonalMatchingPursuit Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Number of Active Features:** {self.model.n_iter_}")
-                st.write(f"**Number of Non-zero Coefficients:** {self.model.n_nonzero_coefs_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:** {st.session_state.get('regressionOMP').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionOMP').intercept_}")
+                st.write(f"**Number of Active Features:** {st.session_state.get('regressionOMP').n_iter_}")
+                st.write(f"**Number of Non-zero Coefficients:** {st.session_state.get('regressionOMP').n_nonzero_coefs_}")
+                self.regression_metrics(st.session_state.get('regressionOMP'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionOMP'] = None
     def orthogonal_matching_pursuit_cv(self):
@@ -672,11 +672,11 @@ class Regression:
             with self.col2:
                 st.success("OrthogonalMatchingPursuitCV Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Estimated Non-zero Coefficients:** {self.model.n_nonzero_coefs_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                self.regression_metrics()
+                st.write(f"**Intercept:** {st.session_state.get('regressionOMP').intercept_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionOMP').coef_}")
+                st.write(f"**Estimated Non-zero Coefficients:** {st.session_state.get('regressionOMP').n_nonzero_coefs_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionOMP').n_iter_}")
+                self.regression_metrics(st.session_state.get('regressionOMP'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionOMPCV'] = None
 
@@ -719,15 +719,15 @@ class Regression:
             with self.col2:
                 st.success("ARD Regression Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Alpha (Noise Precision):** {self.model.alpha_}")
-                st.write(f"**Lambda (Weight Precision):** {self.model.lambda_}")
-                st.write(f"**Sigma (Variance-Covariance Matrix):** {self.model.sigma_}")
-                if hasattr(self.model, 'scores_'):
-                    st.write(f"**Scores (Objective Function):** {self.model.scores_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                self.regression_metrics()
+                st.write(f"**Intercept:** {st.session_state.get('regressionOMP').intercept_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionOMP').coef_}")
+                st.write(f"**Alpha (Noise Precision):** {st.session_state.get('regressionOMP').alpha_}")
+                st.write(f"**Lambda (Weight Precision):** {st.session_state.get('regressionOMP').lambda_}")
+                st.write(f"**Sigma (Variance-Covariance Matrix):** {st.session_state.get('regressionOMP').sigma_}")
+                if hasattr(st.session_state.get('regressionOMP'), 'scores_'):
+                    st.write(f"**Scores (Objective Function):** {st.session_state.get('regressionOMP').scores_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionOMP').n_iter_}")
+                self.regression_metrics(st.session_state.get('regressionOMP'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionARD'] = None
     def bayesian_ridge(self):
@@ -763,22 +763,22 @@ class Regression:
                         if compute_score:
                             st.write(f"**Scores (Log Marginal Likelihood):** {self.model.scores_}")
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionBayesianRidge'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Bayesian Ridge Regression Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Alpha (Noise Precision):** {self.model.alpha_}")
-                st.write(f"**Lambda (Weight Precision):** {self.model.lambda_}")
-                st.write(f"**Sigma (Variance-Covariance Matrix):** {self.model.sigma_}")
-                if hasattr(self.model, 'scores_'):
-                    st.write(f"**Scores (Log Marginal Likelihood):** {self.model.scores_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                self.regression_metrics()
+                st.write(f"**Intercept:** {st.session_state.get('regressionBayesianRidge').intercept_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionBayesianRidge').coef_}")
+                st.write(f"**Alpha (Noise Precision):** {st.session_state.get('regressionBayesianRidge').alpha_}")
+                st.write(f"**Lambda (Weight Precision):** {st.session_state.get('regressionBayesianRidge').lambda_}")
+                st.write(f"**Sigma (Variance-Covariance Matrix):** {st.session_state.get('regressionBayesianRidge').sigma_}")
+                if hasattr(st.session_state.get('regressionBayesianRidge'), 'scores_'):
+                    st.write(f"**Scores (Log Marginal Likelihood):** {st.session_state.get('regressionBayesianRidge').scores_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionBayesianRidge').n_iter_}")
+                self.regression_metrics(st.session_state.get('regressionBayesianRidge'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionBayesianRidge'] = None
     def multi_task_elastic_net(self):
@@ -808,19 +808,19 @@ class Regression:
                         st.write(f"**Dual Gap:** {self.model.dual_gap_}")
                         st.write(f"**Iterations:** {self.model.n_iter_}")
                         st.write(f"**Tolerance Scaled (eps):** {self.model.eps_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionMTElasticNet'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Multi-task ElasticNet Regression Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Dual Gap:** {self.model.dual_gap_}")
-                st.write(f"**Iterations:** {self.model.n_iter_}")
-                st.write(f"**Tolerance Scaled (eps):** {self.model.eps_}")
-                self.regression_metrics()
+                st.write(f"**Intercept:** {st.session_state.get('regressionMTElasticNet').intercept_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionMTElasticNet').coef_}")
+                st.write(f"**Dual Gap:** {st.session_state.get('regressionMTElasticNet').dual_gap_}")
+                st.write(f"**Iterations:** {st.session_state.get('regressionMTElasticNet').n_iter_}")
+                st.write(f"**Tolerance Scaled (eps):** {st.session_state.get('regressionMTElasticNet').eps_}")
+                self.regression_metrics(st.session_state.get('regressionMTElasticNet'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionMTElasticNet'] = None
     def multi_task_elastic_net_cv(self):
@@ -854,20 +854,20 @@ class Regression:
                         st.write(f"**Alpha Path:** {self.model.alphas_}")
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
                         st.write(f"**Dual Gap:** {self.model.dual_gap_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionMTElasticNetCV'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Multi-task ElasticNetCV Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Optimal alpha:** {self.model.alpha_}")
-                st.write(f"**Best L1 Ratio:** {self.model.l1_ratio_}")
-                st.write(f"**MSE Path:** {self.model.mse_path_}")
-                st.write(f"**Alpha Path:** {self.model.alphas_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Dual Gap:** {self.model.dual_gap_}")
-                self.regression_metrics()
+                st.write(f"**Optimal alpha:** {st.session_state.get('regressionMTElasticNetCV').alpha_}")
+                st.write(f"**Best L1 Ratio:** {st.session_state.get('regressionMTElasticNetCV').l1_ratio_}")
+                st.write(f"**MSE Path:** {st.session_state.get('regressionMTElasticNetCV').mse_path_}")
+                st.write(f"**Alpha Path:** {st.session_state.get('regressionMTElasticNetCV').alphas_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionMTElasticNetCV').n_iter_}")
+                st.write(f"**Dual Gap:** {st.session_state.get('regressionMTElasticNetCV').dual_gap_}")
+                self.regression_metrics(st.session_state.get('regressionMTElasticNetCV'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionMTElasticNetCV'] = None
     def multi_task_lasso(self):
@@ -896,20 +896,20 @@ class Regression:
                         st.write(f"**Dual Gaps:** {self.model.dual_gap_}")
                         if hasattr(self.model, 'feature_names_in_'):
                             st.write(f"**Feature Names:** {self.model.feature_names_in_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionMTLasso'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Multi-task Lasso Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:**\n{self.model.coef_}")
-                st.write(f"**Intercepts:**\n{self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Dual Gaps:** {self.model.dual_gap_}")
+                st.write(f"**Coefficients:**\n{st.session_state.get('regressionMTLasso').coef_}")
+                st.write(f"**Intercepts:**\n{st.session_state.get('regressionMTLasso').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionMTLasso').n_iter_}")
+                st.write(f"**Dual Gaps:** {st.session_state.get('regressionMTLasso').dual_gap_}")
                 if hasattr(self.model, 'feature_names_in_'):
-                    st.write(f"**Feature Names:** {self.model.feature_names_in_}")
-                self.regression_metrics()
+                    st.write(f"**Feature Names:** {st.session_state.get('regressionMTLasso').feature_names_in_}")
+                self.regression_metrics(st.session_state.get('regressionMTLasso'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionMTLasso'] = None
     def multi_task_lasso_cv(self):
@@ -943,22 +943,22 @@ class Regression:
                         st.write(f"**Dual Gap:** {self.model.dual_gap_}")
                         if hasattr(self.model, 'feature_names_in_'):
                             st.write(f"**Feature Names:** {self.model.feature_names_in_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionMTLassoCV'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Multi-task LassoCV Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:**\n{self.model.coef_}")
-                st.write(f"**Intercepts:**\n{self.model.intercept_}")
-                st.write(f"**Alpha Chosen by CV:** {self.model.alpha_}")
-                st.write(f"**Mean Squared Error Path:**\n{self.model.mse_path_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Dual Gap:** {self.model.dual_gap_}")
-                if hasattr(self.model, 'feature_names_in_'):
-                    st.write(f"**Feature Names:** {self.model.feature_names_in_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:**\n{st.session_state.get('regressionMTLassoCV').coef_}")
+                st.write(f"**Intercepts:**\n{st.session_state.get('regressionMTLassoCV').intercept_}")
+                st.write(f"**Alpha Chosen by CV:** {st.session_state.get('regressionMTLassoCV').alpha_}")
+                st.write(f"**Mean Squared Error Path:**\n{st.session_state.get('regressionMTLassoCV').mse_path_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionMTLassoCV').n_iter_}")
+                st.write(f"**Dual Gap:** {st.session_state.get('regressionMTLassoCV').dual_gap_}")
+                if hasattr(st.session_state.get('regressionMTLassoCV'), 'feature_names_in_'):
+                    st.write(f"**Feature Names:** {st.session_state.get('regressionMTLassoCV').feature_names_in_}")
+                self.regression_metrics(st.session_state.get('regressionMTLassoCV'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionMTLassoCV'] = None
     def huber_regressor(self):
@@ -988,21 +988,21 @@ class Regression:
                         st.write(f"**Outliers Identified:**\n{self.model.outliers_}")
                         if hasattr(self.model, 'feature_names_in_'):
                             st.write(f"**Feature Names:** {self.model.feature_names_in_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionHuber'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Huber Regressor Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:**\n{self.model.coef_}")
-                st.write(f"**Intercept:**\n{self.model.intercept_}")
-                st.write(f"**Scale:**\n{self.model.scale_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Outliers Identified:**\n{self.model.outliers_}")
-                if hasattr(self.model, 'feature_names_in_'):
-                    st.write(f"**Feature Names:** {self.model.feature_names_in_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:**\n{st.session_state.get('regressionHuber').coef_}")
+                st.write(f"**Intercept:**\n{st.session_state.get('regressionHuber').intercept_}")
+                st.write(f"**Scale:**\n{st.session_state.get('regressionHuber').scale_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionHuber').n_iter_}")
+                st.write(f"**Outliers Identified:**\n{st.session_state.get('regressionHuber').outliers_}")
+                if hasattr(st.session_state.get('regressionHuber'), 'feature_names_in_'):
+                    st.write(f"**Feature Names:** {st.session_state.get('regressionHuber').feature_names_in_}")
+                self.regression_metrics(st.session_state.get('regressionHuber'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionHuber'] = None
     def quantile_regressor(self):
@@ -1030,19 +1030,19 @@ class Regression:
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
                         if hasattr(self.model, 'feature_names_in_'):
                             st.write(f"**Feature Names:** {self.model.feature_names_in_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionQuantile'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Quantile Regressor Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:**\n{self.model.coef_}")
-                st.write(f"**Intercept:**\n{self.model.intercept_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                if hasattr(self.model, 'feature_names_in_'):
-                    st.write(f"**Feature Names:** {self.model.feature_names_in_}")
-                self.regression_metrics()
+                st.write(f"**Coefficients:**\n{st.session_state.get('regressionQuantile').coef_}")
+                st.write(f"**Intercept:**\n{st.session_state.get('regressionQuantile').intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionQuantile').n_iter_}")
+                if hasattr(st.session_state.get('regressionQuantile'), 'feature_names_in_'):
+                    st.write(f"**Feature Names:** {st.session_state.get('regressionQuantile').feature_names_in_}")
+                self.regression_metrics(st.session_state.get('regressionQuantile'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionQuantile'] = None
     def ransac_regressor(self):
@@ -1071,19 +1071,19 @@ class Regression:
                         st.write(f"**Inlier Mask:**\n{self.model.inlier_mask_}")
                         st.write(f"**Final Model Coefficients:**\n{self.model.estimator_.coef_}")
                         st.write(f"**Final Model Intercept:**\n{self.model.estimator_.intercept_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionRANSAC'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("RANSAC Regressor Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Number of Trials:** {self.model.n_trials_}")
-                st.write(f"**Number of Inliers:** {sum(self.model.inlier_mask_)}")
-                st.write(f"**Inlier Mask:**\n{self.model.inlier_mask_}")
-                st.write(f"**Final Model Coefficients:**\n{self.model.estimator_.coef_}")
-                st.write(f"**Final Model Intercept:**\n{self.model.estimator_.intercept_}")
-                self.regression_metrics()
+                st.write(f"**Number of Trials:** {st.session_state.get('regressionRANSAC').n_trials_}")
+                st.write(f"**Number of Inliers:** {sum(st.session_state.get('regressionRANSAC').inlier_mask_)}")
+                st.write(f"**Inlier Mask:**\n{st.session_state.get('regressionRANSAC').inlier_mask_}")
+                st.write(f"**Final Model Coefficients:**\n{st.session_state.get('regressionRANSAC').estimator_.coef_}")
+                st.write(f"**Final Model Intercept:**\n{st.session_state.get('regressionRANSAC').estimator_.intercept_}")
+                self.regression_metrics(st.session_state.get('regressionRANSAC'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionRANSAC'] = None
     def theil_sen_regressor(self):
@@ -1118,11 +1118,11 @@ class Regression:
             with self.col2:
                 st.success("Theil-Sen Regressor Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Breakdown Point:** {self.model.breakdown_}")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                self.regression_metrics()
+                st.write(f"**Breakdown Point:** {st.session_state.get('regressionTheilSen').breakdown_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionTheilSen').n_iter_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionTheilSen').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionTheilSen').intercept_}")
+                self.regression_metrics(st.session_state.get('regressionTheilSen'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionTheilSen'] = None
     def gamma_regressor(self):
@@ -1149,17 +1149,17 @@ class Regression:
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionGamma'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Gamma Regressor Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                self.regression_metrics()
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionGamma').n_iter_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionGamma').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionGamma').intercept_}")
+                self.regression_metrics(st.session_state.get('regressionGamma'))
                 if st.button("Re Train The Model", use_container_width=True, type='primary'):
                     st.session_state['regressionGamma'] = None
     def poisson_regressor(self):
@@ -1186,16 +1186,16 @@ class Regression:
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionPoisson'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Poisson Regressor Model Is Already Trained")
                 st.markdown("### Model Attributes")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionPoisson').n_iter_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionPoisson').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionPoisson').intercept_}")
                 self.regression_metrics()
                 if st.button("Retrain Model", use_container_width=True, type='primary'):
                     st.session_state['regressionPoisson'] = None
@@ -1225,21 +1225,22 @@ class Regression:
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state.get('regressionTweedie'))
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
             with self.col2:
                 st.success("Tweedie Regressor Model Is Already Trained")
                 st.markdown("### Model Attributes")
-                st.write(f"**Number of Iterations:** {self.model.n_iter_}")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
-                self.regression_metrics()
+                st.write(f"**Number of Iterations:** {st.session_state.get('regressionTweedie').n_iter_}")
+                st.write(f"**Coefficients:** {st.session_state.get('regressionTweedie').coef_}")
+                st.write(f"**Intercept:** {st.session_state.get('regressionTweedie').intercept_}")
+                self.regression_metrics(st.session_state.get('regressionTweedie'))
                 if st.button("Retrain Model", use_container_width=True, type='primary'):
                     st.session_state['regressionTweedie'] = None
-    def regression_metrics(self):
+    def regression_metrics(self,model):
         with self.col3:
+            self.model=model
             st.markdown("### Evaluate Regression Metrics")
             # D2 Absolute Error
             try:
