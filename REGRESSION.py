@@ -63,8 +63,8 @@ class Regression:
             with self.col2:
                 st.success("Linear Regression Model Is Trained Successfully")
                 st.markdown("### Model Attributes")
-                st.write(f"**Coefficients:** {self.model.coef_}")
-                st.write(f"**Intercept:** {self.model.intercept_}")
+                st.write(f"**Coefficients:** {st.session_state['regressionLinear'].coef_}")
+                st.write(f"**Intercept:** {st.session_state['regressionLinear'].intercept_}")
                 self.regression_metrics()
                 if st.button("Re Train The Model",use_container_width=True,type='primary'):
                     st.session_state['regressionLinear']=None
