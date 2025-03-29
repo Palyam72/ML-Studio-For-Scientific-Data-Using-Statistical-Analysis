@@ -1,14 +1,7 @@
 import streamlit as st
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import *
-from sklearn.metrics import (
-    d2_absolute_error_score, d2_pinball_score, d2_tweedie_score,
-    explained_variance_score, max_error, mean_absolute_error,
-    mean_absolute_percentage_error, mean_gamma_deviance,
-    mean_pinball_loss, mean_poisson_deviance, mean_squared_error,
-    mean_squared_log_error, mean_tweedie_deviance, median_absolute_error,
-    r2_score
-)
+from sklearn.metrics import *
 import numpy as np
 
 class Regression:
@@ -20,80 +13,11 @@ class Regression:
     def display(self):
         self.train_test_split()
         with self.col2:
-            st.subheader("Classical Linear Model",divider='blue')
-            models = [
-                "LinearRegression", "Ridge", "RidgeCV", "SGDRegressor",
-                "ElasticNet", "ElasticNetCV", "Lars", "LarsCV", "Lasso",
-                "LassoCV", "LassoLars", "LassoLarsCV", "LassoLarsIC",
-                "OrthogonalMatchingPursuit", "OrthogonalMatchingPursuitCV",
-                "ARDRegression", "BayesianRidge",
-                "MultiTaskElasticNet", "MultiTaskElasticNetCV",
-                "MultiTaskLasso", "MultiTaskLassoCV",
-                "HuberRegressor", "QuantileRegressor", 
-                "RANSACRegressor", "TheilSenRegressor",
-                "GammaRegressor", "PoissonRegressor", "TweedieRegressor"
-            ]
-            Model=st.pills("Select the regressor that you want",models)
-            # Define the actions based on the selected model
-            if Model == "LinearRegression":
-                self.linear_regression()
-            elif Model == "Ridge":
-                self.ridge_regression()
-            elif Model == "RidgeCV":
-                self.ridge_cv()
-            elif Model == "SGDRegressor":
-                self.sgd_regressor()
-            elif Model == "ElasticNet":
-                self.elasticNet()
-            elif Model == "ElasticNetCV":
-                self.elasticNetCV()
-            elif Model == "Lars":
-                self.lars()
-            elif Model == "LarsCV":
-                self.lars_cv()
-            elif Model == "Lasso":
-                self.lasso()
-            elif Model == "LassoCV":
-                self.lassocv()
-            elif Model == "LassoLars":
-                self.lassolars()
-            elif Model == "LassoLarsCV":
-                self.lasso_lars_cv()
-            elif Model == "LassoLarsIC":
-                self.lasso_lars_ic()
-            elif Model == "OrthogonalMatchingPursuit":
-                self.orthogonal_matching_pursuit()
-            elif Model == "OrthogonalMatchingPursuitCV":
-                self.orthogonal_matching_pursuit_cv()
-            elif Model == "ARDRegression":
-                self.ard_regression()
-            elif Model == "BayesianRidge":
-                self.bayesian_ridge()
-            elif Model == "MultiTaskElasticNet":
-                self.multi_task_elastic_net()
-            elif Model == "MultiTaskElasticNetCV":
-                self.multi_task_elastic_net_cv()
-            elif Model == "MultiTaskLasso":
-                self.multi_task_lasso()
-            elif Model == "MultiTaskLassoCV":
-                self.multi_task_lasso_cv()
-            elif Model == "HuberRegressor":
-                self.huber_regressor()
-            elif Model == "QuantileRegressor":
-                self.quantile_regressor()
-            elif Model == "RANSACRegressor":
-                self.ransac_regressor()
-            elif Model == "TheilSenRegressor":
-                self.theil_sen_regressor()
-            elif Model == "GammaRegressor":
-                self.gamma_regressor()
-            elif Model == "PoissonRegressor":
-                self.poisson_regressor()
-            elif Model == "TweedieRegressor":
-                self.tweedie_regressor()
-                
-                
-                                       
+            st.subheader("Classical Linear Model", divider='blue')
+            model_map = {"LinearRegression": self.linear_regression, "Ridge": self.ridge_regression, "RidgeCV": self.ridge_cv, "SGDRegressor": self.sgd_regressor, "ElasticNet": self.elasticNet, "ElasticNetCV": self.elasticNetCV, "Lars": self.lars, "LarsCV": self.lars_cv, "Lasso": self.lasso, "LassoCV": self.lassocv, "LassoLars": self.lassolars, "LassoLarsCV": self.lasso_lars_cv, "LassoLarsIC": self.lasso_lars_ic, "OrthogonalMatchingPursuit": self.orthogonal_matching_pursuit, "OrthogonalMatchingPursuitCV": self.orthogonal_matching_pursuit_cv, "ARDRegression": self.ard_regression, "BayesianRidge": self.bayesian_ridge, "MultiTaskElasticNet": self.multi_task_elastic_net, "MultiTaskElasticNetCV": self.multi_task_elastic_net_cv, "MultiTaskLasso": self.multi_task_lasso, "MultiTaskLassoCV": self.multi_task_lasso_cv, "HuberRegressor": self.huber_regressor, "QuantileRegressor": self.quantile_regressor, "RANSACRegressor": self.ransac_regressor, "TheilSenRegressor": self.theil_sen_regressor, "GammaRegressor": self.gamma_regressor, "PoissonRegressor": self.poisson_regressor, "TweedieRegressor": self.tweedie_regressor}
+            model = st.selectbox("Select the regressor that you want", model_map.keys())
+            model_map[model]()
+                             
     def train_test_split(self):
         with self.col1:
             st.subheader("Train-Test Split Configuration",divider='blue')
