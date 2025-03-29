@@ -11,7 +11,7 @@ for i in session_variables:
 class Regression:
     def __init__(self, dataset):
         self.dataset = dataset
-        self.col1, self.col2, self.col3 = st.columns([1, 1, 1])
+        self.col1, self.col2, self.col3 = st.columns([1, 1, 1],border=True)
         self.xTrain, self.xTest, self.yTrain, self.yTest = None, None, None, None
         self.model = None
     def display(self):
