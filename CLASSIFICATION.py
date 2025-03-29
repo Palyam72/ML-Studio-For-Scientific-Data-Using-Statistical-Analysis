@@ -47,10 +47,10 @@ class Classification:
           if operation == "Train Test Split":
               col2.subheader("You Are Going To Implement Train Test Split", divider=True)
               test_columns = col2.selectbox("Select the target column", self.dataset.columns.tolist())
+              test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
+              X = self.dataset.drop(columns=[test_columns])
+              y = self.dataset[test_columns]
               if col2.button("Apply Train Test Split", use_container_width=True, type='primary'):
-                  test_size = col2.slider("Select Test Size", 0.1, 0.5, 0.2, 0.1)
-                  X = self.dataset.drop(columns=[test_columns])
-                  y = self.dataset[test_columns]
                   self.xtrain, self.xtest, self.ytrain, self.ytest = train_test_split(X, y, test_size=test_size, random_state=42)
                   st.session_state["availableDatasets"]["classification_train_test_split_xtrain"] = self.xtrain
                   st.session_state["availableDatasets"]["classification_train_test_split_xtest"] = self.xtest
