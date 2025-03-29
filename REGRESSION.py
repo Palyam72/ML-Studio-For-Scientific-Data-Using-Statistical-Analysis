@@ -34,9 +34,14 @@ class Regression:
             test_size = st.slider("Test size (as a proportion)", 0.1, 0.9, 0.2, 0.05)
             shuffle = st.checkbox("Shuffle the data before splitting", value=True)
             if st.checkbox("Confirm to apply the train test split"):
-                self.xTrain, self.xTest, self.yTrain, self.yTest = train_test_split(
-                    x_data, y_data, test_size=test_size, shuffle=shuffle
-                )
+                if st.session_state['regression_train_test_split'] is None:
+                    self.xTrain, self.xTest, self.yTrain, self.yTest = train_test_split(
+                        x_data, y_data, test_size=test_size, shuffle=shuffle
+                    )
+                else:
+                    st.success("Splitted Successfully")
+                    if st.button("Re Split",type='primary','use_container_width=True):
+                        st.session_state['regression_train_test_split']=None
                 st.markdown("### Train-Test Split Completed!")
                 st.write("Training data shape:", self.xTrain.shape, self.yTrain.shape)
                 st.write("Testing data shape:", self.xTest.shape, self.yTest.shape)
