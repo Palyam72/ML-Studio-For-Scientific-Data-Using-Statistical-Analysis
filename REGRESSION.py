@@ -40,7 +40,7 @@ class Regression:
                     )
                 else:
                     st.success("Splitted Successfully")
-                    if st.button("Re Split",type='primary','use_container_width=True):
+                    if st.button("Re Split",type='primary',use_container_width=True):
                         st.session_state['regression_train_test_split']=None
                 st.markdown("### Train-Test Split Completed!")
                 st.write("Training data shape:", self.xTrain.shape, self.yTrain.shape)
