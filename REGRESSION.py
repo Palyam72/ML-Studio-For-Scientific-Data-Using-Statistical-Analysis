@@ -40,9 +40,10 @@ class Regression:
             shuffle = st.checkbox("Shuffle the data before splitting", value=True)
             if st.checkbox("Confirm to apply the train test split"):
                 if st.session_state['regression_train_test_split'] is None:
-                    self.xTrain, self.xTest, self.yTrain, self.yTest = train_test_split(
+                  self.xTrain, self.xTest, self.yTrain, self.yTest = train_test_split(
                         x_data, y_data, test_size=test_size, shuffle=shuffle
-                    )
+                  )
+                  st.session_state['regression_train_test_split']="Vishnu"
                 else:
                     st.success("Splitted Successfully")
                     if st.button("Re Split",type='primary',use_container_width=True):
