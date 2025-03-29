@@ -4,7 +4,12 @@ from sklearn.linear_model import *
 from sklearn.metrics import *
 import numpy as np
 
-session_variables=['regressionLinear','regressionRidge','regressionRidgeCV']
+session_variables=['regressionLinear','regressionRidge','regressionRidgeCV','regression_train_test_split',
+                   'regressionSGD','regressionElasticNet','regressionElasticNetCV','regressionLars','regressionLarsCV',
+                   'regressionLasso','regressionLassoCV',"regressionLassoLars",'regressionLassoLarsCV','regressionLassoLarsIC','regressionOMP',
+                  'regressionOMPCV','regressionARD','regressionBayesianRidge','regressionMTElasticNet','regressionMTLasso','regressionMTElasticNetCV',
+                   'regressionHuber','regressionQuantile','regressionRANSAC','regressionPoisson','regressionTheilSen','regressionTweedie'
+                  ]
 for i in session_variables:
     if i not in st.session_state:
         st.session_state[i]=None
