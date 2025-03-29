@@ -44,13 +44,17 @@ class Regression:
                         x_data, y_data, test_size=test_size, shuffle=shuffle
                   )
                   st.session_state['regression_train_test_split']="Vishnu"
+                  st.session_state['regresionXTrain']=self.xtrain,
+                  st.session_state['regresionYTrain']=self.ytrain,
+                  st.session_state['regresionXTest']=self.xtest,
+                  st.session_state['regresionYTest']=self.ytest
                 else:
                     st.success("Splitted Successfully")
                     if st.button("Re Split",type='primary',use_container_width=True):
                         st.session_state['regression_train_test_split']=None
                 st.markdown("### Train-Test Split Completed!")
-                st.write("Training data shape:", self.xTrain.shape, self.yTrain.shape)
-                st.write("Testing data shape:", self.xTest.shape, self.yTest.shape)
+                st.write("Training data shape:", st.session_state['regresionXTrain'].shape, st.session_state['regresionYTrain'].shape)
+                st.write("Testing data shape:", st.session_state['regresionXTest'].shape, st.session_state['regresionYTest'].shape)
 
     def linear_regression(self):
         if st.session_state['regressionLinear'] == None:
