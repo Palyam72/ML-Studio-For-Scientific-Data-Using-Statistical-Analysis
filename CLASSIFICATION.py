@@ -13,7 +13,7 @@ from sklearn import metrics
 import warnings
 from sklearn.linear_model import LogisticRegression
 
-session_models=["Decision Trees","Ada Boost Classifier","Hist Gradient Boosting Classifier","Random Forest Classifier",
+session_models=["Bagging Classifier","Decision Trees","Ada Boost Classifier","Hist Gradient Boosting Classifier","Random Forest Classifier",
                 "Stacking Classifier","Voting Classifier","LinearSVC","NuSVC",
                "OneClassSVM","KNN","RadiusNeighbors","BernoulliNB","CategoricalNB","ComplementNB","GaussianNB","MultinomialNB"]
 for i in session_models:
@@ -317,10 +317,16 @@ class Classification:
                                   warm_start=warm_start, n_jobs=n_jobs, random_state=random_state, verbose=verbose)
           col2.subheader("Your Model",divider='blue')
           col2.write(model.get_params())
-          model.fit(st.session_state["availableDatasets"][xtrain_key],st.session_state["availableDatasets"][ytrain_key])
+          if st.session_state["Bagging Classifier"] ==None:
+              st.session_state["Bagging Classifier"]=model.fit(st.session_state["availableDatasets"][xtrain_key], st.session_state["availableDatasets"][ytrain_key])
+          else:
+              col2.success("Model Created")
+              delete=col2.checkbox("DO You Want to recreate model")
+              if delete:
+                  st.session_state["Bagging Classifier"]=None
           col2.success("Model Fitted Successfully")
           col2.divider()
-          self.metrics(col2,model)
+          self.metrics(col2, st.session_state["Bagging Classifier"])
     def hist_gradient_boosting_classifier(self, col2):
       xtrain_key = col2.selectbox("Select X Train for HistGradientBoostingClassifier", list(st.session_state["availableDatasets"].keys()))
       ytrain_key = col2.selectbox("Select Y Train for HistGradientBoostingClassifier", list(st.session_state["availableDatasets"].keys()))
