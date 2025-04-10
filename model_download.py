@@ -1,9 +1,8 @@
 import streamlit as st
 import pickle
-import os
 
 class DownloadModel:
-    def __init__(self,dataset):
+    def __init__(self):
         self.classification = [
             "Bagging Classifier", "Extra Tree Classifier", "Decision Trees", "Ada Boost Classifier",
             "Hist Gradient Boosting Classifier", "Random Forest Classifier", "Stacking Classifier",
@@ -16,28 +15,23 @@ class DownloadModel:
     def download_classification(self):
         selected_model = st.selectbox("Select model to download", self.classification)
 
-        if selected_model in st.session_state and st.session_state[selected_model] is not None:
-            model_path = st.session_state[selected_model]
+        model_obj = st.session_state.get(selected_model, None)
+        if model_obj is not None:
+            bytes_data = pickle.dumps(model_obj)
 
-            if os.path.exists(model_path):
-                with open(model_path, "rb") as f:
-                    bytes_data = f.read()
-
-                st.download_button(
-                    label="Confirm To Download",
-                    data=bytes_data,
-                    file_name=os.path.basename(model_path),
-                    mime="application/octet-stream",
-                    use_container_width=True,
-                    type='primary'
-                )
-            else:
-                st.warning("Model file does not exist at the specified path.")
+            st.download_button(
+                label="Confirm To Download",
+                data=bytes_data,
+                file_name=f"{selected_model.replace(' ', '_')}.pkl",
+                mime="application/octet-stream",
+                use_container_width=True,
+                type='primary'
+            )
         else:
-            st.info("Selected model is not yet available in session state.")
+            st.info("Selected model is not available in session state.")
 
     def display(self):
-        col1, col2 = st.columns([1, 2], border=True)
+        col1, col2 = st.columns([1, 2], gap="medium")
         with col1:
             radio_option = st.radio("Select the techniques to download", ["Classification", "Regression", "Clustering"])
 
