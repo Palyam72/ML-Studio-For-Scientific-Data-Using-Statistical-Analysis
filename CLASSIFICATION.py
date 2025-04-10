@@ -241,13 +241,17 @@ class Classification:
                                        random_state=random_state)
           col2.subheader("Your Created Model", divider='blue')
           col2.write(model)
-          model.fit(xtrain, ytrain)
-          col2.subheader("Here are the detailed list of parameters", divider='blue')
-          col2.write(f"Trained Model Parameters:\n{model.get_params()}")
-          col2.subheader("Feature Importances", divider='blue')
-          col2.write(model.feature_importances_)
-          col2.subheader("Your Model Metrics On Test Data", divider='blue')
-          self.metrics(col2, model)
+          # "Extra Tree Classifier"
+          if st.session_state["Extra Tree Classifier"] ==None:
+              st.session_state["Extra Tree Classifier"]=model.fit(st.session_state["availableDatasets"][xtrain_key], st.session_state["availableDatasets"][ytrain_key])
+          else:
+              col2.success("Model Created")
+              delete=col2.checkbox("DO You Want to recreate model")
+              if delete:
+                  st.session_state["Extra Tree Classifier"]=None
+          col2.success("Model Fitted Successfully")
+          col2.divider()
+          self.metrics(col2, st.session_state["Extra Tree Classifier"])
     def metrics(self, col2, model):
       col2.subheader("Metrics On Predictions", divider='blue')
       
