@@ -13,7 +13,7 @@ from sklearn import metrics
 import warnings
 from sklearn.linear_model import LogisticRegression
 
-session_models=["Decision Trees","Hist Gradient Boosting Classifier","Random Forest Classifier",
+session_models=["Decision Trees","Ada Boost Classifier","Hist Gradient Boosting Classifier","Random Forest Classifier",
                 "Stacking Classifier","Voting Classifier","LinearSVC","NuSVC",
                "OneClassSVM","KNN","RadiusNeighbors","BernoulliNB","CategoricalNB","ComplementNB","GaussianNB","MultinomialNB"]
 for i in session_models:
@@ -204,11 +204,17 @@ class Classification:
           model = AdaBoostClassifier(n_estimators=n_estimators, learning_rate=learning_rate, random_state=random_state)
           col2.subheader("Your Created Model", divider='blue')
           col2.write(model)
-          model.fit(xtrain, ytrain)
-          col2.subheader("Here are the detailed list of parameters", divider='blue')
-          col2.write(f"Trained Model Parameters:\n{model.get_params()}")
-          col2.subheader("Your Model Metrics On Test Data", divider='blue')
-          self.metrics(col2, model)
+          if st.session_state["Ada Boost Classifier"] ==None:
+              st.session_state["Ada Boost Classifier"]=model.fit(st.session_state["availableDatasets"][xtrain_key], st.session_state["availableDatasets"][ytrain_key])
+          else:
+              col2.success("Model Created")
+              delete=col2.checkbox("DO You Want to recreate model")
+              if delete:
+                  st.session_state["Ada Boost Classifier"]=None
+          col2.success("Model Fitted Successfully")
+          col2.divider()
+          self.metrics(col2, st.session_state["Ada Boost Classifier"])
+          
     def extra_trees(self, col2):
       col2.subheader("Extra Trees Classifier Settings", divider='blue')
       xtrain_key = col2.selectbox("Select X Train", list(st.session_state["availableDatasets"].keys()))
