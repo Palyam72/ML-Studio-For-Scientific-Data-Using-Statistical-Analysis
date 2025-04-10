@@ -13,7 +13,7 @@ from sklearn import metrics
 import warnings
 from sklearn.linear_model import LogisticRegression
 
-session_models=["Hist Gradient Boosting Classifier","Random Forest Classifier",
+session_models=["Decision Trees","Hist Gradient Boosting Classifier","Random Forest Classifier",
                 "Stacking Classifier","Voting Classifier","LinearSVC","NuSVC",
                "OneClassSVM","KNN","RadiusNeighbors","BernoulliNB","CategoricalNB","ComplementNB","GaussianNB","MultinomialNB"]
 for i in session_models:
@@ -153,26 +153,36 @@ class Classification:
                                          max_leaf_nodes=max_leaf_nodes, min_impurity_decrease=min_impurity_decrease, random_state=random_state)
           col2.subheader("Your Created Model", divider='blue')
           col2.write(model)
-          model.fit(xtrain, ytrain)
-          col2.subheader("Here are the detailed list of parameters",divider='blue')
-          col2.write(f"Trained Model Parameters:\n{model.get_params()}")
-          col2.subheader("Decision Tree Model Attributes", divider='blue')
-          col2.write(f"Classes: {model.classes_}")
-          col2.write(f"Feature Importances: {model.feature_importances_}")
-          col2.write(f"Max Features: {model.max_features_}")
-          col2.write(f"Number of Classes: {model.n_classes_}")
-          col2.write(f"Number of Features: {model.n_features_in_}")
-          col2.write(f"Feature Names: {getattr(model, 'feature_names_in_', 'Not Available')}")
-          col2.write(f"Number of Outputs: {model.n_outputs_}")
-          col2.write(f"Tree Structure: {model.tree_}")
-          col2.subheader("Decision Tree Visualization", divider='blue')
-          feature_names = list(map(str, xtrain.columns))  # Ensure feature names are strings
+          if st.session_state["Decision Trees"] ==None:
+              st.session_state["Decision Trees"]=model.fit(st.session_state["availableDatasets"][xtrain_key], st.session_state["availableDatasets"][ytrain_key])
+              col2.subheader("Here are the detailed list of parameters",divider='blue')
+              col2.write(f"Trained Model Parameters:\n{model.get_params()}")
+              col2.subheader("Decision Tree Model Attributes", divider='blue')
+              col2.write(f"Classes: {model.classes_}")
+              col2.write(f"Feature Importances: {model.feature_importances_}")
+              col2.write(f"Max Features: {model.max_features_}")
+              col2.write(f"Number of Classes: {model.n_classes_}")
+              col2.write(f"Number of Features: {model.n_features_in_}")
+              col2.write(f"Feature Names: {getattr(model, 'feature_names_in_', 'Not Available')}")
+              col2.write(f"Number of Outputs: {model.n_outputs_}")
+              col2.write(f"Tree Structure: {model.tree_}")
+              col2.subheader("Decision Tree Visualization", divider='blue')
+              feature_names = list(map(str, xtrain.columns))  # Ensure feature names are strings
+              
+              fig, ax = plt.subplots(figsize=(12, 6))
+              plot_tree(model, filled=True, feature_names=feature_names, class_names=list(map(str, model.classes_)), ax=ax)
+              col2.pyplot(fig)
+              col2.subheader("Your Model Metrics On Test Data",divider='blue')
+              self.metrics(col2,model)
+          else:
+              col2.success("Model Created")
+              delete=col2.checkbox("DO You Want to recreate model")
+              if delete:
+                  st.session_state["Hist Gradient Boosting Classifier"]=None
+          col2.success("Model Fitted Successfully")
+          col2.divider()
+          self.metrics(col2, st.session_state["Decision Trees"])
           
-          fig, ax = plt.subplots(figsize=(12, 6))
-          plot_tree(model, filled=True, feature_names=feature_names, class_names=list(map(str, model.classes_)), ax=ax)
-          col2.pyplot(fig)
-          col2.subheader("Your Model Metrics On Test Data",divider='blue')
-          self.metrics(col2,model)
             
     def ada_boost(self, col2):
       col2.subheader("Ada Boost Classifier Settings", divider='blue')
