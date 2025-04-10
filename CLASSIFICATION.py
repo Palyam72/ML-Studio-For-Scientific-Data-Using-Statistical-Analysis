@@ -3,7 +3,7 @@ import pandas as pd
 import missingno as mso
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier, RandomForestClassifier
+from sklearn.ensemble import *
 from sklearn.tree import *
 from sklearn.svm import SVC, NuSVC, OneClassSVM, LinearSVC
 from sklearn.neighbors import KNeighborsClassifier, RadiusNeighborsClassifier
