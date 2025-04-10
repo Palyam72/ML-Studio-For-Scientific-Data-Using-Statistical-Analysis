@@ -13,7 +13,7 @@ from sklearn import metrics
 import warnings
 from sklearn.linear_model import LogisticRegression
 
-session_models=["Bagging Classifier","Decision Trees","Ada Boost Classifier","Hist Gradient Boosting Classifier","Random Forest Classifier",
+session_models=["Bagging Classifier","Extra Tree Classifier","Decision Trees","Ada Boost Classifier","Hist Gradient Boosting Classifier","Random Forest Classifier",
                 "Stacking Classifier","Voting Classifier","LinearSVC","NuSVC",
                "OneClassSVM","KNN","RadiusNeighbors","BernoulliNB","CategoricalNB","ComplementNB","GaussianNB","MultinomialNB"]
 for i in session_models:
