@@ -11,6 +11,7 @@ from CHANGERS import *
 from REGRESSION import *
 from clustering import clusters
 from CLASSIFICATION import Classification
+from model_download import *
 # Initialize DataExtractor object
 dataextractor = DataExtractor()
 
@@ -135,6 +136,19 @@ elif selected == "Clustering":
             dataset = st.session_state.selected_dataset
             object=clusters(dataset)
             object.display()
-            
+elif selected == "Model Download":
+    if st.session_state.availableDatasets:
+        # Dataset selection for cleaning
+        selected_dataset_name = st.selectbox(
+            "Select a dataset to clean",
+            list(st.session_state.availableDatasets.keys())
+        )
+
+        if selected_dataset_name:
+            # Load the selected dataset from session state
+            st.session_state.selected_dataset = st.session_state.availableDatasets[selected_dataset_name]
+            dataset = st.session_state.selected_dataset
+            object=DownloadModel(dataset)
+            object.display()
                         
         
