@@ -3,7 +3,7 @@ import pickle
 import os
 
 class DownloadModel:
-    def __init__(self):
+    def __init__(self,dataset):
         self.classification = [
             "Bagging Classifier", "Extra Tree Classifier", "Decision Trees", "Ada Boost Classifier",
             "Hist Gradient Boosting Classifier", "Random Forest Classifier", "Stacking Classifier",
