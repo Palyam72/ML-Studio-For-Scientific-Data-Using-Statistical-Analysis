@@ -2,7 +2,7 @@ import streamlit as st
 import pickle
 
 class DownloadModel:
-    def __init__(self):
+    def __init__(self,df):
         self.classification = [
             "Bagging Classifier", "Extra Tree Classifier", "Decision Trees", "Ada Boost Classifier",
             "Hist Gradient Boosting Classifier", "Random Forest Classifier", "Stacking Classifier",
