@@ -37,7 +37,7 @@ class DownloadModel:
             st.info("Selected model is not yet available in session state.")
 
     def display(self):
-        col1, col2 = st.columns([1, 2], gap="medium")
+        col1, col2 = st.columns([1, 2], border=True)
         with col1:
             radio_option = st.radio("Select the techniques to download", ["Classification", "Regression", "Clustering"])
 
