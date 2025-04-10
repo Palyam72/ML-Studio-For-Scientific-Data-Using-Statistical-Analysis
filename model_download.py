@@ -60,6 +60,6 @@ class DownloadModel:
             if radio_option == "Classification":
                 self.download_classification()
             elif radio_option == "Regression":
-                st.info("Regression download support coming soon.")
+                st.download_regression()
             elif radio_option == "Clustering":
                 st.info("Clustering download support coming soon.")
