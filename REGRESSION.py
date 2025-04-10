@@ -1115,7 +1115,7 @@ class Regression:
                         st.write(f"**Number of Iterations:** {self.model.n_iter_}")
                         st.write(f"**Coefficients:** {self.model.coef_}")
                         st.write(f"**Intercept:** {self.model.intercept_}")
-                        self.regression_metrics()
+                        self.regression_metrics(st.session_state['regressionTheilSen'])
                     except Exception as e:
                         st.error(f"Error training model: {str(e)}")
         else:
