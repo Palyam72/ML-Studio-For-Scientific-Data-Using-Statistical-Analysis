@@ -62,7 +62,7 @@ class Classification:
               col2.subheader("You Make Model Here", divider='blue')
               option = col2.selectbox("Select the classification model that you want", 
                                       ["Ada Boost Classifier", "Bagging Classifier", "Extra Tree Classifier", 
-                                       "Gradient Boosting Classifier", "Hist Gradient Boosting Classifier", 
+                                       "Hist Gradient Boosting Classifier", 
                                        "Random Forest Classifier", "Stacking Classifier", "Voting Classifier", 
                                        "Decision Tree Classifier", "Linear SVM", "NuSVC", "One Class SVM", "SVC", 
                                        "KNeighbours Classifier", "Radius Neighbours Classifier", "BernoulliNB", 
